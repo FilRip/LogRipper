@@ -1,0 +1,71 @@
+﻿<Window x:Class="LogRipper.Controls.FusionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:LogRipper.ViewModels"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:constants="clr-namespace:LogRipper.Constants"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        ui:ThemeManager.IsThemeAware="True"
+        mc:Ignorable="d" Closing="Window_Closing"
+        Title="{x:Static constants:Locale.TITLE_MERGE_FILE}" Height="210" Width="600">
+    <Window.DataContext>
+        <viewmodels:FusionWindowViewModel/>
+    </Window.DataContext>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static constants:Locale.LBL_ASK_DATEFORMAT}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FormatDate}"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static constants:Locale.LBL_MERGE_FILENAME}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FileName}" PreviewMouseUp="TextBox_PreviewMouseUp"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_TEXT_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <xctk:ColorPicker Grid.Row="4" Grid.Column="1" SelectedColor="{Binding ForeColor}"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_BACK_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <xctk:ColorPicker Grid.Row="6" Grid.Column="1" SelectedColor="{Binding BackColor}"/>
+
+        <Grid Grid.Row="8" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{x:Static constants:Locale.PREVIEW_COLOR}" HorizontalAlignment="Center" Background="{Binding BackColorBrush}" Foreground="{Binding ForeColorBrush}"/>
+            <Button Grid.Column="1" Name="BtnCancel" Click="BtnCancel_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Locale.BTN_CANCEL}" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                    <Image Source="{x:Static constants:Icons.CancelImage}" Height="16" Width="16"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="3" Click="BtnOK_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Locale.BTN_OK}" VerticalAlignment="Center" Margin="0 0 5 0" Name="BtnOK"/>
+                    <Image Source="{x:Static constants:Icons.OkImage}" Height="16" Width="16"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+    </Grid>
+</Window>

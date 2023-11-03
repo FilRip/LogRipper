@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
+
+namespace LogRipper.Helpers
+{
+    /// <summary>
+    /// Logique d'interaction pour InputBoxWindow.xaml
+    /// </summary>
+    public partial class InputBoxWindow : Window
+    {
+        public InputBoxWindow()
+        {
+            InitializeComponent();
+
+            if (Properties.Settings.Default.InputBoxPosX != 0)
+                Left = Properties.Settings.Default.InputBoxPosX;
+            if (Properties.Settings.Default.InputBoxPosY != 0)
+                Top = Properties.Settings.Default.InputBoxPosY;
+            if (Properties.Settings.Default.InputBoxSizeX != 0)
+                Width = Properties.Settings.Default.InputBoxSizeX;
+            if (Properties.Settings.Default.InputBoxSizeY != 0)
+                Height = Properties.Settings.Default.InputBoxSizeY;
+        }
+
+        public void ShowModal(string title, string question, string defaultValue = "")
+        {
+            Title = title;
+            TxtQuestion.Text = question;
+            TxtUserEdit.ItemsSource = new List<string>() { defaultValue };
+            TxtUserEdit.Text = defaultValue;
+            TxtUserEdit.SelectedIndex = 0;
+            ShowDialog();
+        }
+
+        public void ShowModal(string title, string question, string[] defaultValue)
+        {
+            Title = title;
+            TxtQuestion.Text = question;
+            TxtUserEdit.ItemsSource = defaultValue;
+            TxtUserEdit.SelectedIndex = 0;
+            ShowDialog();
+        }
+
+        private void BtnOk_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Properties.Settings.Default.InputBoxPosX = Left;
+            Properties.Settings.Default.InputBoxPosY = Top;
+            Properties.Settings.Default.InputBoxSizeX = Width;
+            Properties.Settings.Default.InputBoxSizeY = Height;
+            Properties.Settings.Default.Save();
+        }
+
+        private void TxtUserEdit_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return || e.Key == Key.Enter)
+                BtnOk_Click(this, null);
+            else if (e.Key == Key.Escape)
+                Close();
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                // HACK : Send tab to enter in TxtUserEdit (Focus, Keyboard Focus & FocusManager doesn't work)
+                InputManager.Current.ProcessInput(new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.Tab) { RoutedEvent = Keyboard.KeyDownEvent });
+                InputManager.Current.ProcessInput(new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.Tab) { RoutedEvent = Keyboard.KeyUpEvent });
+            }, System.Windows.Threading.DispatcherPriority.Background);
+        }
+    }
+}
