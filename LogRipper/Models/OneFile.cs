@@ -14,6 +14,7 @@ using LogRipper.Constants;
 using LogRipper.Controls;
 using LogRipper.Helpers;
 using LogRipper.ViewModels;
+using LogRipper.Windows;
 
 namespace LogRipper.Models
 {

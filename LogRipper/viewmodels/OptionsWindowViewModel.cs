@@ -8,6 +8,7 @@ using System.Windows.Media;
 using LogRipper.Constants;
 using LogRipper.Controls;
 using LogRipper.Helpers;
+using LogRipper.Windows;
 
 using Microsoft.Win32;
 

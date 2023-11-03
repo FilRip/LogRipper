@@ -11,6 +11,7 @@ using LogRipper.Constants;
 using LogRipper.Controls;
 using LogRipper.Exceptions;
 using LogRipper.Helpers;
+using LogRipper.Windows;
 
 using Microsoft.Win32;
 

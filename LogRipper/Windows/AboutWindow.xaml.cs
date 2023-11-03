@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace LogRipper.Controls
+namespace LogRipper.Windows
 {
     /// <summary>
     /// Logique d'interaction pour AboutWindow.xaml

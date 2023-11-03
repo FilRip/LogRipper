@@ -2,7 +2,7 @@
 
 using LogRipper.ViewModels;
 
-namespace LogRipper.Controls
+namespace LogRipper.Windows
 {
     /// <summary>
     /// Logique d'interaction pour OptionsWindow.xaml

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Data;
@@ -16,6 +17,7 @@ using LogRipper.Controls;
 using LogRipper.Exceptions;
 using LogRipper.Helpers;
 using LogRipper.Models;
+using LogRipper.Windows;
 
 using Microsoft.Win32;
 
@@ -31,7 +33,7 @@ namespace LogRipper.ViewModels
         private ListCurrentRules _listRules;
         private readonly ICommand _addRule, _listCurrentRules, _saveRules, _loadRules, _cmdShowDateFilter, _cmdOpenFile, _cmdReloadAllFiles, _cmdMergeRules;
         private readonly ICommand _cmdEncodageDefault, _cmdEncodageAscii, _cmdEncodageUtf7, _cmdEncodageUtf8, _cmdEncodageUtf32, _cmdEncodageUnicode;
-        private readonly ICommand _showNumLine, _showFileName, _cmdShowSearchResult, _cmdExportToHtml, _cmdExit, _cmdCopySelectedItems;
+        private readonly ICommand _showNumLine, _showFileName, _cmdShowSearchResult, _cmdExportToHtml, _cmdExit, _cmdCopySelectedItems, _cmdCheckUpdate;
         private readonly ICommand _cmdSearch, _cmdGotoLine, _cmdMergeFile, _cmdAutoReload, _cmdAutoScrollToEnd, _cmdAutoFollowInMargin;
         private readonly ICommand _cmdOptions, _cmdShowMargin, _cmdShowToolbar, _cmdSaveState, _cmdLoadState, _cmdShowAbout, _cmdSaveSearchResult;
         private bool _encodageDefault, _encodageAscii, _encodageUtf7, _encodageUtf8, _encodageUtf32, _encodageUnicode, _showFilterByDate, _autoFollowInMargin;
@@ -97,6 +99,7 @@ namespace LogRipper.ViewModels
             _cmdReloadAllFiles = new RelayCommand((param) => ReloadAllFiles());
             _cmdSaveSearchResult = new RelayCommand((param) => SaveSearchResult());
             _cmdMergeRules = new RelayCommand((param) => MergeRules());
+            _cmdCheckUpdate = new RelayCommand((param) => CheckForUpdate());
 
             _minDate = DateTime.MinValue;
             _maxDate = DateTime.MaxValue;
@@ -118,6 +121,11 @@ namespace LogRipper.ViewModels
         #endregion
 
         #region Properties
+
+        public ICommand CmdCheckUpdate
+        {
+            get { return _cmdCheckUpdate; }
+        }
 
         public ICommand CmdMergeRules
         {
@@ -704,6 +712,24 @@ namespace LogRipper.ViewModels
         #endregion
 
         #region Methods
+
+        private void CheckForUpdate()
+        {
+            string version = AutoUpdater.LatestVersion(Properties.Settings.Default.beta);
+            if (!string.IsNullOrWhiteSpace(version))
+            {
+                Version latestVersion = new(version);
+                string result = string.Format(Locale.LBL_VERSION_COMPARE, Assembly.GetEntryAssembly().GetName().Version.ToString(), $"{latestVersion.Major}.{latestVersion.Minor}.{latestVersion.Build}.{latestVersion.Revision}");
+                WpfMessageBox.ShowModal(result, "LogRipper");
+                if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0 &&
+                    WpfMessageBox.ShowModal(string.Format(Locale.LBL_NEW_VERSION, latestVersion.ToString()), "LogRipper", MessageBoxButton.YesNo))
+                {
+                    AutoUpdater.InstallNewVersion(version);
+                }
+            }
+            else
+                WpfMessageBox.ShowModal(Locale.ERROR_CHECK_NEW_VERSION, Locale.TITLE_ERROR);
+        }
 
         private void ShowDateFilter()
         {

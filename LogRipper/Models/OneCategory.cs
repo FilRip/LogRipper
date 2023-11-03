@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 
 using LogRipper.Controls;
 using LogRipper.Helpers;
+using LogRipper.Windows;
 
 namespace LogRipper.Models
 {

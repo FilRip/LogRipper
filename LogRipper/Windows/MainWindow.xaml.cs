@@ -15,7 +15,7 @@ using LogRipper.ViewModels;
 using ModernWpf;
 using ModernWpf.Controls;
 
-namespace LogRipper.Controls
+namespace LogRipper.Windows
 {
     /// <summary>
     /// Code behind for MainWindow.xaml
@@ -28,6 +28,8 @@ namespace LogRipper.Controls
         // TODO : Make a scrollbar colored by matching
         // TODO : Remove some Modal window
         // TODO : Make tabs for different search result
+        // TODO : Make docking/float window/toolbar
+        // TODO : Icon in systray
         public MainWindow()
         {
             InitializeComponent();

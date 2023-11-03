@@ -155,6 +155,9 @@ namespace LogRipper.Constants
         public static string LBL_ERROR_INSTALL_NEW_VERSION { get; set; } = "Error during installing the new version";
         public static string LBL_ERROR_DOWNLOAD_NEW_VERSION { get; set; } = "Error during downloading the new version";
         public static string LBL_RESTART_APP_NEW_VERSION { get; set; } = "New version has been installed. You must restart to change take effect. Do you want to restart now ?";
+        public static string LBL_VERSION_COMPARE { get; set; } = "Your version : {0}\r\nAvailable version : {1}";
+        public static string MENU_CHECK_NEW_VERSION { get; set; } = "Check for update now";
+        public static string ERROR_CHECK_NEW_VERSION { get; set; } = "Unable to check if new version is available\r\nBe sure you're connected to Internet";
         #endregion
 
         #region Methods
@@ -304,6 +307,9 @@ namespace LogRipper.Constants
                 LBL_ERROR_DOWNLOAD_NEW_VERSION = GetTranslation(nameof(LBL_ERROR_DOWNLOAD_NEW_VERSION));
                 LBL_ERROR_INSTALL_NEW_VERSION = GetTranslation(nameof(LBL_ERROR_INSTALL_NEW_VERSION));
                 LBL_RESTART_APP_NEW_VERSION = GetTranslation(nameof(LBL_RESTART_APP_NEW_VERSION));
+                LBL_VERSION_COMPARE = GetTranslation(nameof(LBL_VERSION_COMPARE));
+                MENU_CHECK_NEW_VERSION = GetTranslation(nameof(MENU_CHECK_NEW_VERSION));
+                ERROR_CHECK_NEW_VERSION = GetTranslation(nameof(ERROR_CHECK_NEW_VERSION));
             }
             ABOUT = ABOUT.Replace(@"\r\n", Environment.NewLine);
             ABOUT = ABOUT.Replace(@"\r", Environment.NewLine);

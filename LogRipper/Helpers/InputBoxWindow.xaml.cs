@@ -24,20 +24,24 @@ namespace LogRipper.Helpers
                 Height = Properties.Settings.Default.InputBoxSizeY;
         }
 
-        public void ShowModal(string title, string question, string defaultValue = "")
+        private void CommonInit(string title, string question)
         {
             Title = title;
-            TxtQuestion.Text = question;
+            TxtQuestion.Text = question.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine);
+        }
+
+        internal void ShowModal(string title, string question, string defaultValue = "")
+        {
+            CommonInit(title, question);
             TxtUserEdit.ItemsSource = new List<string>() { defaultValue };
             TxtUserEdit.Text = defaultValue;
             TxtUserEdit.SelectedIndex = 0;
             ShowDialog();
         }
 
-        public void ShowModal(string title, string question, string[] defaultValue)
+        internal void ShowModal(string title, string question, string[] defaultValue)
         {
-            Title = title;
-            TxtQuestion.Text = question;
+            CommonInit(title, question);
             TxtUserEdit.ItemsSource = defaultValue;
             TxtUserEdit.SelectedIndex = 0;
             ShowDialog();

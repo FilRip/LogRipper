@@ -13,6 +13,7 @@ using LogRipper.Constants;
 using LogRipper.Controls;
 using LogRipper.Helpers;
 using LogRipper.Models;
+using LogRipper.Windows;
 
 namespace LogRipper.ViewModels
 {

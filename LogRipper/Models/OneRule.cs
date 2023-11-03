@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using LogRipper.Constants;
 using LogRipper.Controls;
 using LogRipper.Helpers;
+using LogRipper.Windows;
 
 namespace LogRipper.Models
 {

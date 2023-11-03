@@ -12,6 +12,7 @@ using LogRipper.Constants;
 using LogRipper.Controls;
 using LogRipper.Exceptions;
 using LogRipper.Models;
+using LogRipper.Windows;
 
 namespace LogRipper.Helpers
 {

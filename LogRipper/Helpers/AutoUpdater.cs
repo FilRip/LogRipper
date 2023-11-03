@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -10,6 +11,8 @@ using System.Windows;
 using LogRipper.Constants;
 using LogRipper.Exceptions;
 
+using Windows.Media.Protection.PlayReady;
+
 namespace LogRipper.Helpers
 {
     internal static class AutoUpdater
@@ -18,52 +21,85 @@ namespace LogRipper.Helpers
         private const string UpdateExtension = ".update";
         private static readonly string AutoUpdateDirectory = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), UpdateFolder);
 
+        internal static string LatestVersion(bool beta)
+        {
+            WebClient client = null;
+            string result = null;
+            try
+            {
+                client = new WebClient();
+                string readme = client.DownloadString(new Uri($"https://github.com/FilRip/LogRipper/blob/master/README.md"));
+                if (!string.IsNullOrWhiteSpace(readme))
+                {
+                    string search = $"Latest {(beta ? "beta " : "")}version=";
+                    int pos = readme.IndexOf(search);
+                    if (pos > -1)
+                    {
+                        int lastPos = readme.IndexOf('\\', pos + search.Length);
+                        StringBuilder sb = new(readme.Substring(pos + search.Length, lastPos - pos - search.Length));
+                        while (sb.ToString().Count(c => c == '.') < 3)
+                        {
+                            sb.Append(".0");
+                        }
+                        result = sb.ToString();
+                    }
+                }
+            }
+            catch (Exception) { /* Ignore errors */ }
+            finally
+            {
+                client?.Dispose();
+            }
+            return result;
+        }
+
+        internal static void InstallNewVersion(string version)
+        {
+            WebClient client = null;
+            try
+            {
+                string destFile = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "LogRipper.zip");
+                if (File.Exists(destFile))
+                    File.Delete(destFile);
+                client = new WebClient();
+                client.DownloadFile(new Uri($"https://github.com/FilRip/LogRipper/releases/download/v{version}/LogRipper.zip"), destFile);
+                if (!File.Exists(destFile) || new FileInfo(destFile).Length == 0)
+                    throw new LogRipperException(Locale.LBL_ERROR_DOWNLOAD_NEW_VERSION);
+                if (!ZipManager.Extract(AutoUpdateDirectory, destFile))
+                    throw new LogRipperException(Locale.LBL_ERROR_EXTRACT_NEW_VERSION);
+                File.Delete(destFile);
+                if (!UpdateFile(AutoUpdateDirectory))
+                    throw new LogRipperException(Locale.LBL_ERROR_INSTALL_NEW_VERSION);
+                RemoveAllAutoUpdateDir(AutoUpdateDirectory);
+                if (WpfMessageBox.ShowModal(Locale.LBL_RESTART_APP_NEW_VERSION, "LogRipper", MessageBoxButton.YesNo))
+                    Restart();
+            }
+            catch { /* Ignore errors */ }
+            finally
+            {
+                client?.Dispose();
+            }
+        }
+
         internal static void SearchNewVersion(bool beta)
         {
             Task.Run(() =>
             {
                 CleanUpUpdate();
-                WebClient client = null;
                 try
                 {
-                    string readme;
-                    client = new WebClient();
-                    readme = client.DownloadString(new Uri($"https://github.com/FilRip/LogRipper/blob/master/README.md"));
-                    if (!string.IsNullOrWhiteSpace(readme))
+                    string version = LatestVersion(beta);
+                    if (!string.IsNullOrWhiteSpace(version))
                     {
-                        string search = $"Latest {(beta ? "beta " : "")}version=";
-                        int pos = readme.IndexOf(search);
-                        if (pos > -1)
+                        Version latestVersion = new(version);
+                        if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0 &&
+                            WpfMessageBox.ShowModal(string.Format(Locale.LBL_NEW_VERSION, latestVersion.ToString()), "LogRipper", MessageBoxButton.YesNo))
                         {
-                            int lastPos = readme.IndexOf('\\', pos + search.Length);
-                            string version = readme.Substring(pos + search.Length, lastPos - pos - search.Length);
-                            Version latestVersion = new(version);
-                            if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0 &&
-                                WpfMessageBox.ShowModal(string.Format(Locale.LBL_NEW_VERSION, version), "LogRipper", MessageBoxButton.YesNo))
-                            {
-                                string destFile = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "LogRipper.zip");
-                                if (File.Exists(destFile))
-                                    File.Delete(destFile);
-                                client.DownloadFile(new Uri($"https://github.com/FilRip/LogRipper/releases/download/v{version}/LogRipper.zip"), destFile);
-                                if (!File.Exists(destFile) || new FileInfo(destFile).Length == 0)
-                                    throw new LogRipperException(Locale.LBL_ERROR_DOWNLOAD_NEW_VERSION);
-                                if (!ZipManager.Extract(AutoUpdateDirectory, destFile))
-                                    throw new LogRipperException(Locale.LBL_ERROR_EXTRACT_NEW_VERSION);
-                                File.Delete(destFile);
-                                if (!UpdateFile(AutoUpdateDirectory))
-                                    throw new LogRipperException(Locale.LBL_ERROR_INSTALL_NEW_VERSION);
-                                RemoveAllAutoUpdateDir(AutoUpdateDirectory);
-                                if (WpfMessageBox.ShowModal(Locale.LBL_RESTART_APP_NEW_VERSION, "LogRipper", MessageBoxButton.YesNo))
-                                    Restart();
-                            }
+                            InstallNewVersion(version);
                         }
                     }
                 }
                 catch (Exception) { /* Ignore errors */ }
-                finally
-                {
-                    client?.Dispose();
-                }
             });
         }
 
