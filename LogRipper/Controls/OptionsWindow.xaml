@@ -1,0 +1,123 @@
+﻿<Window x:Class="LogRipper.Controls.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:constants="clr-namespace:LogRipper.Constants"
+        xmlns:viewmodels="clr-namespace:LogRipper.ViewModels"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        ui:ThemeManager.IsThemeAware="True"
+        mc:Ignorable="d"
+        Title="{x:Static constants:Locale.TITLE_SETTINGS}" Height="720" Width="500" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <viewmodels:OptionsWindowViewModel/>
+    </Window.DataContext>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static constants:Locale.OPTION_LANGUAGE}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ListLanguages}" SelectedItem="{Binding SelectedLanguage}" Padding="0"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static constants:Locale.LBL_ASK_DATEFORMAT}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentDateFormat}"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.OPTION_THEME}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <ListBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding ListThemes}" SelectedItem="{Binding SelectedTheme}"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_TEXT_COLOR}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <xctk:ColorPicker Grid.Row="6" Grid.Column="1" SelectedColor="{Binding DefaultForegroundColor}"/>
+
+        <TextBlock Grid.Row="8" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_BACK_COLOR}" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+        <xctk:ColorPicker Grid.Row="8" Grid.Column="1" SelectedColor="{Binding DefaultBackgroundColor}"/>
+        <TextBlock Grid.Row="10" Grid.Column="1" Text="{x:Static constants:Locale.PREVIEW_COLOR}" HorizontalAlignment="Left" Background="{Binding BackColorBrush}" Foreground="{Binding ForeColorBrush}"/>
+
+        <TextBlock Grid.Row="12" Grid.Column="0" Text="{x:Static constants:Locale.OPTIONS_DEFAULT_RULES}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="12" Grid.Column="1" Text="{Binding RulesFilename}" PreviewMouseUp="TextBox_PreviewMouseUp"/>
+
+        <TextBlock Grid.Row="14" Grid.Column="0" Text="{x:Static constants:Locale.OPTIONS_FONT_SIZE}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <ui:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding DefaultFontSize}" SpinButtonPlacementMode="Inline" SmallChange="1" LargeChange="10" Minimum="1"/>
+
+        <TextBlock Grid.Row="16" Grid.Column="0" Text="{x:Static constants:Locale.OPTIONS_SPACE_SIZE}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <ui:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding DefaultSpaceSize}" Minimum="2" SpinButtonPlacementMode="Inline" SmallChange="1" LargeChange="10"/>
+
+        <TextBlock Grid.Row="18" Grid.Column="0" Text="{x:Static constants:Locale.SETTINGS_WRAP}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <CheckBox Grid.Row="18" Grid.Column="1" IsChecked="{Binding WrapLines}"/>
+
+        <CheckBox Grid.Row="20" Grid.Column="1" IsChecked="{Binding AutoShowMargin}" Content="{x:Static constants:Locale.SETTINGS_AUTO_SHOW_MARGIN}"/>
+
+        <CheckBox Grid.Row="22" Grid.Column="1" IsChecked="{Binding AutoShowToolbar}" Content="{x:Static constants:Locale.SETTINGS_AUTO_SHOW_TOOLBAR}"/>
+
+        <CheckBox Grid.Row="24" Grid.Column="1" IsChecked="{Binding AutoShowDateFilter}" Content="{x:Static constants:Locale.SETTINGS_AUTO_SHOW_DATE_FILTER}"/>
+
+        <Button Grid.Row="26" Grid.ColumnSpan="2" Content="{x:Static constants:Locale.SETTINGS_ADD_EXPLORER}" Command="{Binding CmdAddRegistry}" IsEnabled="{Binding NotPresentInRegistry}"/>
+        <Button Grid.Row="28" Grid.ColumnSpan="2" Content="{x:Static constants:Locale.SETTINGS_REMOVE_EXPLORER}" Command="{Binding CmdRemoveRegistry}" IsEnabled="{Binding PresentInRegistry}"/>
+
+        <Grid Grid.Row="30" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding CmdResetPositionWindow}" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Locale.RESET_WINDOW_POS}" HorizontalAlignment="Center" Margin="0 0 5 0"/>
+                    <Image Source="{x:Static constants:Icons.WindowImage}" Width="16" Height="16"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="3" Click="BtnCancel_Click" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Locale.BTN_CANCEL}" HorizontalAlignment="Center" Margin="0 0 5 0" Name="BtnCancel"/>
+                    <Image Source="{x:Static constants:Icons.CancelImage}" Width="16" Height="16"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="5" Command="{Binding CmdSaveAndClose}" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Locale.BTN_OK}" HorizontalAlignment="Center" Margin="0 0 5 0"/>
+                    <Image Source="{x:Static constants:Icons.SaveImage}" Width="16" Height="16"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+    </Grid>
+</Window>

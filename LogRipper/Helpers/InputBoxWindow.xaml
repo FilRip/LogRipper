@@ -1,0 +1,30 @@
+﻿<Window x:Class="LogRipper.Helpers.InputBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:constants="clr-namespace:LogRipper.Constants"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        ui:ThemeManager.IsThemeAware="True"
+        mc:Ignorable="d"
+        Closing="Window_Closing"
+        Height="160" Width="400" Activated="Window_Activated" ShowActivated="True">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Name="TxtQuestion"/>
+        <ComboBox Grid.Row="1" Name="TxtUserEdit" IsEditable="True" IsEnabled="True" Focusable="True" IsTabStop="True" TabIndex="0" PreviewKeyUp="TxtUserEdit_PreviewKeyUp"/>
+        <CheckBox Grid.Row="2" Name="ChkCaseSensitive" Content="{x:Static constants:Locale.LBL_SEARCH_CASE_SENSITIVE}" Visibility="Visible" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="True" TabIndex="1"/>
+        <Button Grid.Row="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BtnOk_Click" HorizontalAlignment="Center" TabIndex="2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Go" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                <Image Source="{x:Static constants:Icons.SearchImage}" Height="16" Width="16"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Window>
