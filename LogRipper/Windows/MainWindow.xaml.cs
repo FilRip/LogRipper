@@ -221,7 +221,14 @@ namespace LogRipper.Windows
         private void TextBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (sender is TextBox textbox)
+            {
+                if (!string.IsNullOrWhiteSpace(textbox.SelectedText) &&
+                    textbox.SelectedText[textbox.SelectedText.Length - 1] == ' ')
+
+                    textbox.SelectionLength--;
+
                 MyDataContext.SetTextSelected(textbox.SelectedText);
+            }
         }
     }
 }
