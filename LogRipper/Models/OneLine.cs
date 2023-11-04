@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
-using LogRipper.Controls;
 using LogRipper.Helpers;
 using LogRipper.Windows;
 
@@ -25,6 +24,9 @@ namespace LogRipper.Models
 
         [XmlElement()]
         public int NumLine { get; set; }
+
+        [XmlElement()]
+        public string GroupLines { get; set; }
 
         [XmlIgnore()]
         public SolidColorBrush DefaultBackground
@@ -69,6 +71,8 @@ namespace LogRipper.Models
         {
             get
             {
+                if (!string.IsNullOrWhiteSpace(GroupLines))
+                    return Visibility.Collapsed;
                 bool result = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesHideLine(Line, Date);
                 return result ? Visibility.Collapsed : Visibility.Visible;
             }

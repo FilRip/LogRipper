@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Language" Type="System.String" Scope="User">
-      <Value Profile="(Default)">fr-FR</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DefaultDateFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">yyyy-MM-dd HH:mm:ss,fff</Value>

@@ -7,13 +7,23 @@ namespace LogRipper.Helpers
     {
         public static bool ShowModal(string text, string title, MessageBoxButton boutons = MessageBoxButton.OK, Window parentWindow = null)
         {
-            text = text.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine);
+            text = text.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine).Replace(@"\n", Environment.NewLine);
             parentWindow ??= Application.Current.GetCurrentWindow();
             MessageBoxResult ret = MessageBoxResult.None;
-            parentWindow.Dispatcher.Invoke(() =>
+            if (parentWindow != null)
             {
-                ret = MessageBox.Show(parentWindow, text, title, boutons);
-            });
+                parentWindow.Dispatcher.Invoke(() =>
+                {
+                    ret = MessageBox.Show(parentWindow, text, title, boutons);
+                });
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ret = MessageBox.Show(text, title, boutons);
+                });
+            }
             return (ret == MessageBoxResult.OK || ret == MessageBoxResult.Yes);
         }
     }

@@ -413,17 +413,19 @@
                 <ui:ProgressRing Grid.Column="6" IsActive="{Binding ActiveProgressRing}" Height="32" Width="32" HorizontalAlignment="Right" VerticalAlignment="Top"/>
             </Grid>
             <DataGrid Grid.Row="1" BorderThickness="0" ItemsSource="{Binding FilteredListLines}" Name="ListBoxLines" SelectionMode="Extended" GridLinesVisibility="Vertical"
-                      HeadersVisibility="None" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="ListBoxLines_ScrollChanged" SelectedItem="{Binding SelectedLine}" SelectionChanged="ListBoxLines_SelectionChanged"
+                      HeadersVisibility="None" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="ListBoxLines_ScrollChanged" SelectedItem="{Binding SelectedLine}" SelectionChanged="ListBoxLines_SelectionChanged" SelectedIndex="{Binding RowIndexSelected}"
                       CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" RowHeight="{x:Static constants:Values.RowHeight}" MinRowHeight="1">
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Setter Property="Visibility" Value="{Binding HideLine}"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{Binding Foreground}"/>
-                                <Setter Property="Foreground" Value="{Binding Background}"/>
-                            </Trigger>
-                        </Style.Triggers>
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="{x:Static constants:Locale.HIDE_LINE_BEFORE}" Command="{Binding DataContext.CmdHideLineBefore, Source={StaticResource ParentDataContext}}"/>
+                                    <MenuItem Header="{x:Static constants:Locale.HIDE_LINE_AFTER}" Command="{Binding DataContext.CmdHideLineAfter, Source={StaticResource ParentDataContext}}"/>
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>

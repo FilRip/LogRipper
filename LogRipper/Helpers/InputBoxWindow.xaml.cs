@@ -27,7 +27,7 @@ namespace LogRipper.Helpers
         private void CommonInit(string title, string question)
         {
             Title = title;
-            TxtQuestion.Text = question.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine);
+            TxtQuestion.Text = question.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine).Replace(@"\n", Environment.NewLine);
         }
 
         internal void ShowModal(string title, string question, string defaultValue = "")

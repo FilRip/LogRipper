@@ -36,6 +36,7 @@ namespace LogRipper.ViewModels
         private readonly ICommand _showNumLine, _showFileName, _cmdShowSearchResult, _cmdExportToHtml, _cmdExit, _cmdCopySelectedItems, _cmdCheckUpdate;
         private readonly ICommand _cmdSearch, _cmdGotoLine, _cmdMergeFile, _cmdAutoReload, _cmdAutoScrollToEnd, _cmdAutoFollowInMargin;
         private readonly ICommand _cmdOptions, _cmdShowMargin, _cmdShowToolbar, _cmdSaveState, _cmdLoadState, _cmdShowAbout, _cmdSaveSearchResult;
+        private readonly ICommand _cmdHideLineBefore, _cmdHideLineAfter;
         private bool _encodageDefault, _encodageAscii, _encodageUtf7, _encodageUtf8, _encodageUtf32, _encodageUnicode, _showFilterByDate, _autoFollowInMargin;
         private bool _currentShowNumLine, _currentShowFileName, _showSearchResult, _enableAutoReload, _autoScrollToEnd, _showMargin, _showToolbar, _dateFilter;
         private bool _hideAllOthersLines, _activeProgressRing;
@@ -100,6 +101,8 @@ namespace LogRipper.ViewModels
             _cmdSaveSearchResult = new RelayCommand((param) => SaveSearchResult());
             _cmdMergeRules = new RelayCommand((param) => MergeRules());
             _cmdCheckUpdate = new RelayCommand((param) => CheckForUpdate());
+            _cmdHideLineBefore = new RelayCommand((param) => HideLineBefore());
+            _cmdHideLineAfter = new RelayCommand((param) => HideLineAfter());
 
             ResetMinMaxDate();
             StartDateTime = DateTime.MinValue;
@@ -120,6 +123,16 @@ namespace LogRipper.ViewModels
         #endregion
 
         #region Properties
+
+        public ICommand CmdHideLineBefore
+        {
+            get { return _cmdHideLineBefore; }
+        }
+
+        public ICommand CmdHideLineAfter
+        {
+            get { return _cmdHideLineAfter; }
+        }
 
         public ICommand CmdCheckUpdate
         {
@@ -411,6 +424,8 @@ namespace LogRipper.ViewModels
             }
         }
 
+        public int RowIndexSelected { get; set; }
+
         public OneLine SelectedLine
         {
             get { return _currentLine; }
@@ -701,7 +716,9 @@ namespace LogRipper.ViewModels
                 string ret = _search;
                 if (_currentSearchMode == ECurrentSearchMode.BY_RULES)
                     ret = _listSearchRules[0].ToString();
-                return $"{ret} " + string.Format(Locale.LBL_RESULT, NbMatchSearch);
+                if (!string.IsNullOrWhiteSpace(Locale.LBL_RESULT))
+                    return $"{ret} " + string.Format(Locale.LBL_RESULT, NbMatchSearch);
+                else return "";
             }
         }
 
@@ -1272,6 +1289,24 @@ namespace LogRipper.ViewModels
         private void AutoFollowMargin()
         {
             AutoFollowInMargin = !AutoFollowInMargin;
+        }
+
+        private void HideLineBefore()
+        {
+            if (RowIndexSelected <= 0)
+                return;
+            for (int i = 0; i < RowIndexSelected; i++)
+                ListLines[i].GroupLines = "HideIt";
+            RefreshListLines();
+        }
+
+        private void HideLineAfter()
+        {
+            if (RowIndexSelected + 1 >= ListLines.Count)
+                return;
+            for (int i = RowIndexSelected + 1; i < ListLines.Count; i++)
+                ListLines[i].GroupLines = "HideIt";
+            RefreshListLines();
         }
 
         #endregion

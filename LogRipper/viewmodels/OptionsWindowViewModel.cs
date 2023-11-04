@@ -30,10 +30,7 @@ namespace LogRipper.ViewModels
 
         public OptionsWindowViewModel() : base()
         {
-            _listLanguages = new List<string>()
-            {
-                "English",
-            };
+            _listLanguages = new List<string>();
             foreach (string lang in Directory.GetFiles(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Languages"), "*.ini"))
                 _listLanguages.Add(Path.GetFileNameWithoutExtension(lang));
             if (_listLanguages.Contains(Properties.Settings.Default.Language))
