@@ -25,6 +25,8 @@
             <Style TargetType="TextBox" x:Key="MyTextBoxStyle">
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="BorderBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
+                <Setter Property="SelectionBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
+                <Setter Property="SelectionTextBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
                 <Setter Property="Margin" Value="9 -1 0 0"/>
                 <EventSetter Event="SelectionChanged" Handler="TextBox_SelectionChanged"/>
             </Style>
