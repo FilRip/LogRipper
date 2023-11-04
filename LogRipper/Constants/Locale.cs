@@ -158,6 +158,7 @@ namespace LogRipper.Constants
         public static string LBL_VERSION_COMPARE { get; set; } = "Your version : {0}\r\nAvailable version : {1}";
         public static string MENU_CHECK_NEW_VERSION { get; set; } = "Check for update now";
         public static string ERROR_CHECK_NEW_VERSION { get; set; } = "Unable to check if new version is available\r\nBe sure you're connected to Internet";
+        public static string NO_DATEFORMAT_IN_FILE { get; set; } = "You have not yet set a date format for the current file";
         #endregion
 
         #region Methods
@@ -310,6 +311,7 @@ namespace LogRipper.Constants
                 LBL_VERSION_COMPARE = GetTranslation(nameof(LBL_VERSION_COMPARE));
                 MENU_CHECK_NEW_VERSION = GetTranslation(nameof(MENU_CHECK_NEW_VERSION));
                 ERROR_CHECK_NEW_VERSION = GetTranslation(nameof(ERROR_CHECK_NEW_VERSION));
+                NO_DATEFORMAT_IN_FILE = GetTranslation(nameof(NO_DATEFORMAT_IN_FILE));
             }
             ABOUT = ABOUT.Replace(@"\r\n", Environment.NewLine);
             ABOUT = ABOUT.Replace(@"\r", Environment.NewLine);

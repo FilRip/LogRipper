@@ -101,8 +101,7 @@ namespace LogRipper.ViewModels
             _cmdMergeRules = new RelayCommand((param) => MergeRules());
             _cmdCheckUpdate = new RelayCommand((param) => CheckForUpdate());
 
-            _minDate = DateTime.MinValue;
-            _maxDate = DateTime.MaxValue;
+            ResetMinMaxDate();
             StartDateTime = DateTime.MinValue;
             EndDateTime = DateTime.MaxValue;
 
@@ -256,6 +255,14 @@ namespace LogRipper.ViewModels
             get { return _maxDate; }
         }
 
+        private void ResetMinMaxDate()
+        {
+            _minDate = DateTime.MinValue;
+            _maxDate = DateTime.MaxValue;
+            OnPropertyChanged(nameof(MinDate));
+            OnPropertyChanged(nameof(MaxDate));
+        }
+
         public bool FilterByDate
         {
             get { return _dateFilter; }
@@ -263,6 +270,12 @@ namespace LogRipper.ViewModels
             {
                 if (_dateFilter != value)
                 {
+                    if (_listFiles?.Count > 0 && string.IsNullOrWhiteSpace(_listFiles[0].DateFormat))
+                    {
+                        WpfMessageBox.ShowModal(Locale.NO_DATEFORMAT_IN_FILE, Locale.TITLE_ERROR);
+                        if (!_listFiles[0].EditFile())
+                            return;
+                    }
                     _dateFilter = value;
                     OnPropertyChanged();
                     try
@@ -275,12 +288,13 @@ namespace LogRipper.ViewModels
                         _startDate = DateTime.MinValue;
                         _endDate = DateTime.MaxValue;
                     }
+                    ResetMinMaxDate();
+                    OnPropertyChanged(nameof(StartDateTime));
+                    OnPropertyChanged(nameof(EndDateTime));
                     _minDate = _startDate;
                     _maxDate = _endDate;
                     OnPropertyChanged(nameof(MinDate));
                     OnPropertyChanged(nameof(MaxDate));
-                    OnPropertyChanged(nameof(StartDateTime));
-                    OnPropertyChanged(nameof(EndDateTime));
                     RefreshListLines();
                 }
             }

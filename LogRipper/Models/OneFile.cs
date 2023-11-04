@@ -250,7 +250,7 @@ namespace LogRipper.Models
             }
         }
 
-        private void EditFile()
+        internal bool EditFile()
         {
             FileWindow win = new()
             {
@@ -303,7 +303,9 @@ namespace LogRipper.Models
                 Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListLines();
                 Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
                 Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ActiveProgressRing = false;
+                return true;
             }
+            return false;
         }
 
         #endregion

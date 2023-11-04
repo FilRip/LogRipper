@@ -4,8 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 using LogRipper.Constants;
 using LogRipper.Helpers;
@@ -142,7 +144,7 @@ namespace LogRipper.Windows
                     MyDataContext.RefreshListLines();
                 }
                 MyDataContext.ActiveProgressRing = false;
-            }, System.Windows.Threading.DispatcherPriority.Background);
+            }, DispatcherPriority.Background);
         }
 
         internal void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -171,7 +173,7 @@ namespace LogRipper.Windows
                             ColumnLines.MaxWidth = double.PositiveInfinity;
 
                     }
-                }, System.Windows.Threading.DispatcherPriority.Background);
+                }, DispatcherPriority.Background);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -190,19 +192,19 @@ namespace LogRipper.Windows
             AutoUpdater.SearchNewVersion(Properties.Settings.Default.beta);
         }
 
-        private void TxtFile_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TxtFile_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             OneFile file = (OneFile)((TextBlock)sender).DataContext;
             file.Active = !file.Active;
         }
 
-        private void TxtRule_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TxtRule_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             OneRule rule = (OneRule)((TextBlock)sender).DataContext;
             rule.Active = !rule.Active;
         }
 
-        private void TxtCategory_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TxtCategory_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             OneCategory category = (OneCategory)((TextBlock)sender).DataContext;
             category.Active = !category.Active;
