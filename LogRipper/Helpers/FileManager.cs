@@ -44,8 +44,7 @@ namespace LogRipper.Helpers
             foreach (OneFile file in listFiles)
             {
                 _listFiles.Add(file.FileName, file);
-                if (file.AutoReload)
-                    file.CreateFileWatcher();
+                file.CommonInit();
             }
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListFiles();
         }

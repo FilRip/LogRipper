@@ -74,7 +74,7 @@ namespace LogRipper.Models
                 XmlSerializer serializer = new(typeof(OneState));
                 if (File.Exists(filename))
                     File.Delete(filename);
-                if (Path.GetExtension(filename).Trim().ToLower() == "state")
+                if (Path.GetExtension(filename).Trim().ToLower() == ".state")
                 {
                     FileStream fs = new(filename, FileMode.CreateNew, FileAccess.Write);
                     serializer.Serialize(fs, state);
@@ -113,7 +113,7 @@ namespace LogRipper.Models
                     XmlSerializer serializer = new(typeof(OneState));
                     XmlReader stream;
                     Stream dataOut;
-                    if (Path.GetExtension(dialog.FileName).Trim().ToLower() == "state")
+                    if (Path.GetExtension(dialog.FileName).Trim().ToLower() == ".state")
                     {
                         dataOut = new FileStream(filename, FileMode.Open, FileAccess.Read);
                     }
@@ -126,15 +126,21 @@ namespace LogRipper.Models
                     newState = (OneState)serializer.Deserialize(stream);
                     FileManager.SetNewListFiles(newState.ListFiles);
                     win.MyDataContext.SelectedLine = null;
-                    win.MyDataContext.ListLines = new ObservableCollection<OneLine>(newState.ListLines);
-                    win.MyDataContext.ListRules.SetRules(new ObservableCollection<OneRule>(newState.ListRules));
-                    win.MyDataContext.ListCategory = newState.ListCategory;
+                    if (newState.ListLines != null)
+                    {
+                        win.MyDataContext.ListLines = new ObservableCollection<OneLine>(newState.ListLines);
+                    }
+                    if (newState.ListRules != null)
+                    {
+                        win.MyDataContext.ListRules.SetRules(new ObservableCollection<OneRule>(newState.ListRules));
+                        win.MyDataContext.ListCategory = newState.ListCategory;
+                        win.MyDataContext.UpdateCategory();
+                    }
                     win.MyDataContext.FilterByDate = newState.FilterByDate;
                     win.MyDataContext.StartDateTime = newState.StartDate;
                     win.MyDataContext.EndDateTime = newState.EndDate;
                     win.MyDataContext.HideAllOthersLines = newState.HideAllOthersLines;
                     win.MyDataContext.RefreshVisibleLines();
-                    win.MyDataContext.UpdateCategory();
                     win.ListBoxLines.SelectedIndex = newState.CurrentNumLine;
                     win.ScrollToSelected();
                     stream.Close();

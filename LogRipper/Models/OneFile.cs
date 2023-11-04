@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -16,6 +17,8 @@ using LogRipper.Helpers;
 using LogRipper.ViewModels;
 using LogRipper.Windows;
 
+using Windows.Storage.Streams;
+
 namespace LogRipper.Models
 {
     [XmlRoot()]
@@ -23,11 +26,11 @@ namespace LogRipper.Models
     {
         private FileSystemWatcher _watcher;
         private bool disposedValue, _active;
-        private int _lastOffset;
-        private readonly object _lockFileAccess;
+        private readonly object _lockFileAccess = new();
         private Encoding _currentEncoding;
-        private readonly ICommand _cmdReloadFile, _cmdRemoveFile, _cmdEditFile;
+        private ICommand _cmdReloadFile, _cmdRemoveFile, _cmdEditFile;
 
+        // For XmlSerialization
         public OneFile() { }
 
         internal OneFile(string filepath, int offset, Encoding currentEncoding, bool activeAutoReload) : this()
@@ -36,12 +39,39 @@ namespace LogRipper.Models
             AutoReload = activeAutoReload;
             FullPath = filepath;
             FileName = Path.GetFileNameWithoutExtension(filepath);
+            LastOffset = offset;
             _currentEncoding = currentEncoding;
-            _lockFileAccess = new object();
-            _lastOffset = offset;
+            SetEncodingName();
+            CommonInit();
+        }
+
+        private void SetEncodingName()
+        {
+            EncoderName = _currentEncoding switch
+            {
+                ASCIIEncoding => "ASCII",
+                UTF7Encoding => "UTF7",
+                UTF8Encoding => "UTF8",
+                UTF32Encoding => "UTF32",
+                System.Text.UnicodeEncoding => "Unicode",
+                _ => "Default",
+            };
+        }
+
+        internal void CommonInit()
+        {
             _cmdReloadFile = new RelayCommand((param) => ReloadFile());
             _cmdRemoveFile = new RelayCommand((param) => RemoveFile());
             _cmdEditFile = new RelayCommand((param) => EditFile());
+            _currentEncoding ??= EncoderName switch
+                {
+                    "ASCII" => Encoding.ASCII,
+                    "UTF7" => Encoding.UTF7,
+                    "UTF8" => Encoding.UTF8,
+                    "UTF32" => Encoding.UTF32,
+                    "Unicode" => Encoding.Unicode,
+                    _ => Encoding.Default,
+                };
             CreateFileWatcher();
         }
 
@@ -61,7 +91,7 @@ namespace LogRipper.Models
         internal void ActiveAutoReload()
         {
             AutoReload = !AutoReload;
-            if (AutoReload && new FileInfo(FullPath).Length != _lastOffset)
+            if (AutoReload && new FileInfo(FullPath).Length != LastOffset)
                 Watcher_Changed(null, null);
         }
 
@@ -100,13 +130,13 @@ namespace LogRipper.Models
                         try
                         {
                             fs = File.Open(FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-                            fs.Position = _lastOffset;
+                            fs.Position = LastOffset;
                             // TODO : If file smaller than before
-                            if (newLength < _lastOffset)
+                            if (newLength < LastOffset)
                                 return;
-                            byte[] donnees = new byte[newLength - _lastOffset];
-                            int nbRead = fs.Read(donnees, 0, newLength - _lastOffset);
-                            _lastOffset += nbRead;
+                            byte[] donnees = new byte[newLength - LastOffset];
+                            int nbRead = fs.Read(donnees, 0, newLength - LastOffset);
+                            LastOffset += nbRead;
                             string[] newString = _currentEncoding.GetString(donnees).Split((char)13, (char)10);
                             int lastNumLine = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Max(l => l.NumLine);
                             foreach (string text in newString)
@@ -164,6 +194,9 @@ namespace LogRipper.Models
         {
             get { return _cmdEditFile; }
         }
+
+        [XmlElement()]
+        public int LastOffset { get; set; }
 
         [XmlElement()]
         public string FileName { get; set; }
@@ -225,7 +258,7 @@ namespace LogRipper.Models
                 List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
                 listLines.RemoveAll(l => l.FileName == FileName);
                 ObservableCollection<OneLine> listNewLines = FileManager.LoadFile(FullPath, _currentEncoding, DefaultBackground, DefaultForeground, createFile: false);
-                _lastOffset = (int)new FileInfo(FullPath).Length;
+                LastOffset = (int)new FileInfo(FullPath).Length;
                 if (!string.IsNullOrWhiteSpace(DateFormat))
                     FileManager.ComputeDate(listNewLines, DateFormat);
                 mainWindowViewModel.ListLines = new ObservableCollection<OneLine>(listLines.Concat(listNewLines).OrderBy(l => l.Date));
@@ -250,6 +283,9 @@ namespace LogRipper.Models
             }
         }
 
+        [XmlElement()]
+        public string EncoderName { get; set; }
+
         internal bool EditFile()
         {
             FileWindow win = new()
@@ -273,6 +309,7 @@ namespace LogRipper.Models
                 win.MyDataContext.CurrentEncoder = Locale.MENU_ENC_UTF32.Replace("_", "");
             else if (_currentEncoding == Encoding.Unicode)
                 win.MyDataContext.CurrentEncoder = Locale.MENU_ENC_UNICODE.Replace("_", "");
+            SetEncodingName();
             string oldDateFormat = DateFormat;
             if (win.ShowDialog() == true)
             {
@@ -298,11 +335,12 @@ namespace LogRipper.Models
                 ObservableCollection<OneLine> lines = new(Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FileName == FileName));
                 if (!string.IsNullOrWhiteSpace(DateFormat) && oldDateFormat != DateFormat)
                     FileManager.ComputeDate(lines, DateFormat);
-                Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
-                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListFiles();
-                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListLines();
-                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
-                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ActiveProgressRing = false;
+                MainWindow mainWindow = Application.Current.GetCurrentWindow<MainWindow>();
+                mainWindow.RefreshMargin();
+                mainWindow.MyDataContext.RefreshListFiles();
+                mainWindow.MyDataContext.RefreshListLines();
+                mainWindow.MyDataContext.RefreshVisibleLines();
+                mainWindow.MyDataContext.ActiveProgressRing = false;
                 return true;
             }
             return false;
