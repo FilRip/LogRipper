@@ -172,7 +172,7 @@ namespace LogRipper.Constants
             Language = Properties.Settings.Default.Language;
             string filename = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Languages", Language + ".ini");
             if (!File.Exists(filename))
-                filename = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Languages", "English.ini");
+                filename = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Languages", "en-us.ini");
             if (File.Exists(filename))
             {
                 _languageFile = File.ReadAllLines(filename);

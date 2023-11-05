@@ -11,8 +11,6 @@ using System.Windows;
 using LogRipper.Constants;
 using LogRipper.Exceptions;
 
-using Windows.Media.Protection.PlayReady;
-
 namespace LogRipper.Helpers
 {
     internal static class AutoUpdater

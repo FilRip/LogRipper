@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
 using LogRipper.Constants;
-using LogRipper.Controls;
 using LogRipper.Helpers;
 using LogRipper.Windows;
 
@@ -16,8 +16,9 @@ namespace LogRipper.ViewModels
 {
     internal class OptionsWindowViewModel : ViewModelBase
     {
-        private readonly List<string> _listLanguages, _listThemes;
-        private string _selectedLanguage;
+        private readonly List<OneLanguage> _listLanguages;
+        private readonly List<string> _listThemes;
+        private OneLanguage _selectedLanguage;
         private string _currentDateFormat;
         private string _selectedTheme;
         private readonly ICommand _cmdResetPositionWindow, _cmdSave, _cmdAddRegistry, _cmdRemoveRegistry, _cmdRulesFilename;
@@ -30,13 +31,30 @@ namespace LogRipper.ViewModels
 
         public OptionsWindowViewModel() : base()
         {
-            _listLanguages = new List<string>();
+            OneLanguage _default = null;
+            OneLanguage _current = null;
+            _listLanguages = new List<OneLanguage>();
             foreach (string lang in Directory.GetFiles(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Languages"), "*.ini"))
-                _listLanguages.Add(Path.GetFileNameWithoutExtension(lang));
-            if (_listLanguages.Contains(Properties.Settings.Default.Language))
-                SelectedLanguage = Properties.Settings.Default.Language;
-            else
-                SelectedLanguage = "English";
+            {
+                CultureInfo ci = CultureInfo.GetCultureInfo(Path.GetFileNameWithoutExtension(lang));
+                if (ci != null)
+                {
+                    _listLanguages.Add(new OneLanguage()
+                    {
+                        Language = ci.DisplayName,
+                        LanguageCode = ci.Name,
+                    });
+                    if (ci.IetfLanguageTag == "en-us")
+                        _default = _listLanguages[_listLanguages.Count - 1];
+                    if (ci.IetfLanguageTag == Properties.Settings.Default.Language)
+                        _current = _listLanguages[_listLanguages.Count - 1];
+                }
+            }
+            OnPropertyChanged(nameof(ListLanguages));
+            if (_current != null)
+                SelectedLanguage = _current;
+            else if (_default != null)
+                SelectedLanguage = _default;
             _listThemes = new List<string>()
             {
                 "Windows",
@@ -157,12 +175,12 @@ namespace LogRipper.ViewModels
             }
         }
 
-        public List<string> ListLanguages
+        public List<OneLanguage> ListLanguages
         {
             get { return _listLanguages; }
         }
 
-        public string SelectedLanguage
+        public OneLanguage SelectedLanguage
         {
             get { return _selectedLanguage; }
             set
@@ -338,7 +356,7 @@ namespace LogRipper.ViewModels
 
         public void SaveAndClose()
         {
-            Properties.Settings.Default.Language = SelectedLanguage;
+            Properties.Settings.Default.Language = SelectedLanguage.LanguageCode;
             Properties.Settings.Default.DefaultDateFormat = CurrentDateFormat;
             Properties.Settings.Default.DefaultBackgroundColor = System.Drawing.Color.FromArgb(_backColor.Value.R, _backColor.Value.G, _backColor.Value.B);
             Properties.Settings.Default.DefaultForegroundColor = System.Drawing.Color.FromArgb(_foreColor.Value.R, _foreColor.Value.G, _foreColor.Value.B);
@@ -352,6 +370,17 @@ namespace LogRipper.ViewModels
             Properties.Settings.Default.WrapLines = _wrapLines;
             Properties.Settings.Default.Save();
             Application.Current.GetCurrentWindow<OptionsWindow>().Close();
+        }
+
+        public sealed class OneLanguage
+        {
+            public string Language { get; set; }
+            public string LanguageCode { get; set; }
+
+            public override string ToString()
+            {
+                return Language;
+            }
         }
     }
 }

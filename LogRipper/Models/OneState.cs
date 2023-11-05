@@ -8,7 +8,6 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using LogRipper.Constants;
-using LogRipper.Controls;
 using LogRipper.Exceptions;
 using LogRipper.Helpers;
 using LogRipper.Windows;

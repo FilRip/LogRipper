@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Xml.Serialization;
 
-using LogRipper.Controls;
 using LogRipper.Helpers;
 using LogRipper.Windows;
 

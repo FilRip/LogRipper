@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -16,8 +15,6 @@ using LogRipper.Controls;
 using LogRipper.Helpers;
 using LogRipper.ViewModels;
 using LogRipper.Windows;
-
-using Windows.Storage.Streams;
 
 namespace LogRipper.Models
 {
@@ -64,14 +61,14 @@ namespace LogRipper.Models
             _cmdRemoveFile = new RelayCommand((param) => RemoveFile());
             _cmdEditFile = new RelayCommand((param) => EditFile());
             _currentEncoding ??= EncoderName switch
-                {
-                    "ASCII" => Encoding.ASCII,
-                    "UTF7" => Encoding.UTF7,
-                    "UTF8" => Encoding.UTF8,
-                    "UTF32" => Encoding.UTF32,
-                    "Unicode" => Encoding.Unicode,
-                    _ => Encoding.Default,
-                };
+            {
+                "ASCII" => Encoding.ASCII,
+                "UTF7" => Encoding.UTF7,
+                "UTF8" => Encoding.UTF8,
+                "UTF32" => Encoding.UTF32,
+                "Unicode" => Encoding.Unicode,
+                _ => Encoding.Default,
+            };
             CreateFileWatcher();
         }
 

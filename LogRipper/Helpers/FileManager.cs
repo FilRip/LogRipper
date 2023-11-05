@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Media;
 
 using LogRipper.Constants;
-using LogRipper.Controls;
 using LogRipper.Exceptions;
 using LogRipper.Models;
 using LogRipper.Windows;
