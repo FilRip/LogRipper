@@ -1,7 +1,6 @@
-﻿namespace LogRipper.Models
+﻿namespace LogRipper.Models;
+
+internal interface IProgressionPackUnpack
 {
-    internal interface IProgressionPackUnpack
-    {
-        void SetProgress(long totalSize, long currentPos);
-    }
+    void SetProgress(long totalSize, long currentPos);
 }

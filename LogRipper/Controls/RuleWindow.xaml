@@ -118,9 +118,9 @@
                             <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
                         </Grid.ColumnDefinitions>
                         <ListBox Grid.Row="0" Grid.RowSpan="5" ItemsSource="{Binding SubRules, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" SelectedItem="{Binding SelectedSubRule}" HorizontalAlignment="Right"/>
-                        <Button Grid.Row="0" Grid.Column="2" Content="&#xECC8;" FontFamily="Segoe MDL2 Assets" Width="32" Height="32" FontSize="24" ToolTip="{x:Static constants:Locale.ADD_SUB_RULE}" Command="{Binding CmdAddSubRule}" Foreground="Green" Margin="0" Padding="0"/>
-                        <Button Grid.Row="2" Grid.Column="2" Content="&#xECC9;" FontFamily="Segoe MDL2 Assets" Width="32" Height="32" FontSize="24" ToolTip="{x:Static constants:Locale.REMOVE_SUB_RULE}" Command="{Binding CmdRemoveSubRule}" Foreground="Red" Margin="0" Padding="0"/>
-                        <Button Grid.Row="4" Grid.Column="2" Content="&#xE70F;" FontFamily="Segoe MDL2 Assets" Width="32" Height="32" FontSize="24" Command="{Binding CmdEditSubRule}" Foreground="Yellow" Margin="0" Padding="0"/>
+                        <Button Grid.Row="0" Grid.Column="2" Content="&#xECC8;" FontFamily="Segoe MDL2 Assets" Width="32" Height="32" FontSize="24" ToolTip="{x:Static constants:Locale.ADD_SUB_RULE}" Command="{Binding AddSubRuleCommand}" Foreground="Green" Margin="0" Padding="0"/>
+                        <Button Grid.Row="2" Grid.Column="2" Content="&#xECC9;" FontFamily="Segoe MDL2 Assets" Width="32" Height="32" FontSize="24" ToolTip="{x:Static constants:Locale.REMOVE_SUB_RULE}" Command="{Binding RemoveSubRuleCommand}" Foreground="Red" Margin="0" Padding="0"/>
+                        <Button Grid.Row="4" Grid.Column="2" Content="&#xE70F;" FontFamily="Segoe MDL2 Assets" Width="32" Height="32" FontSize="24" Command="{Binding EditSubRuleCommand}" Foreground="Yellow" Margin="0" Padding="0"/>
                     </Grid>
                 </Grid>
                 <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Text="{Binding ListSubRules}"/>
@@ -192,13 +192,13 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Command="{Binding CmdCloseWindow}">
+            <Button Grid.Column="1" Command="{Binding CloseWindowCommand}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static constants:Locale.BTN_CANCEL_RULE}" VerticalAlignment="Center" Margin="0 0 5 0"/>
                     <Image Source="{x:Static constants:Icons.CancelImage}" Height="16" Width="16"/>
                 </StackPanel>
             </Button>
-            <Button Grid.Column="3" Command="{Binding CmdAddRule}">
+            <Button Grid.Column="3" Command="{Binding AddRuleCommand}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static constants:Locale.BTN_ADD_RULE}" VerticalAlignment="Center" Name="BtnOK" Margin="0 0 5 0"/>
                     <Image Source="{x:Static constants:Icons.OkImage}" Height="16" Width="16"/>

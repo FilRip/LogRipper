@@ -5,43 +5,42 @@ using System.Xml.Serialization;
 using LogRipper.Helpers;
 using LogRipper.Windows;
 
-namespace LogRipper.Models
+namespace LogRipper.Models;
+
+[XmlRoot()]
+public class OneCategory
 {
-    [XmlRoot()]
-    public class OneCategory
+    private bool _active;
+
+    public OneCategory()
     {
-        private bool _active;
+        Active = true;
+    }
 
-        public OneCategory()
+    public OneCategory(string category) : this()
+    {
+        Category = category;
+    }
+
+    [XmlElement()]
+    public string Category { get; set; }
+
+    [XmlElement()]
+    public bool Active
+    {
+        get { return _active; }
+        set
         {
-            Active = true;
-        }
-
-        public OneCategory(string category) : this()
-        {
-            Category = category;
-        }
-
-        [XmlElement()]
-        public string Category { get; set; }
-
-        [XmlElement()]
-        public bool Active
-        {
-            get { return _active; }
-            set
+            if (Active != value)
             {
-                if (Active != value)
+                _active = value;
+                foreach (OneRule rule in Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.ListRules.Where(r => r.Category == Category))
                 {
-                    _active = value;
-                    foreach (OneRule rule in Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.ListRules.Where(r => r.Category == Category))
-                    {
-                        rule.Active = value;
-                        rule.Refresh();
-                    }
-                    Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
-                    Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
+                    rule.Active = value;
+                    rule.Refresh();
                 }
+                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
+                Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
             }
         }
     }

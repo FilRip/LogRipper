@@ -4,106 +4,100 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using LogRipper.Constants;
 using LogRipper.Helpers;
 
-namespace LogRipper.Models
+namespace LogRipper.Models;
+
+public abstract partial class RuleViewModelBase : ObservableObject
 {
-    public abstract class RuleViewModelBase : ViewModelBase
+    private Assembly _dll;
+    private MethodInfo _mi;
+    private Regex _regex;
+
+    [ObservableProperty()]
+    [property: XmlElement()]
+    private string _text;
+
+    partial void OnTextChanged(string value)
     {
-        private Assembly _dll;
-        private MethodInfo _mi;
-        private Regex _regex;
-        private string _text;
+        _dll = null;
+        _mi = null;
+        _regex = null;
+    }
 
-        [XmlElement()]
-        public string Text
+    private StringComparison MyStringComparison
+    {
+        get
         {
-            get { return _text; }
-            set
+            return CaseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+        }
+    }
+
+    [XmlElement()]
+    public bool CaseSensitive { get; set; }
+
+    [XmlElement()]
+    public Conditions Conditions { get; set; }
+
+    internal virtual bool Execute(string line, DateTime dateline)
+    {
+        bool result = false;
+        if (Conditions == Conditions.CONTAINS)
+        {
+            result = line.IndexOf(Text, 0, MyStringComparison) >= 0;
+        }
+        else if (Conditions == Conditions.START_WITH)
+        {
+            result = line.StartsWith(Text, MyStringComparison);
+        }
+        else if (Conditions == Conditions.END_WITH)
+        {
+            result = line.EndsWith(Text, MyStringComparison);
+        }
+        else if (Conditions == Conditions.REG_EX)
+        {
+            _regex ??= new Regex(Text);
+            result = _regex.Match(line).Success;
+        }
+        else if (Conditions == Conditions.SCRIPT)
+        {
+            if (_dll == null)
             {
-                if (_text != value)
+                CompilerResults compResult = Compiler.Compile(Text);
+                if (compResult.Errors.Count == 0)
                 {
-                    _text = value;
-                    OnPropertyChanged();
-                    _dll = null;
-                    _mi = null;
-                    _regex = null;
+                    _dll = compResult.CompiledAssembly;
+                    Type myClass = _dll.GetType("MyDynamicNameSpace.MyDynamicClass");
+                    _mi = myClass.GetMethod("MyDynamicMethod", BindingFlags.Public | BindingFlags.Static);
                 }
             }
-        }
-
-        private StringComparison MyStringComparison
-        {
-            get
+            if (_mi != null)
             {
-                return CaseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+                result = (bool)_mi.Invoke(null, new object[] { line, dateline });
             }
         }
 
-        [XmlElement()]
-        public bool CaseSensitive { get; set; }
+        return result;
+    }
 
-        [XmlElement()]
-        public Conditions Conditions { get; set; }
+    internal virtual bool AreSame(RuleViewModelBase baseRule)
+    {
+        if (baseRule.Conditions != Conditions)
+            return false;
+        if (baseRule.CaseSensitive != CaseSensitive)
+            return false;
+        if (baseRule.Text != Text)
+            return false;
+        return true;
+    }
 
-        internal virtual bool Execute(string line, DateTime dateline)
-        {
-            bool result = false;
-            if (Conditions == Conditions.CONTAINS)
-            {
-                result = line.IndexOf(Text, 0, MyStringComparison) >= 0;
-            }
-            else if (Conditions == Conditions.START_WITH)
-            {
-                result = line.StartsWith(Text, MyStringComparison);
-            }
-            else if (Conditions == Conditions.END_WITH)
-            {
-                result = line.EndsWith(Text, MyStringComparison);
-            }
-            else if (Conditions == Conditions.REG_EX)
-            {
-                _regex ??= new Regex(_text);
-                result = _regex.Match(line).Success;
-            }
-            else if (Conditions == Conditions.SCRIPT)
-            {
-                if (_dll == null)
-                {
-                    CompilerResults compResult = Compiler.Compile(_text);
-                    if (compResult.Errors.Count == 0)
-                    {
-                        _dll = compResult.CompiledAssembly;
-                        Type myClass = _dll.GetType("MyDynamicNameSpace.MyDynamicClass");
-                        _mi = myClass.GetMethod("MyDynamicMethod", BindingFlags.Public | BindingFlags.Static);
-                    }
-                }
-                if (_mi != null)
-                {
-                    result = (bool)_mi.Invoke(null, new object[] { line, dateline });
-                }
-            }
-
-            return result;
-        }
-
-        internal virtual bool AreSame(RuleViewModelBase baseRule)
-        {
-            if (baseRule.Conditions != Conditions)
-                return false;
-            if (baseRule.CaseSensitive != CaseSensitive)
-                return false;
-            if (baseRule.Text != Text)
-                return false;
-            return true;
-        }
-
-        internal virtual void Refresh()
-        {
-            OnPropertyChanged(nameof(Conditions));
-            OnPropertyChanged(nameof(Text));
-            OnPropertyChanged(nameof(CaseSensitive));
-        }
+    internal virtual void Refresh()
+    {
+        OnPropertyChanged(nameof(Conditions));
+        OnPropertyChanged(nameof(Text));
+        OnPropertyChanged(nameof(CaseSensitive));
     }
 }

@@ -1,105 +1,49 @@
-﻿using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
-using LogRipper.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Win32;
 
-namespace LogRipper.ViewModels
+namespace LogRipper.ViewModels;
+
+public partial class FusionWindowViewModel : ObservableObject
 {
-    public class FusionWindowViewModel : ViewModelBase
+    [ObservableProperty()]
+    private string _formatDate;
+    [ObservableProperty()]
+    private string _fileName;
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(BackColorBrush))]
+    private Color _backColor;
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(ForeColorBrush))]
+    private Color _foreColor;
+
+    public FusionWindowViewModel() : base()
     {
-        private string _formatDate;
-        private string _filename;
-        private readonly ICommand _browseFilename;
-        private Color _backColor, _foreColor;
+        BackColor = Constants.Colors.DefaultBackgroundColor;
+        ForeColor = Constants.Colors.DefaultForegroundColor;
+    }
 
-        public FusionWindowViewModel() : base()
-        {
-            _browseFilename = new RelayCommand((param) => BrowseFilename());
-            BackColor = Constants.Colors.DefaultBackgroundColor;
-            ForeColor = Constants.Colors.DefaultForegroundColor;
-        }
+    public Brush BackColorBrush
+    {
+        get { return new SolidColorBrush(BackColor); }
+    }
 
-        public string FormatDate
-        {
-            get { return _formatDate; }
-            set
-            {
-                if (_formatDate != value)
-                {
-                    _formatDate = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+    public Brush ForeColorBrush
+    {
+        get { return new SolidColorBrush(ForeColor); }
+    }
 
-        public string FileName
+    [RelayCommand()]
+    private void BrowseFilename()
+    {
+        OpenFileDialog dialog = new()
         {
-            get { return _filename; }
-            set
-            {
-                if (_filename != value)
-                {
-                    _filename = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public Color BackColor
+            Filter = "Log file|*.log|All files|*.*",
+        };
+        if (dialog.ShowDialog() == true)
         {
-            get { return _backColor; }
-            set
-            {
-                if (_backColor != value)
-                {
-                    _backColor = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(BackColorBrush));
-                }
-            }
-        }
-
-        public Color ForeColor
-        {
-            get { return _foreColor; }
-            set
-            {
-                if (_foreColor != value)
-                {
-                    _foreColor = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(ForeColorBrush));
-                }
-            }
-        }
-
-        public Brush BackColorBrush
-        {
-            get { return new SolidColorBrush(_backColor); }
-        }
-
-        public Brush ForeColorBrush
-        {
-            get { return new SolidColorBrush(_foreColor); }
-        }
-
-        public ICommand CmdBrowseFilename
-        {
-            get { return _browseFilename; }
-        }
-
-        private void BrowseFilename()
-        {
-            OpenFileDialog dialog = new()
-            {
-                Filter = "Log file|*.log|All files|*.*",
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                FileName = dialog.FileName;
-            }
+            FileName = dialog.FileName;
         }
     }
 }

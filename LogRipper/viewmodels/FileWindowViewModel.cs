@@ -1,98 +1,49 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using LogRipper.Constants;
-using LogRipper.Helpers;
 
-namespace LogRipper.ViewModels
+namespace LogRipper.ViewModels;
+
+public partial class FileWindowViewModel : ObservableObject
 {
-    public class FileWindowViewModel : ViewModelBase
+    [ObservableProperty()]
+    private string _formatDate;
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(BackColorBrush))]
+    private Color _backColor;
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(ForeColorBrush))]
+    private Color _foreColor;
+    private readonly List<string> _listEncoders;
+    [ObservableProperty()]
+    private string _currentEncoder;
+
+    public FileWindowViewModel() : base()
     {
-        private string _formatDate;
-        private Color _backColor, _foreColor;
-        private readonly List<string> _listEncoders;
-        private string _encoder;
-
-        public FileWindowViewModel() : base()
+        _listEncoders = new List<string>()
         {
-            _listEncoders = new List<string>()
-            {
-                Locale.MENU_ENC_DEFAULT.Replace("_", ""),
-                Locale.MENU_ENC_ASCII.Replace("_", ""),
-                Locale.MENU_ENC_UTF7.Replace("_", ""),
-                Locale.MENU_ENC_UTF8.Replace("_", ""),
-                Locale.MENU_ENC_UTF32.Replace("_", ""),
-                Locale.MENU_ENC_UNICODE.Replace("_", ""),
-            };
-        }
+            Locale.MENU_ENC_DEFAULT.Replace("_", ""),
+            Locale.MENU_ENC_ASCII.Replace("_", ""),
+            Locale.MENU_ENC_UTF7.Replace("_", ""),
+            Locale.MENU_ENC_UTF8.Replace("_", ""),
+            Locale.MENU_ENC_UTF32.Replace("_", ""),
+            Locale.MENU_ENC_UNICODE.Replace("_", ""),
+        };
+    }
 
-        public List<string> ListEncoders
-        {
-            get { return _listEncoders; }
-        }
+    public List<string> ListEncoders
+    {
+        get { return _listEncoders; }
+    }
 
-        public string CurrentEncoder
-        {
-            get { return _encoder; }
-            set
-            {
-                if (_encoder != value)
-                {
-                    _encoder = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+    public Brush BackColorBrush
+    {
+        get { return new SolidColorBrush(BackColor); }
+    }
 
-        public string FormatDate
-        {
-            get { return _formatDate; }
-            set
-            {
-                if (_formatDate != value)
-                {
-                    _formatDate = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public Color BackColor
-        {
-            get { return _backColor; }
-            set
-            {
-                if (_backColor != value)
-                {
-                    _backColor = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(BackColorBrush));
-                }
-            }
-        }
-
-        public Color ForeColor
-        {
-            get { return _foreColor; }
-            set
-            {
-                if (_foreColor != value)
-                {
-                    _foreColor = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(ForeColorBrush));
-                }
-            }
-        }
-
-        public Brush BackColorBrush
-        {
-            get { return new SolidColorBrush(_backColor); }
-        }
-
-        public Brush ForeColorBrush
-        {
-            get { return new SolidColorBrush(_foreColor); }
-        }
+    public Brush ForeColorBrush
+    {
+        get { return new SolidColorBrush(ForeColor); }
     }
 }

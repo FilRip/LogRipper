@@ -45,13 +45,13 @@
                     <Image Source="{x:Static constants:Icons.SearchImage}" Width="16" Height="16"/>
                 </StackPanel>
             </Button>
-            <Button Grid.Column="1" Command="{Binding CmdEdit}" HorizontalAlignment="Center">
+            <Button Grid.Column="1" Command="{Binding EditCommand}" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static constants:Locale.BTN_EDIT_RULE}" HorizontalAlignment="Center" Margin="0 0 5 0"/>
                     <Image Source="{x:Static constants:Icons.EditImage}" Width="16" Height="16"/>
                 </StackPanel>
             </Button>
-            <Button Grid.Column="2" Command="{Binding CmdDelete}" HorizontalAlignment="Center">
+            <Button Grid.Column="2" Command="{Binding DeleteCommand}" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static constants:Locale.BTN_DEL_RULE}" HorizontalAlignment="Center" Margin="0 0 5 0"/>
                     <Image Source="{x:Static constants:Icons.RecycleImage}" Width="16" Height="16"/>

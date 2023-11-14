@@ -3,109 +3,136 @@ using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using LogRipper.Helpers;
 using LogRipper.Windows;
 
-namespace LogRipper.Models
+namespace LogRipper.Models;
+
+[XmlRoot()]
+public class OneLine : ObservableObject
 {
-    [XmlRoot()]
-    public class OneLine : ViewModelBase
+    public OneLine() { }
+
+    [XmlElement()]
+    public DateTime Date { get; set; }
+
+    [XmlElement()]
+    public string Line { get; set; }
+
+    [XmlElement()]
+    public string FileName { get; set; }
+
+    [XmlElement()]
+    public int NumLine { get; set; }
+
+    [XmlElement()]
+    public string GroupLines { get; set; }
+
+    [XmlIgnore()]
+    public SolidColorBrush DefaultBackground
     {
-        public OneLine() { }
+        get { return FileManager.GetFile(FileName)?.DefaultBackground ?? Constants.Colors.BackgroundColorBrush; }
+    }
 
-        [XmlElement()]
-        public DateTime Date { get; set; }
+    [XmlIgnore()]
+    public SolidColorBrush DefaultForeground
+    {
+        get { return FileManager.GetFile(FileName)?.DefaultForeground ?? Constants.Colors.ForegroundColorBrush; }
+    }
 
-        [XmlElement()]
-        public string Line { get; set; }
-
-        [XmlElement()]
-        public string FileName { get; set; }
-
-        [XmlElement()]
-        public int NumLine { get; set; }
-
-        [XmlElement()]
-        public string GroupLines { get; set; }
-
-        [XmlIgnore()]
-        public SolidColorBrush DefaultBackground
+    [XmlIgnore()]
+    public bool SpecialLine
+    {
+        get
         {
-            get { return FileManager.GetFile(FileName).DefaultBackground; }
+            return (!string.IsNullOrWhiteSpace(GroupLines) && GroupLines.IndexOf(' ') >= 0);
         }
+    }
 
-        [XmlIgnore()]
-        public SolidColorBrush DefaultForeground
+    [XmlIgnore()]
+    public bool NotSpecialLine
+    {
+        get { return !SpecialLine; }
+    }
+
+    [XmlIgnore()]
+    public string LineOrGroup
+    {
+        get
         {
-            get { return FileManager.GetFile(FileName).DefaultForeground; }
+            if (!string.IsNullOrWhiteSpace(GroupLines) && GroupLines.IndexOf(' ') >= 0)
+                return GroupLines;
+            else
+                return Line;
         }
+    }
 
-        [XmlIgnore()]
-        public SolidColorBrush Background
+    [XmlIgnore()]
+    public SolidColorBrush Background
+    {
+        get
         {
-            get
-            {
-                SolidColorBrush result = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesBackground(Line, Date);
+            SolidColorBrush result = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesBackground(Line, Date);
 
-                if (result != null)
-                    return result;
-                return FileManager.GetFile(FileName)?.DefaultBackground;
-            }
+            if (result != null)
+                return result;
+            return FileManager.GetFile(FileName)?.DefaultBackground ?? Constants.Colors.BackgroundColorBrush;
         }
+    }
 
-        [XmlIgnore()]
-        public SolidColorBrush Foreground
+    [XmlIgnore()]
+    public SolidColorBrush Foreground
+    {
+        get
         {
-            get
-            {
-                SolidColorBrush result = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesForeground(Line, Date);
+            SolidColorBrush result = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesForeground(Line, Date);
 
-                if (result != null)
-                    return result;
-                return FileManager.GetFile(FileName)?.DefaultForeground;
-            }
+            if (result != null)
+                return result;
+            return FileManager.GetFile(FileName)?.DefaultForeground ?? Constants.Colors.ForegroundColorBrush;
         }
+    }
 
-        [XmlIgnore()]
-        public Visibility HideLine
+    [XmlIgnore()]
+    public Visibility HideLine
+    {
+        get
         {
-            get
-            {
-                if (!string.IsNullOrWhiteSpace(GroupLines))
-                    return Visibility.Collapsed;
-                bool result = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesHideLine(Line, Date);
-                return result ? Visibility.Collapsed : Visibility.Visible;
-            }
+            bool result = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesHideLine(Line, Date);
+            return result ? Visibility.Collapsed : Visibility.Visible;
         }
+    }
 
-        [XmlIgnore()]
-        public FontWeight Weight
+    [XmlIgnore()]
+    public FontWeight Weight
+    {
+        get
         {
-            get
-            {
-                bool bold = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesBold(Line, Date);
-                return (bold ? FontWeights.Bold : FontWeights.Regular);
-            }
+            bool bold = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesBold(Line, Date);
+            return (bold ? FontWeights.Bold : FontWeights.Regular);
         }
+    }
 
-        [XmlIgnore()]
-        public FontStyle Style
+    [XmlIgnore()]
+    public FontStyle Style
+    {
+        get
         {
-            get
-            {
-                bool italic = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesItalic(Line, Date);
-                return (italic ? FontStyles.Italic : FontStyles.Normal);
-            }
+            bool italic = ((MainWindow)Application.Current.MainWindow).MyDataContext.ListRules.ExecuteRulesItalic(Line, Date);
+            return (italic ? FontStyles.Italic : FontStyles.Normal);
         }
+    }
 
-        internal void RefreshLine()
-        {
-            OnPropertyChanged(nameof(Line));
-            OnPropertyChanged(nameof(Background));
-            OnPropertyChanged(nameof(Foreground));
-            OnPropertyChanged(nameof(HideLine));
-            OnPropertyChanged(nameof(Style));
-            OnPropertyChanged(nameof(Weight));
-        }
+    internal void RefreshLine()
+    {
+        OnPropertyChanged(nameof(Line));
+        OnPropertyChanged(nameof(Background));
+        OnPropertyChanged(nameof(Foreground));
+        OnPropertyChanged(nameof(HideLine));
+        OnPropertyChanged(nameof(Style));
+        OnPropertyChanged(nameof(Weight));
+        OnPropertyChanged(nameof(GroupLines));
     }
 }

@@ -6,17 +6,16 @@ using System.Windows.Controls;
 
 using ModernWpf.Controls.Primitives;
 
-namespace LogRipper.Controls
-{
-    public class CheckedMenuItem : MenuItem
-    {
-        public static readonly DependencyProperty UseSystemFocusVisualsProperty =
-            FocusVisualHelper.UseSystemFocusVisualsProperty.AddOwner(typeof(CheckedMenuItem));
+namespace LogRipper.Controls;
 
-        public bool UseSystemFocusVisuals
-        {
-            get => (bool)GetValue(UseSystemFocusVisualsProperty);
-            set => SetValue(UseSystemFocusVisualsProperty, value);
-        }
+public class CheckedMenuItem : MenuItem
+{
+    public static readonly DependencyProperty UseSystemFocusVisualsProperty =
+        FocusVisualHelper.UseSystemFocusVisualsProperty.AddOwner(typeof(CheckedMenuItem));
+
+    public bool UseSystemFocusVisuals
+    {
+        get => (bool)GetValue(UseSystemFocusVisualsProperty);
+        set => SetValue(UseSystemFocusVisualsProperty, value);
     }
 }

@@ -12,51 +12,49 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True" Loaded="Window_Loaded"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}" WindowState="Maximized"
-        Title="LogRipper v" Height="450" Width="800"
+        Title="LogRipper v" Height="450" Width="800" Focusable="True" StateChanged="Window_StateChanged"
         Closing="Window_Closing" SizeChanged="Window_SizeChanged">
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="boolToVisible"/>
-            <converters:HideGridColumnConverter x:Key="HideGridColumn"/>
-            <converters:GridHiderConverter x:Key="AutoHideGrid"/>
-            <Style TargetType="TextBox" x:Key="MyTextBoxStyle">
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
-                <Setter Property="SelectionBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
-                <Setter Property="SelectionTextBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
-                <Setter Property="Margin" Value="9 -1 0 0"/>
-                <EventSetter Event="SelectionChanged" Handler="TextBox_SelectionChanged"/>
-            </Style>
-        </ResourceDictionary>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        <converters:HideGridColumnConverter x:Key="HideGridColumn"/>
+        <converters:GridHiderConverter x:Key="AutoHideGrid"/>
+        <Style TargetType="TextBox" x:Key="MyTextBoxStyle">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
+            <Setter Property="SelectionBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
+            <Setter Property="SelectionTextBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
+            <Setter Property="Margin" Value="9 -1 0 0"/>
+            <EventSetter Event="SelectionChanged" Handler="TextBox_SelectionChanged"/>
+        </Style>
     </Window.Resources>
 
     <Window.InputBindings>
-        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding CmdSearch}"/>
-        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding CmdOpenFile}"/>
-        <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding CmdMergeFile}"/>
-        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding CmdSaveState}"/>
-        <KeyBinding Key="L" Modifiers="Ctrl" Command="{Binding CmdLoadState}"/>
-        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CmdCopySelectedItems}"/>
-        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CmdExit}"/>
-        <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding CmdAddRule}"/>
-        <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding CmdListRules}"/>
-        <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="{Binding CmdSaveRules}"/>
-        <KeyBinding Key="L" Modifiers="Ctrl+Shift" Command="{Binding CmdLoadRules}"/>
-        <KeyBinding Key="G" Modifiers="Ctrl" Command="{Binding CmdGotoLine}"/>
-        <KeyBinding Key="F1" Modifiers="Shift" Command="{Binding CmdShowNumLine}"/>
-        <KeyBinding Key="F2" Modifiers="Shift" Command="{Binding CmdShowFileName}"/>
-        <KeyBinding Key="F3" Modifiers="Shift" Command="{Binding CmdShowSearchResult}"/>
-        <KeyBinding Key="F4" Modifiers="Shift" Command="{Binding CmdShowMargin}"/>
-        <KeyBinding Key="F5" Modifiers="Shift" Command="{Binding CmdShowToolbar}"/>
-        <KeyBinding Key="F6" Modifiers="Shift" Command="{Binding CmdShowDateFilter}"/>
-        <KeyBinding Key="F10" Modifiers="Ctrl" Command="{Binding CmdAutoFollowInMargin}"/>
-        <KeyBinding Key="F11" Modifiers="Ctrl" Command="{Binding CmdEnableAutoReload}"/>
-        <KeyBinding Key="F12" Modifiers="Ctrl" Command="{Binding CmdEnableAutoScrollToEnd}"/>
-        <KeyBinding Key="R" Modifiers="Ctrl+Shift" Command="{Binding CmdReloadAllFiles}"/>
-        <KeyBinding Key="K" Modifiers="Ctrl" Command="{Binding CmdMergeRules}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchCommand}"/>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenFileCommand}"/>
+        <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding MergeFileCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveStateCommand}"/>
+        <KeyBinding Key="L" Modifiers="Ctrl" Command="{Binding LoadStateCommand}"/>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopySelectedItemsCommand}"/>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding ExitCommand}"/>
+        <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding AddRuleCommand}"/>
+        <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding OpenListRulesCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="{Binding SaveRulesCommand}"/>
+        <KeyBinding Key="L" Modifiers="Ctrl+Shift" Command="{Binding LoadRulesCommand}"/>
+        <KeyBinding Key="G" Modifiers="Ctrl" Command="{Binding GotoLineCommand}"/>
+        <KeyBinding Key="F1" Modifiers="Shift" Command="{Binding ToggleShowNumLineCommand}"/>
+        <KeyBinding Key="F2" Modifiers="Shift" Command="{Binding ToggleShowFileNameCommand}"/>
+        <KeyBinding Key="F3" Modifiers="Shift" Command="{Binding ToggleShowSearchResultCommand}"/>
+        <KeyBinding Key="F4" Modifiers="Shift" Command="{Binding ShowMarginCommand}"/>
+        <KeyBinding Key="F5" Modifiers="Shift" Command="{Binding ShowToolbarCommand}"/>
+        <KeyBinding Key="F6" Modifiers="Shift" Command="{Binding ShowDateFilterCommand}"/>
+        <KeyBinding Key="F10" Modifiers="Ctrl" Command="{Binding AutoFollowMarginCommand}"/>
+        <KeyBinding Key="F11" Modifiers="Ctrl" Command="{Binding AutoReloadCommand}"/>
+        <KeyBinding Key="F12" Modifiers="Ctrl" Command="{Binding ToggleAutoScrollToEndCommand}"/>
+        <KeyBinding Key="R" Modifiers="Ctrl+Shift" Command="{Binding ReloadAllFilesCommand}"/>
+        <KeyBinding Key="K" Modifiers="Ctrl" Command="{Binding MergeRulesCommand}"/>
     </Window.InputBindings>
     
     <Grid Name="MainGrid">
@@ -82,125 +80,125 @@
         <!-- Main menu -->
         <Menu Grid.Row="0" Grid.ColumnSpan="3">
             <MenuItem Header="{x:Static constants:Locale.MENU_FILE}">
-                <MenuItem Header="{x:Static constants:Locale.MENU_OPEN}" Command="{Binding CmdOpenFile}" InputGestureText="Ctrl+O">
+                <MenuItem Header="{x:Static constants:Locale.MENU_OPEN}" Command="{Binding OpenFileCommand}" InputGestureText="Ctrl+O">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE8E5;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_MERGE}" Command="{Binding CmdMergeFile}" InputGestureText="Ctrl+M">
+                <MenuItem Header="{x:Static constants:Locale.MENU_MERGE}" Command="{Binding MergeFileCommand}" InputGestureText="Ctrl+M">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xEA3C;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_RELOAD_FILES}" Command="{Binding CmdReloadAllFiles}" InputGestureText="Ctrl+Shift+R">
+                <MenuItem Header="{x:Static constants:Locale.MENU_RELOAD_FILES}" Command="{Binding ReloadAllFilesCommand}" InputGestureText="Ctrl+Shift+R">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE72C;"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="{x:Static constants:Locale.MENU_EXPORT_HTML}" Command="{Binding CmdExportToHtml}">
+                <MenuItem Header="{x:Static constants:Locale.MENU_EXPORT_HTML}" Command="{Binding ExportToHtmlCommand}">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xEDE1;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_SAVE_STATE}" Command="{Binding CmdSaveState}" InputGestureText="Ctrl+S">
+                <MenuItem Header="{x:Static constants:Locale.MENU_SAVE_STATE}" Command="{Binding SaveStateCommand}" InputGestureText="Ctrl+S">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE105;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_LOAD_STATE}" Command="{Binding CmdLoadState}" InputGestureText="Ctrl+L">
+                <MenuItem Header="{x:Static constants:Locale.MENU_LOAD_STATE}" Command="{Binding LoadStateCommand}" InputGestureText="Ctrl+L">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xED25;"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="{x:Static constants:Locale.MENU_EXIT}" Command="{Binding CmdExit}" InputGestureText="Ctrl+X">
+                <MenuItem Header="{x:Static constants:Locale.MENU_EXIT}" Command="{Binding ExitCommand}" InputGestureText="Ctrl+X">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE8BB;"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{x:Static constants:Locale.MENU_RULES}">
-                <MenuItem Header="{x:Static constants:Locale.MENU_ADD_RULE}" Command="{Binding CmdAddRule}" InputGestureText="Ctrl+I">
+                <MenuItem Header="{x:Static constants:Locale.MENU_ADD_RULE}" Command="{Binding AddRuleCommand}" InputGestureText="Ctrl+I">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xECC8;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_MANAGE_RULES}" Command="{Binding CmdListRules}" InputGestureText="Ctrl+R">
+                <MenuItem Header="{x:Static constants:Locale.MENU_MANAGE_RULES}" Command="{Binding OpenListRulesCommand}" InputGestureText="Ctrl+R">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xF5ED;"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="{x:Static constants:Locale.MENU_SAVE_RULES}" Command="{Binding CmdSaveRules}" InputGestureText="Ctrl+Shift+S">
+                <MenuItem Header="{x:Static constants:Locale.MENU_SAVE_RULES}" Command="{Binding SaveRulesCommand}" InputGestureText="Ctrl+Shift+S">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE105;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_LOAD_RULES}" Command="{Binding CmdLoadRules}" InputGestureText="Ctrl+Shift+L">
+                <MenuItem Header="{x:Static constants:Locale.MENU_LOAD_RULES}" Command="{Binding LoadRulesCommand}" InputGestureText="Ctrl+Shift+L">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE7AC;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_MERGE_RULES}" Command="{Binding CmdMergeRules}" InputGestureText="Ctrl+K">
+                <MenuItem Header="{x:Static constants:Locale.MENU_MERGE_RULES}" Command="{Binding MergeRulesCommand}" InputGestureText="Ctrl+K">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xEA3C;"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{x:Static constants:Locale.MENU_EDIT}">
-                <MenuItem Header="{x:Static constants:Locale.MENU_COPY}" Command="{Binding CmdCopySelectedItems}" InputGestureText="Ctrl+C">
+                <MenuItem Header="{x:Static constants:Locale.MENU_COPY}" Command="{Binding CopySelectedItemsCommand}" InputGestureText="Ctrl+C">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE8C8;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_SEARCH}" Command="{Binding CmdSearch}" InputGestureText="Ctrl+F">
+                <MenuItem Header="{x:Static constants:Locale.MENU_SEARCH}" Command="{Binding SearchCommand}" InputGestureText="Ctrl+F">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE721;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_GOTO_LINE}" Command="{Binding CmdGotoLine}" InputGestureText="Ctrl+G">
+                <MenuItem Header="{x:Static constants:Locale.MENU_GOTO_LINE}" Command="{Binding GotoLineCommand}" InputGestureText="Ctrl+G">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE8D1;"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{x:Static constants:Locale.MENU_SHOW}">
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_NUMLINE}" Command="{Binding CmdShowNumLine}" IsChecked="{Binding CurrentShowNumLine}" InputGestureText="Shift+F1"/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_FILENAME}" Command="{Binding CmdShowFileName}" IsChecked="{Binding CurrentShowFileName}" InputGestureText="Shift+F2"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_NUMLINE}" Command="{Binding ToggleShowNumLineCommand}" IsChecked="{Binding CurrentShowNumLine}" InputGestureText="Shift+F1"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_FILENAME}" Command="{Binding ToggleShowFileNameCommand}" IsChecked="{Binding CurrentShowFileName}" InputGestureText="Shift+F2"/>
                 <Separator/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_SEARCHRESULT}" Command="{Binding CmdShowSearchResult}" IsChecked="{Binding ShowSearchResult}" InputGestureText="Shift+F3"/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_MARGIN}" Command="{Binding CmdShowMargin}" IsChecked="{Binding EnableShowMargin}" InputGestureText="Shift+F4"/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_TOOLBAR}" Command="{Binding CmdShowToolbar}" IsChecked="{Binding EnableShowToolbar}" InputGestureText="Shift+F5"/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_DATE_FILTER}" Command="{Binding CmdShowDateFilter}" IsChecked="{Binding EnableShowDateFilter}" InputGestureText="Shift+F6"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_SEARCHRESULT}" Command="{Binding ToggleShowSearchResultCommand}" IsChecked="{Binding ShowSearchResult}" InputGestureText="Shift+F3"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_MARGIN}" Command="{Binding ShowMarginCommand}" IsChecked="{Binding EnableShowMargin}" InputGestureText="Shift+F4"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_TOOLBAR}" Command="{Binding ShowToolbarCommand}" IsChecked="{Binding EnableShowToolbar}" InputGestureText="Shift+F5"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_SHOW_DATE_FILTER}" Command="{Binding ShowDateFilterCommand}" IsChecked="{Binding EnableShowDateFilter}" InputGestureText="Shift+F6"/>
             </MenuItem>
             <MenuItem Header="{x:Static constants:Locale.MENU_SETTINGS}">
                 <MenuItem Header="{x:Static constants:Locale.MENU_ENCODING}">
-                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_DEFAULT}" IsChecked="{Binding EncodageDefault}" Command="{Binding SetEncodageDefault}"/>
-                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_ASCII}" IsChecked="{Binding EncodageAscii}" Command="{Binding SetEncodageAscii}"/>
-                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UTF7}" IsChecked="{Binding EncodageUtf7}" Command="{Binding SetEncodageUtf7}"/>
-                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UTF8}" IsChecked="{Binding EncodageUtf8}" Command="{Binding SetEncodageUtf8}"/>
-                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UTF32}" IsChecked="{Binding EncodageUtf32}" Command="{Binding SetEncodageUtf32}"/>
-                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UNICODE}" IsChecked="{Binding EncodageUnicode}" Command="{Binding SetEncodageUnicode}"/>
+                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_DEFAULT}" IsChecked="{Binding EncodingDefault}" Command="{Binding ChangeEncodingToDefaultCommand}"/>
+                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_ASCII}" IsChecked="{Binding EncodingAscii}" Command="{Binding ChangeEncodingToAsciiCommand}"/>
+                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UTF7}" IsChecked="{Binding EncodingUtf7}" Command="{Binding ChangeEncodingToUtf7Command}"/>
+                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UTF8}" IsChecked="{Binding EncodingUtf8}" Command="{Binding ChangeEncodingToUtf8Command}"/>
+                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UTF32}" IsChecked="{Binding EncodingUtf32}" Command="{Binding ChangeEncodingToUtf32Command}"/>
+                    <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENC_UNICODE}" IsChecked="{Binding EncodingUnicode}" Command="{Binding ChangeEncodingToUnicodeCommand}"/>
                 </MenuItem>
                 <Separator/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENABLE_AUTO_RELOAD}" IsChecked="{Binding EnableAutoReload}" Command="{Binding CmdEnableAutoReload}" InputGestureText="Ctrl+F11"/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENABLE_AUTO_SCROLL}" IsChecked="{Binding EnableAutoScrollToEnd}" Command="{Binding CmdEnableAutoScrollToEnd}" InputGestureText="Ctrl+F12"/>
-                <local:CheckedMenuItem Header="{x:Static constants:Locale.SETTINGS_AUTO_FOLLOW_MARGIN}" IsChecked="{Binding AutoFollowInMargin}" Command="{Binding CmdAutoFollowInMargin}" InputGestureText="Ctrl+F10"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENABLE_AUTO_RELOAD}" IsChecked="{Binding EnableAutoReload}" Command="{Binding AutoReloadCommand}" InputGestureText="Ctrl+F11"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.MENU_ENABLE_AUTO_SCROLL}" IsChecked="{Binding EnableAutoScrollToEnd}" Command="{Binding ToggleAutoScrollToEndCommand}" InputGestureText="Ctrl+F12"/>
+                <local:CheckedMenuItem Header="{x:Static constants:Locale.SETTINGS_AUTO_FOLLOW_MARGIN}" IsChecked="{Binding AutoFollowInMargin}" Command="{Binding AutoFollowMarginCommand}" InputGestureText="Ctrl+F10"/>
                 <Separator/>
-                <MenuItem Header="{x:Static constants:Locale.MENU_OPTIONS}" Command="{Binding CmdOptions}">
+                <MenuItem Header="{x:Static constants:Locale.MENU_OPTIONS}" Command="{Binding OpenSettingsCommand}">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xF8B0;"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_?">
-                <MenuItem Header="{x:Static constants:Locale.MENU_ABOUT}" Command="{Binding CmdShowAbout}">
+                <MenuItem Header="{x:Static constants:Locale.MENU_ABOUT}" Command="{Binding ShowAboutCommand}">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE897;"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="{x:Static constants:Locale.MENU_CHECK_NEW_VERSION}" Command="{Binding CmdCheckUpdate}">
+                <MenuItem Header="{x:Static constants:Locale.MENU_CHECK_NEW_VERSION}" Command="{Binding CheckForUpdateCommand}">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xEC05;"/>
                     </MenuItem.Icon>
@@ -230,55 +228,34 @@
                             <ItemsControl ItemsSource="{Binding ListFiles}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
+                                        <DataTemplate.Resources>
+                                            <ContextMenu x:Key="FileContextMenu">
+                                                <MenuItem Header="{x:Static constants:Locale.BTN_EDIT_RULE}" Command="{Binding EditFileCommand}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xE70F;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="{x:Static constants:Locale.RELOAD_FILE}" Command="{Binding ReloadFileCommand}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xE72C;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="{x:Static constants:Locale.REMOVE_FILE}" Command="{Binding RemoveFileCommand}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xE74D;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </DataTemplate.Resources>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="32"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <CheckBox Grid.Column="0" IsChecked="{Binding Active}" Name="ChkFile">
-                                                <CheckBox.ContextMenu>
-                                                    <ContextMenu>
-                                                        <MenuItem Header="{x:Static constants:Locale.BTN_EDIT_RULE}" Command="{Binding CmdEditFile}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE70F;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.RELOAD_FILE}" Command="{Binding CmdReloadFile}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE72C;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.REMOVE_FILE}" Command="{Binding CmdRemoveFile}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE74D;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                    </ContextMenu>
-                                                </CheckBox.ContextMenu>
-                                            </CheckBox>
-                                            <TextBlock Grid.Column="1" Text="{Binding FileName}"
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding Active}" Name="ChkFile" ContextMenu="{StaticResource FileContextMenu}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding FileName}" ContextMenu="{StaticResource FileContextMenu}"
                                                        Background="{Binding DefaultBackground}"
-                                                       Foreground="{Binding DefaultForeground}" VerticalAlignment="Center" HorizontalAlignment="Left" Name="TxtFile" PreviewMouseLeftButtonUp="TxtFile_PreviewMouseLeftButtonUp">
-                                                <TextBlock.ContextMenu>
-                                                    <ContextMenu>
-                                                        <MenuItem Header="{x:Static constants:Locale.BTN_EDIT_RULE}" Command="{Binding CmdEditFile}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE70F;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.RELOAD_FILE}" Command="{Binding CmdReloadFile}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE72C;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.REMOVE_FILE}" Command="{Binding CmdRemoveFile}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE74D;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                    </ContextMenu>
-                                                </TextBlock.ContextMenu>
-                                            </TextBlock>
+                                                       Foreground="{Binding DefaultForeground}" VerticalAlignment="Center" HorizontalAlignment="Left" Name="TxtFile" PreviewMouseLeftButtonUp="TxtFile_PreviewMouseLeftButtonUp"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -302,55 +279,34 @@
                             <ItemsControl ItemsSource="{Binding ListRules.ListRules}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
+                                        <DataTemplate.Resources>
+                                            <ContextMenu x:Key="RuleContextMenu">
+                                                <MenuItem Header="{x:Static constants:Locale.BTN_EDIT_RULE}" Command="{Binding EditCommand}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xE70F;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="{x:Static constants:Locale.BTN_DEL_RULE}" Command="{Binding DeleteThisRuleCommand}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xE74D;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="{x:Static constants:Locale.MENU_ADD_RULE}" Command="{Binding Path=DataContext.AddRuleCommand, Source={StaticResource ParentDataContext}}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xECC8;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </DataTemplate.Resources>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="32"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <CheckBox Grid.Column="0" IsChecked="{Binding Active}">
-                                                <CheckBox.ContextMenu>
-                                                    <ContextMenu>
-                                                        <MenuItem Header="{x:Static constants:Locale.BTN_EDIT_RULE}" Command="{Binding CmdEdit}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE70F;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.BTN_DEL_RULE}" Command="{Binding CmdDelete}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE74D;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.MENU_ADD_RULE}" Command="{Binding Path=DataContext.CmdAddRule, Source={StaticResource ParentDataContext}}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xECC8;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                    </ContextMenu>
-                                                </CheckBox.ContextMenu>
-                                            </CheckBox>
-                                            <TextBlock Grid.Column="1" Text="{Binding Label}"
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding Active}" ContextMenu="{StaticResource RuleContextMenu}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Label}" ContextMenu="{StaticResource RuleContextMenu}"
                                                        Background="{Binding BackgroundBrush}"
-                                                       Foreground="{Binding ForegroundBrush}" VerticalAlignment="Center" HorizontalAlignment="Left" Name="TxtRule" PreviewMouseLeftButtonUp="TxtRule_PreviewMouseLeftButtonUp">
-                                                <TextBlock.ContextMenu>
-                                                    <ContextMenu>
-                                                        <MenuItem Header="{x:Static constants:Locale.BTN_EDIT_RULE}" Command="{Binding CmdEdit}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE70F;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.BTN_DEL_RULE}" Command="{Binding CmdDelete}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xE74D;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{x:Static constants:Locale.MENU_ADD_RULE}" Command="{Binding Path=DataContext.CmdAddRule, Source={StaticResource ParentDataContext}}">
-                                                            <MenuItem.Icon>
-                                                                <ui:FontIcon Glyph="&#xECC8;"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                    </ContextMenu>
-                                                </TextBlock.ContextMenu>
-                                            </TextBlock>
+                                                       Foreground="{Binding ForegroundBrush}" VerticalAlignment="Center" HorizontalAlignment="Left" Name="TxtRule" PreviewMouseLeftButtonUp="TxtRule_PreviewMouseLeftButtonUp"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -374,7 +330,7 @@
                                                 <ColumnDefinition Width="32"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <CheckBox Grid.Column="0" IsChecked="{Binding Active}"/>
+                                            <CheckBox Grid.Column="0" IsChecked="{Binding Active}" Name="ChkCategory"/>
                                             <TextBlock Grid.Column="1" Text="{Binding Category}" VerticalAlignment="Center" HorizontalAlignment="Left" Name="TxtCategory" PreviewMouseLeftButtonUp="TxtCategory_PreviewMouseLeftButtonUp"/>
                                         </Grid>
                                     </DataTemplate>
@@ -390,29 +346,34 @@
         <!--- Main/Current file(s) -->
         <Grid Margin="5" Grid.Row="3">
             <Grid.RowDefinitions>
-                <RowDefinition Height="{Binding EnableShowDateFilter, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- Filter by date start/end -->
             <Grid Grid.Row="0" Margin="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="{Binding EnableShowDateFilter, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
+                    <ColumnDefinition Width="{Binding EnableShowDateFilter, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
+                    <ColumnDefinition Width="{Binding EnableShowDateFilter, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
+                    <ColumnDefinition Width="{Binding EnableShowDateFilter, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
+                    <ColumnDefinition Width="{Binding EnableShowDateFilter, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
                     <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="{x:Static constants:Values.DefaultRowHeightSpace}"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Content="{x:Static constants:Locale.LBL_DATE_FILTER}" IsChecked="{Binding FilterByDate}"/>
+                <CheckBox Grid.Column="0" Content="{x:Static constants:Locale.LBL_DATE_FILTER}" Command="{Binding ChangeFilterByDateCommand}" IsChecked="{Binding FilterByDateChecked, Mode=OneWay}"/>
                 <TextBlock Grid.Column="1" Text="{x:Static constants:Locale.LBL_DATE_START_FILTER}" VerticalAlignment="Center" Margin="10 0 0 0"/>
                 <xctk:DateTimePicker Grid.Column="2" Value="{Binding StartDateTime}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Minimum="{Binding MinDate}" Maximum="{Binding MaxDate}" ClipValueToMinMax="True"/>
                 <TextBlock Grid.Column="3" Text="{x:Static constants:Locale.LBL_DATE_END_FILTER}" VerticalAlignment="Center" Margin="10 0 0 0"/>
                 <xctk:DateTimePicker Grid.Column="4" Value="{Binding EndDateTime}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Minimum="{Binding MinDate}" Maximum="{Binding MaxDate}" ClipValueToMinMax="True"/>
-                <ui:ProgressRing Grid.Column="6" IsActive="{Binding ActiveProgressRing}" Height="32" Width="32" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                <TextBlock Grid.Column="7" Text="{x:Static constants:Locale.PLEASE_WAIT}" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="{Binding ActiveProgressRing, Converter={StaticResource boolToVisible}}"/>
+                <ui:ProgressRing Grid.Column="9" IsActive="{Binding ActiveProgressRing}" Height="32" Width="32" HorizontalAlignment="Right" VerticalAlignment="Top"/>
             </Grid>
-            <DataGrid Grid.Row="1" BorderThickness="0" ItemsSource="{Binding FilteredListLines}" Name="ListBoxLines" SelectionMode="Extended" GridLinesVisibility="Vertical"
+            <DataGrid Grid.Row="2" BorderThickness="0" ItemsSource="{Binding FilteredListLines}" Name="ListBoxLines" SelectionMode="Extended" GridLinesVisibility="Vertical"
                       HeadersVisibility="None" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="ListBoxLines_ScrollChanged" SelectedItem="{Binding SelectedLine}" SelectionChanged="ListBoxLines_SelectionChanged" SelectedIndex="{Binding RowIndexSelected}"
                       CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" RowHeight="{x:Static constants:Values.RowHeight}" MinRowHeight="1">
                 <DataGrid.RowStyle>
@@ -421,8 +382,10 @@
                         <Setter Property="ContextMenu">
                             <Setter.Value>
                                 <ContextMenu>
-                                    <MenuItem Header="{x:Static constants:Locale.HIDE_LINE_BEFORE}" Command="{Binding DataContext.CmdHideLineBefore, Source={StaticResource ParentDataContext}}"/>
-                                    <MenuItem Header="{x:Static constants:Locale.HIDE_LINE_AFTER}" Command="{Binding DataContext.CmdHideLineAfter, Source={StaticResource ParentDataContext}}"/>
+                                    <MenuItem Header="{x:Static constants:Locale.HIDE_LINE_BEFORE}" Command="{Binding DataContext.HideLineBeforeCommand, Source={StaticResource ParentDataContext}}"/>
+                                    <MenuItem Header="{x:Static constants:Locale.MENU_HIDE_SELECTED}" Command="{Binding DataContext.HideSelectedLinesCommand, Source={StaticResource ParentDataContext}}"/>
+                                    <MenuItem Header="{x:Static constants:Locale.HIDE_LINE_AFTER}" Command="{Binding DataContext.HideLineAfterCommand, Source={StaticResource ParentDataContext}}"/>
+                                    <MenuItem Header="{x:Static constants:Locale.MENU_SHOW_HIDE_LINE_BA}" Command="{Binding DataContext.ShowHiddenLineBACommand, Source={StaticResource ParentDataContext}}"/>
                                 </ContextMenu>
                             </Setter.Value>
                         </Setter>
@@ -451,7 +414,7 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn FontSize="{x:Static constants:Values.FontSize}" Binding="{Binding Line}" FontFamily="Consolas" IsReadOnly="True" x:Name="ColumnLines">
+                    <DataGridTextColumn FontSize="{x:Static constants:Values.FontSize}" Binding="{Binding LineOrGroup}" FontFamily="Consolas" IsReadOnly="True" x:Name="ColumnLines">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Background" Value="{Binding Background}"/>
@@ -463,6 +426,7 @@
                                 <Setter Property="FontWeight" Value="{Binding Weight}"/>
                                 <Setter Property="TextBlock.TextWrapping" Value="{x:Static constants:Values.WrapLines}"/>
                                 <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+                                <Setter Property="IsEnabled" Value="{Binding NotSpecialLine}"/>
                                 <Style.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter Property="BorderThickness" Value="0"/>
@@ -470,7 +434,7 @@
                                             <Setter.Value>
                                                 <DataTemplate>
                                                     <TextBlock Margin="0" Padding="0" TextWrapping="{x:Static constants:Values.WrapLines}">
-                                                        <TextBox IsReadOnly="True" Text="{Binding Text}" Background="{Binding Background}" Foreground="{Binding Foreground}" FontFamily="Consolas" FontWeight="{Binding Weight}" FontStyle="{Binding Style}" TextWrapping="{x:Static constants:Values.WrapLines}" Style="{StaticResource MyTextBoxStyle}" FontSize="{x:Static constants:Values.FontSize}"/>
+                                                        <TextBox IsReadOnly="True" IsEnabled="{Binding IsEnabled}" Text="{Binding Text}" Background="{Binding Background}" Foreground="{Binding Foreground}" FontFamily="Consolas" FontWeight="{Binding FontWeight}" FontStyle="{Binding FontStyle}" TextWrapping="{x:Static constants:Values.WrapLines}" Style="{StaticResource MyTextBoxStyle}" FontSize="{x:Static constants:Values.FontSize}"/>
                                                     </TextBlock>
                                                 </DataTemplate>
                                             </Setter.Value>
@@ -561,7 +525,7 @@
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="{x:Static constants:Locale.MENU_SAVE_SEARCH_RESULT}" Command="{Binding CmdSaveSearchResult}"/>
+                        <MenuItem Header="{x:Static constants:Locale.MENU_SAVE_SEARCH_RESULT}" Command="{Binding SaveSearchResultCommand}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>

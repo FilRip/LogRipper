@@ -2,31 +2,30 @@
 
 using LogRipper.ViewModels;
 
-namespace LogRipper.Windows
+namespace LogRipper.Windows;
+
+/// <summary>
+/// Logique d'interaction pour OptionsWindow.xaml
+/// </summary>
+public partial class OptionsWindow : Window
 {
-    /// <summary>
-    /// Logique d'interaction pour OptionsWindow.xaml
-    /// </summary>
-    public partial class OptionsWindow : Window
+    public OptionsWindow()
     {
-        public OptionsWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        internal OptionsWindowViewModel MyDataContext
-        {
-            get { return (OptionsWindowViewModel)DataContext; }
-        }
+    internal OptionsWindowViewModel MyDataContext
+    {
+        get { return (OptionsWindowViewModel)DataContext; }
+    }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    private void BtnCancel_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 
-        private void TextBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            MyDataContext.OpenRulesFilename();
-        }
+    private void TextBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        MyDataContext.OpenRulesFilename();
     }
 }

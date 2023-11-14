@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 
-namespace LogRipper.Controls
+namespace LogRipper.Controls;
+
+/// <summary>
+/// Logique d'interaction pour Window1.xaml
+/// </summary>
+public partial class Window1 : Window
 {
-    /// <summary>
-    /// Logique d'interaction pour Window1.xaml
-    /// </summary>
-    public partial class Window1 : Window
+    public Window1()
     {
-        public Window1()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

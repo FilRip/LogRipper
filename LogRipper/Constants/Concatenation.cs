@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace LogRipper.Constants
+namespace LogRipper.Constants;
+
+[Serializable()]
+public enum Concatenation
 {
-    [Serializable()]
-    public enum Concatenation
-    {
-        AND = 0,
-        OR = 1,
-    }
+    AND = 0,
+    OR = 1,
 }

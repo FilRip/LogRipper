@@ -586,5 +586,41 @@ namespace LogRipper.Properties {
                 this["beta"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ConfigReloaded {
+            get {
+                return ((bool)(this["ConfigReloaded"]));
+            }
+            set {
+                this["ConfigReloaded"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MinimizeInSystray {
+            get {
+                return ((bool)(this["MinimizeInSystray"]));
+            }
+            set {
+                this["MinimizeInSystray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowInSystray {
+            get {
+                return ((bool)(this["ShowInSystray"]));
+            }
+            set {
+                this["ShowInSystray"] = value;
+            }
+        }
     }
 }

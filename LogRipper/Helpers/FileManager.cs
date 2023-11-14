@@ -13,155 +13,155 @@ using LogRipper.Exceptions;
 using LogRipper.Models;
 using LogRipper.Windows;
 
-namespace LogRipper.Helpers
+namespace LogRipper.Helpers;
+
+internal static class FileManager
 {
-    internal static class FileManager
+    private static readonly Dictionary<string, OneFile> _listFiles = new();
+
+    internal static OneFile GetFile(string filename)
     {
-        private static readonly Dictionary<string, OneFile> _listFiles = new();
+        if (filename != null && _listFiles.ContainsKey(filename))
+            return _listFiles[filename];
+        return null;
+    }
 
-        internal static OneFile GetFile(string filename)
+    internal static List<OneFile> GetAllFiles()
+    {
+        return _listFiles.Values.OfType<OneFile>().Where(f => !f.IsDisposed).ToList();
+    }
+
+    internal static void RemoveAllFiles()
+    {
+        _listFiles.Values.OfType<OneFile>().ToList().ForEach(f => f.Dispose());
+        _listFiles.Clear();
+    }
+
+    internal static void SetNewListFiles(List<OneFile> listFiles)
+    {
+        RemoveAllFiles();
+        foreach (OneFile file in listFiles)
         {
-            if (_listFiles.ContainsKey(filename))
-                return _listFiles[filename];
-            return null;
+            _listFiles.Add(file.FileName, file);
+            file.CommonInit();
         }
+        Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListFiles();
+    }
 
-        internal static List<OneFile> GetAllFiles()
+    internal static List<OneLine> LoadFile(string filename, out OneFile file, Encoding defaultFileEncoding = null, SolidColorBrush defaultBackgfround = null, SolidColorBrush defaultForeground = null, bool activeAutoReload = false, bool createFile = true)
+    {
+        file = null;
+        if (createFile && _listFiles.Values.OfType<OneFile>().Any(f => f.FullPath == filename))
+            throw new LogRipperException(Locale.ERROR_FILE_ALREADY_LOADED);
+        List<OneLine> list = new();
+        int num = 0;
+        defaultFileEncoding ??= Encoding.Default;
+        defaultBackgfround ??= new SolidColorBrush(Constants.Colors.DefaultBackgroundColor);
+        defaultForeground ??= new SolidColorBrush(Constants.Colors.DefaultForegroundColor);
+        int length = (int)new FileInfo(filename).Length;
+        if (length <= 0)
         {
-            return _listFiles.Values.OfType<OneFile>().Where(f => !f.IsDisposed).ToList();
-        }
-
-        internal static void RemoveAllFiles()
-        {
-            _listFiles.Values.OfType<OneFile>().ToList().ForEach(f => f.Dispose());
-            _listFiles.Clear();
-        }
-
-        internal static void SetNewListFiles(List<OneFile> listFiles)
-        {
-            RemoveAllFiles();
-            foreach (OneFile file in listFiles)
-            {
-                _listFiles.Add(file.FileName, file);
-                file.CommonInit();
-            }
-            Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListFiles();
-        }
-
-        internal static ObservableCollection<OneLine> LoadFile(string filename, Encoding defaultFileEncoding = null, SolidColorBrush defaultBackgfround = null, SolidColorBrush defaultForeground = null, bool activeAutoReload = false, bool createFile = true)
-        {
-            if (createFile && _listFiles.Values.OfType<OneFile>().Any(f => f.FullPath == filename))
-                throw new LogRipperException(Locale.ERROR_FILE_ALREADY_LOADED);
-            ObservableCollection<OneLine> list = new();
-            int num = 0;
-            defaultFileEncoding ??= Encoding.Default;
-            defaultBackgfround ??= new SolidColorBrush(Constants.Colors.DefaultBackgroundColor);
-            defaultForeground ??= new SolidColorBrush(Constants.Colors.DefaultForegroundColor);
-            int length = (int)new FileInfo(filename).Length;
-            if (length <= 0)
-            {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
-                return list;
-            }
-            FileStream fs = null;
-            string[] lines = null;
-            try
-            {
-                byte[] donnees = new byte[length];
-                fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                fs.Read(donnees, 0, length);
-                if (donnees.Length > 0)
-                    lines = defaultFileEncoding.GetString(donnees).Split(Environment.NewLine.ToCharArray());
-            }
-            catch (Exception ex)
-            {
-                WpfMessageBox.ShowModal(Locale.ERROR_READING_FILE + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
-                return list;
-            }
-            finally
-            {
-                fs?.Close();
-                fs?.Dispose();
-            }
-            if (lines?.Length > 0)
-            {
-                foreach (string line in lines)
-                {
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        num++;
-                        OneLine oneLine = new()
-                        {
-                            NumLine = num,
-                            Line = line,
-                            FileName = Path.GetFileNameWithoutExtension(filename),
-                        };
-                        list.Add(oneLine);
-                    }
-                }
-                if (createFile)
-                {
-                    _listFiles.Add(Path.GetFileNameWithoutExtension(filename), new OneFile(filename, length, defaultFileEncoding, activeAutoReload)
-                    {
-                        DefaultBackground = defaultBackgfround,
-                        DefaultForeground = defaultForeground,
-                    });
-                    Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListFiles();
-                }
-            }
-            else
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+            WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
             return list;
         }
-
-        internal static void ComputeDate(IEnumerable<OneLine> listLines, string dateFormat)
+        FileStream fs = null;
+        string[] lines = null;
+        try
         {
-            DateTime lastDt = DateTime.MinValue;
-            foreach (OneLine oneLine in listLines)
+            byte[] donnees = new byte[length];
+            fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            fs.Read(donnees, 0, length);
+            if (donnees.Length > 0)
+                lines = defaultFileEncoding.GetString(donnees).Split(Environment.NewLine.ToCharArray());
+        }
+        catch (Exception ex)
+        {
+            WpfMessageBox.ShowModal(Locale.ERROR_READING_FILE + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
+            return list;
+        }
+        finally
+        {
+            fs?.Close();
+            fs?.Dispose();
+        }
+        if (lines?.Length > 0)
+        {
+            foreach (string line in lines)
             {
-                if (!string.IsNullOrWhiteSpace(oneLine.Line) && oneLine.Line.Length >= dateFormat.Length &&
-                    DateTime.TryParseExact(oneLine.Line.Substring(0, dateFormat.Length), dateFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime currentDate))
+                if (!string.IsNullOrEmpty(line))
                 {
-                    lastDt = currentDate;
+                    num++;
+                    OneLine oneLine = new()
+                    {
+                        NumLine = num,
+                        Line = line,
+                        FileName = Path.GetFileNameWithoutExtension(filename),
+                    };
+                    list.Add(oneLine);
                 }
-                oneLine.Date = lastDt;
             }
-        }
-
-        internal static void ExportToHtml(ObservableCollection<OneLine> listLines, ListCurrentRules listRules, string filepath)
-        {
-            StringBuilder sb = new();
-
-            sb.AppendLine("<html>");
-            sb.AppendLine("<body>");
-            sb.AppendLine("<font face=\"Consolas\">");
-            sb.AppendLine("<table>");
-
-            foreach (OneLine line in listLines.Where(line => !string.IsNullOrWhiteSpace(line.Line) && !listRules.ExecuteRulesHideLine(line.Line, line.Date)))
+            if (createFile)
             {
-                sb.AppendLine("<tr>");
-
-                sb.Append($"<td bgcolor=\"#{_listFiles[line.FileName].DefaultBackground.Color.R:X2}{_listFiles[_listFiles[line.FileName].FileName].DefaultBackground.Color.G:X2}{_listFiles[line.FileName].DefaultBackground.Color.B:X2}\">");
-                sb.Append($"<font color=\"#{_listFiles[line.FileName].DefaultForeground.Color.R:X2}{_listFiles[_listFiles[line.FileName].FileName].DefaultForeground.Color.G:X2}{_listFiles[line.FileName].DefaultForeground.Color.B:X2}\">{line.NumLine}</font>");
-                sb.Append("</td>");
-
-                sb.Append($"<td bgcolor=\"#{_listFiles[line.FileName].DefaultBackground.Color.R:X2}{_listFiles[line.FileName].DefaultBackground.Color.G:X}{_listFiles[line.FileName].DefaultBackground.Color.B:X2}\">");
-                sb.Append($"<font color=\"#{_listFiles[line.FileName].DefaultForeground.Color.R:X2}{_listFiles[line.FileName].DefaultForeground.Color.G:X}{_listFiles[line.FileName].DefaultForeground.Color.B:X2}\">{line.FileName}</font>");
-                sb.Append("</td>");
-
-                SolidColorBrush back, fore;
-                back = listRules.ExecuteRulesBackground(line.Line, line.Date) ?? _listFiles[line.FileName].DefaultBackground;
-                fore = listRules.ExecuteRulesForeground(line.Line, line.Date) ?? _listFiles[line.FileName].DefaultForeground;
-                sb.Append($"<td bgcolor=\"#{back.Color.R:X2}{back.Color.G:X2}{back.Color.B:X2}\">");
-                sb.Append($"<font color=\"#{fore.Color.R:X2}{fore.Color.G:X2}{fore.Color.B:X2}\">{line.Line}</font>");
-                sb.Append("</td>");
+                file = new OneFile(filename, length, defaultFileEncoding, activeAutoReload)
+                {
+                    DefaultBackground = defaultBackgfround,
+                    DefaultForeground = defaultForeground,
+                };
+                _listFiles.Add(Path.GetFileNameWithoutExtension(filename), file);
             }
-            sb.AppendLine("</table>");
-            sb.AppendLine("</font>");
-            sb.AppendLine("</body>");
-            sb.AppendLine("</html>");
-
-            File.WriteAllText(filepath, sb.ToString());
         }
+        else
+            WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+        return list;
+    }
+
+    internal static void ComputeDate(IEnumerable<OneLine> listLines, string dateFormat)
+    {
+        DateTime lastDt = DateTime.MinValue;
+        foreach (OneLine oneLine in listLines)
+        {
+            if (!string.IsNullOrWhiteSpace(oneLine.Line) && oneLine.Line.Length >= dateFormat.Length &&
+                DateTime.TryParseExact(oneLine.Line.Substring(0, dateFormat.Length), dateFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime currentDate))
+            {
+                lastDt = currentDate;
+            }
+            oneLine.Date = lastDt;
+        }
+    }
+
+    internal static void ExportToHtml(ObservableCollection<OneLine> listLines, ListCurrentRules listRules, string filepath)
+    {
+        StringBuilder sb = new();
+
+        sb.AppendLine("<html>");
+        sb.AppendLine("<body>");
+        sb.AppendLine("<font face=\"Consolas\">");
+        sb.AppendLine("<table>");
+
+        foreach (OneLine line in listLines.Where(line => !string.IsNullOrWhiteSpace(line.Line) && !listRules.ExecuteRulesHideLine(line.Line, line.Date)))
+        {
+            sb.AppendLine("<tr>");
+
+            sb.Append($"<td bgcolor=\"#{_listFiles[line.FileName].DefaultBackground.Color.R:X2}{_listFiles[_listFiles[line.FileName].FileName].DefaultBackground.Color.G:X2}{_listFiles[line.FileName].DefaultBackground.Color.B:X2}\">");
+            sb.Append($"<font color=\"#{_listFiles[line.FileName].DefaultForeground.Color.R:X2}{_listFiles[_listFiles[line.FileName].FileName].DefaultForeground.Color.G:X2}{_listFiles[line.FileName].DefaultForeground.Color.B:X2}\">{line.NumLine}</font>");
+            sb.Append("</td>");
+
+            sb.Append($"<td bgcolor=\"#{_listFiles[line.FileName].DefaultBackground.Color.R:X2}{_listFiles[line.FileName].DefaultBackground.Color.G:X}{_listFiles[line.FileName].DefaultBackground.Color.B:X2}\">");
+            sb.Append($"<font color=\"#{_listFiles[line.FileName].DefaultForeground.Color.R:X2}{_listFiles[line.FileName].DefaultForeground.Color.G:X}{_listFiles[line.FileName].DefaultForeground.Color.B:X2}\">{line.FileName}</font>");
+            sb.Append("</td>");
+
+            SolidColorBrush back, fore;
+            back = listRules.ExecuteRulesBackground(line.Line, line.Date) ?? _listFiles[line.FileName].DefaultBackground;
+            fore = listRules.ExecuteRulesForeground(line.Line, line.Date) ?? _listFiles[line.FileName].DefaultForeground;
+            sb.Append($"<td bgcolor=\"#{back.Color.R:X2}{back.Color.G:X2}{back.Color.B:X2}\">");
+            sb.Append($"<font color=\"#{fore.Color.R:X2}{fore.Color.G:X2}{fore.Color.B:X2}\">{line.Line}</font>");
+            sb.Append("</td>");
+        }
+        sb.AppendLine("</table>");
+        sb.AppendLine("</font>");
+        sb.AppendLine("</body>");
+        sb.AppendLine("</html>");
+
+        File.WriteAllText(filepath, sb.ToString());
     }
 }
