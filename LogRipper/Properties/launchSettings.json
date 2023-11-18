@@ -1,7 +1,8 @@
 {
   "profiles": {
     "LogRipper": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "c:\\tmp\\test.log"
     }
   }
 }

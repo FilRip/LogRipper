@@ -60,6 +60,10 @@ internal partial class MainWindowViewModel : ObservableObject
     private string _selectedText;
     private int _numGroupLine;
     private ICollectionView _filterListLines;
+    [ObservableProperty()]
+    private ObservableCollection<TabItemSearch> _listSearchTab;
+    [ObservableProperty()]
+    private TabItemSearch _currentSearchTab;
 
     #endregion
 
@@ -75,6 +79,8 @@ internal partial class MainWindowViewModel : ObservableObject
         _listRules.EditRuleEvent += UpdateRules;
         _listFiles = new ObservableCollection<OneFile>();
         _listLines = new ObservableCollection<OneLine>();
+        _listSearchTab = new ObservableCollection<TabItemSearch>();
+        _searchCaseSensitive = StringComparison.CurrentCultureIgnoreCase;
 
         ResetMinMaxDate();
         _startDateTime = DateTime.MinValue;
@@ -205,29 +211,6 @@ internal partial class MainWindowViewModel : ObservableObject
         await SetFilteredListLinesView();
     }
 
-    public ECurrentSearchMode CurrentSearchMode
-    {
-        get { return _currentSearchMode; }
-    }
-
-    public string WhatToSearch
-    {
-        get
-        {
-            string ret = _search;
-            if (_currentSearchMode == ECurrentSearchMode.BY_RULES)
-                ret = _listSearchRules[0].ToString();
-            if (!string.IsNullOrWhiteSpace(Locale.LBL_RESULT))
-                return $"{ret} " + string.Format(Locale.LBL_RESULT, NbMatchSearch);
-            else return "";
-        }
-    }
-
-    public int NbMatchSearch
-    {
-        get { return ListLinesSearch?.Count() ?? 0; }
-    }
-
     public bool FilterByDateChecked
     {
         get { return FilterByDate; }
@@ -271,11 +254,23 @@ internal partial class MainWindowViewModel : ObservableObject
     private void Search()
     {
         InputBoxWindow input = new();
+        input.ChkCaseSensitive.IsChecked = _searchCaseSensitive == StringComparison.CurrentCulture;
         input.ShowModal(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, _search);
         if (input.DialogResult == true && ListLines?.Count > 0 && !string.IsNullOrEmpty(input.TxtUserEdit.Text))
         {
             _search = input.TxtUserEdit.Text;
-            _currentSearchMode = ECurrentSearchMode.BY_STRING;
+            TabItemSearch newTab = new();
+            List<OneLine> result;
+            if (_currentSearchMode == ECurrentSearchMode.BY_RULES)
+                result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && _listSearchRules.Exists(rule => rule.Execute(line.Line, line.Date))).ToList();
+            result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0).ToList();
+            newTab.MyDataContext.SetNewSearch(result, ECurrentSearchMode.BY_STRING, _search);
+            newTab.MyDataContext.CurrentShowNumLine = CurrentShowNumLine;
+            newTab.MyDataContext.CurrentShowFileName = CurrentShowFileName;
+            ListSearchTab.Add(newTab);
+            OnPropertyChanged(nameof(ListSearchTab));
+            CurrentSearchTab = newTab;
+            newTab.SetTitle(_search);
             _searchCaseSensitive = StringComparison.CurrentCultureIgnoreCase;
             if (input.ChkCaseSensitive.IsChecked == true)
                 _searchCaseSensitive = StringComparison.CurrentCulture;
@@ -283,8 +278,6 @@ internal partial class MainWindowViewModel : ObservableObject
             if (find != null)
                 SelectedLine = find;
             ShowSearchResult = true;
-            OnPropertyChanged(nameof(ListLinesSearch));
-            OnPropertyChanged(nameof(WhatToSearch));
         }
     }
 
@@ -553,7 +546,6 @@ internal partial class MainWindowViewModel : ObservableObject
         _currentSearchMode = ECurrentSearchMode.BY_RULES;
         ShowSearchResult = true;
         OnPropertyChanged(nameof(ListLinesSearch));
-        OnPropertyChanged(nameof(WhatToSearch));
     }
 
     [RelayCommand()]
@@ -816,28 +808,6 @@ internal partial class MainWindowViewModel : ObservableObject
                 listCopy.Append(selected.Line);
             }
             Clipboard.SetText(listCopy.ToString());
-        }
-    }
-
-    [RelayCommand()]
-    private void SaveSearchResult()
-    {
-        SaveFileDialog dialog = new()
-        {
-            Filter = "Log files|*.log",
-        };
-        if (dialog.ShowDialog() == true)
-        {
-            try
-            {
-                if (File.Exists(dialog.FileName))
-                    File.Delete(dialog.FileName);
-                File.WriteAllLines(dialog.FileName, ListLinesSearch.Select(l => l.Line), Encoding.Default);
-            }
-            catch (Exception ex)
-            {
-                WpfMessageBox.ShowModal(Locale.ERROR_SAVE_FILE + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
-            }
         }
     }
 

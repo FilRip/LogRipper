@@ -6,5 +6,5 @@ Source code licenced to CC BY-NC :
 - You can redistribute it
 - You <b>CAN'T</b> sell software with this or part of this source code
 <br><br><br>
-Latest version=1.3<br>
-Latest beta version=1.3
+Latest version=1.4<br>
+Latest beta version=1.4

@@ -230,7 +230,6 @@ public partial class OneFile : ObservableObject, IDisposable
         List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
         listLines.RemoveAll(l => l.FileName == FileName);
         List<OneLine> listNewLines;
-        OneFile file = null;
         lock (_lockFileAccess)
         {
             listNewLines = FileManager.LoadFile(FullPath, out _, _currentEncoding, DefaultBackground, DefaultForeground, createFile: false);
@@ -239,7 +238,6 @@ public partial class OneFile : ObservableObject, IDisposable
         if (!string.IsNullOrWhiteSpace(DateFormat))
             FileManager.ComputeDate(listNewLines, DateFormat);
         mainWindowViewModel.ListLines = new ObservableCollection<OneLine>(listLines.Concat(listNewLines).OrderBy(l => l.Date));
-        mainWindowViewModel.ListFiles.Add(file);
         await mainWindowViewModel.RefreshListLines();
         mainWindowViewModel.ActiveProgressRing = false;
     }

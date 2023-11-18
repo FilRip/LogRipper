@@ -29,10 +29,8 @@ public partial class MainWindow : Window
 {
     // TODO : Tabs to open multiples files in differents space
     // TODO : Add possibility to wrap lines
-    // TODO : Add possibility to keep result found
     // TODO : Make a scrollbar colored by matching
     // TODO : Remove some Modal window
-    // TODO : Make tabs for different search result
     // TODO : Make docking/float window/toolbar
     public MainWindow()
     {
@@ -68,7 +66,7 @@ public partial class MainWindow : Window
         {
             if (Environment.GetCommandLineArgs().Length > 1 && !Environment.GetCommandLineArgs()[1].StartsWith("/r=", StringComparison.CurrentCultureIgnoreCase))
             {
-                PreloadFile().RunSynchronously();
+                _ = PreloadFile();
             }
         }
         catch (Exception ex)

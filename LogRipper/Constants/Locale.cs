@@ -170,6 +170,9 @@ internal static class Locale
     public static string SETTINGS_SHOW_SYSTRAY { get; set; }
     public static string SETTINGS_MINIMIZE_SYSTRAY { get; set; }
     public static string MENU_SHOW_MAINWINDOW { get; set; }
+    public static string CLOSE_TAB { get; set; }
+    public static string CLOSE_ALL_TABS { get; set; }
+    public static string CLOSE_OTHER_TABS { get; set; }
     #endregion
 
     #region Methods
@@ -335,6 +338,9 @@ internal static class Locale
             SETTINGS_SHOW_SYSTRAY = GetTranslation(nameof(SETTINGS_SHOW_SYSTRAY));
             SETTINGS_MINIMIZE_SYSTRAY = GetTranslation(nameof(SETTINGS_MINIMIZE_SYSTRAY));
             MENU_SHOW_MAINWINDOW = GetTranslation(nameof(MENU_SHOW_MAINWINDOW));
+            CLOSE_TAB = GetTranslation(nameof(CLOSE_TAB));
+            CLOSE_ALL_TABS = GetTranslation(nameof(CLOSE_ALL_TABS));
+            CLOSE_OTHER_TABS = GetTranslation(nameof(CLOSE_OTHER_TABS));
         }
         else
         {

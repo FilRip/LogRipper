@@ -1,0 +1,10 @@
+{
+  "FileVersion": 2,
+  "Id": "76276e11-f0ba-4c58-a452-94f318f132db",
+  "Items": [
+    {
+      "Id": "9063a384-5154-497b-bf3c-a71076ac4ef4",
+      "Command": "c:\\tmp\\test.log"
+    }
+  ]
+}
