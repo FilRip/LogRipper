@@ -63,7 +63,7 @@ public partial class RuleWindowViewModel : ObservableObject
         BackColor = Constants.Colors.DefaultBackgroundColor;
         ForeColor = Constants.Colors.DefaultForegroundColor;
         Condition = ListConditions[0];
-        SubRules = new ObservableCollection<OneSubRule>();
+        SubRules = [];
     }
 
     #endregion

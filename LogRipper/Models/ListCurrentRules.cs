@@ -16,7 +16,7 @@ internal class ListCurrentRules
 
     internal ListCurrentRules()
     {
-        _listRules = new();
+        _listRules = [];
     }
 
     public ObservableCollection<OneRule> ListRules

@@ -40,7 +40,7 @@ internal partial class OptionsWindowViewModel : ObservableObject
     {
         OneLanguage _default = null;
         OneLanguage _current = null;
-        _listLanguages = new List<OneLanguage>();
+        _listLanguages = [];
         foreach (string lang in Directory.GetFiles(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Languages"), "*.ini"))
         {
             CultureInfo ci = CultureInfo.GetCultureInfo(Path.GetFileNameWithoutExtension(lang));
@@ -62,12 +62,12 @@ internal partial class OptionsWindowViewModel : ObservableObject
             SelectedLanguage = _current;
         else if (_default != null)
             SelectedLanguage = _default;
-        _listThemes = new List<string>()
-        {
+        _listThemes =
+        [
             "Windows",
             Locale.THEME_LIGHT,
             Locale.THEME_DARK,
-        };
+        ];
         SelectedTheme = Properties.Settings.Default.Theme;
         DefaultBackgroundColor = Color.FromRgb(Properties.Settings.Default.DefaultBackgroundColor.R, Properties.Settings.Default.DefaultBackgroundColor.G, Properties.Settings.Default.DefaultBackgroundColor.B);
         DefaultForegroundColor = Color.FromRgb(Properties.Settings.Default.DefaultForegroundColor.R, Properties.Settings.Default.DefaultForegroundColor.G, Properties.Settings.Default.DefaultForegroundColor.B);

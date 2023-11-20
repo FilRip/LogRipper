@@ -72,14 +72,14 @@ internal partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel() : base()
     {
         _listRules = new ListCurrentRules();
-        _listSearchRules = new List<OneRule>();
-        ListCategory = new List<OneCategory>();
+        _listSearchRules = [];
+        ListCategory = [];
         _listRules.AddRuleEvent += UpdateRules;
         _listRules.RemoveRuleEvent += UpdateRules;
         _listRules.EditRuleEvent += UpdateRules;
-        _listFiles = new ObservableCollection<OneFile>();
-        _listLines = new ObservableCollection<OneLine>();
-        _listSearchTab = new ObservableCollection<TabItemSearch>();
+        _listFiles = [];
+        _listLines = [];
+        _listSearchTab = [];
         _searchCaseSensitive = StringComparison.CurrentCultureIgnoreCase;
 
         ResetMinMaxDate();
@@ -874,7 +874,7 @@ internal partial class MainWindowViewModel : ObservableObject
         if (ListLines?.Count == 0)
             return;
         ActiveProgressRing = true;
-        List<OneLine> lineToRemove = new();
+        List<OneLine> lineToRemove = [];
         await Task.Run(() =>
         {
             foreach (OneLine line in ListLines)
@@ -884,11 +884,9 @@ internal partial class MainWindowViewModel : ObservableObject
                 line.GroupLines = null;
             }
         });
-#pragma warning disable S2583 // False positive until await previous Task
         if (lineToRemove.Count > 0)
             foreach (OneLine line in lineToRemove)
                 ListLines.Remove(line);
-#pragma warning restore S2583
         await RefreshListLines();
     }
 

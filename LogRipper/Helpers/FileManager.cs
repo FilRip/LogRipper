@@ -17,7 +17,7 @@ namespace LogRipper.Helpers;
 
 internal static class FileManager
 {
-    private static readonly Dictionary<string, OneFile> _listFiles = new();
+    private static readonly Dictionary<string, OneFile> _listFiles = [];
 
     internal static OneFile GetFile(string filename)
     {
@@ -53,7 +53,7 @@ internal static class FileManager
         file = null;
         if (createFile && _listFiles.Values.OfType<OneFile>().Any(f => f.FullPath == filename))
             throw new LogRipperException(Locale.ERROR_FILE_ALREADY_LOADED);
-        List<OneLine> list = new();
+        List<OneLine> list = [];
         int num = 0;
         defaultFileEncoding ??= Encoding.Default;
         defaultBackgfround ??= new SolidColorBrush(Constants.Colors.DefaultBackgroundColor);
@@ -84,6 +84,7 @@ internal static class FileManager
             fs?.Close();
             fs?.Dispose();
         }
+#pragma warning disable S2589 // False positive, Boolean expressions should not be gratuitous
         if (lines?.Length > 0)
         {
             foreach (string line in lines)
@@ -112,6 +113,7 @@ internal static class FileManager
         }
         else
             WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
         return list;
     }
 

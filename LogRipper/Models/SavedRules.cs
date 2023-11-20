@@ -32,7 +32,7 @@ public class SavedRules
         SavedRules sr = new()
         {
             Title = title,
-            ListRules = new List<OneRule>()
+            ListRules = [],
         };
         sr.ListRules.AddRange(newListRules);
         sr.Save(filename);

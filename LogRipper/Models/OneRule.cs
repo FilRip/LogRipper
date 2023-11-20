@@ -25,7 +25,7 @@ public partial class OneRule : RuleViewModelBase
 
     public OneRule() : base()
     {
-        _subRules = new List<OneSubRule>();
+        _subRules = [];
         _active = true;
     }
 

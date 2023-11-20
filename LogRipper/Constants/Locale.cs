@@ -350,14 +350,14 @@ internal static class Locale
         ABOUT = ABOUT.Replace(@"\r\n", Environment.NewLine);
         ABOUT = ABOUT.Replace(@"\r", Environment.NewLine);
         ABOUT = ABOUT.Replace(@"\n", Environment.NewLine);
-        ListConditions = new List<string>()
-        {
+        ListConditions =
+        [
             LBL_CONTAINS,
             LBL_START_WITH,
             LBL_END_WITH,
             LBL_REG_EX,
             LBL_SCRIPT_CSHARP,
-        };
+        ];
     }
 
     private static string GetTranslation(string label)

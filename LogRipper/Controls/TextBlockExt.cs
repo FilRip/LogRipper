@@ -68,7 +68,7 @@ internal static class TextBlockExt
         if (originalInline is not Span span)
             return;
 
-        Dictionary<Inline, List<Inline>> replacements = new();
+        Dictionary<Inline, List<Inline>> replacements = [];
         List<Inline> startInlines = new(span.Inlines);
         foreach (Inline i in startInlines)
         {
@@ -106,7 +106,7 @@ internal static class TextBlockExt
 
     internal static List<Inline> GetHyperlinks(Run run)
     {
-        List<Inline> result = new();
+        List<Inline> result = [];
         string currentText = run.Text;
         do
         {

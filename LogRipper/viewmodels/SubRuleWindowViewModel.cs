@@ -30,11 +30,11 @@ public partial class SubRuleWindowViewModel : ObservableObject
     {
         _modify = false;
         _dialogResult = false;
-        _listConcatenation = new List<string>()
-        {
+        _listConcatenation =
+        [
             Locale.CONCATENATION_AND,
             Locale.CONCATENATION_OR,
-        };
+        ];
         Condition = ListConditions[0];
         SelectedConcatenation = _listConcatenation[0];
     }

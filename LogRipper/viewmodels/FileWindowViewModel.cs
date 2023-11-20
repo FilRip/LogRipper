@@ -21,15 +21,15 @@ public partial class FileWindowViewModel : ObservableObject
 
     public FileWindowViewModel() : base()
     {
-        _listEncoders = new List<string>()
-        {
+        _listEncoders =
+        [
             Locale.MENU_ENC_DEFAULT.Replace("_", ""),
             Locale.MENU_ENC_ASCII.Replace("_", ""),
             Locale.MENU_ENC_UTF7.Replace("_", ""),
             Locale.MENU_ENC_UTF8.Replace("_", ""),
             Locale.MENU_ENC_UTF32.Replace("_", ""),
             Locale.MENU_ENC_UNICODE.Replace("_", ""),
-        };
+        ];
     }
 
     public List<string> ListEncoders
