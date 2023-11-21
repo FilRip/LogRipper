@@ -23,9 +23,14 @@ namespace LogRipper.Controls
             MyHeader.Label_TabTitle.Content = MyDataContext.Search;
         }
 
-        public void SetTitle(string title)
+        internal void SetTitle(string title)
         {
             MyHeader.Label_TabTitle.Content = title;
+        }
+
+        internal string GetTitle()
+        {
+            return MyHeader.Label_TabTitle.Content.ToString();
         }
 
         private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -33,12 +38,12 @@ namespace LogRipper.Controls
             MyHeader.ButtonClose.Margin = new Thickness(MyHeader.Label_TabTitle.ActualWidth + 5, 3, 0, 0);
         }
 
-        public HeaderWithCloseButton MyHeader
+        internal HeaderWithCloseButton MyHeader
         {
             get { return (HeaderWithCloseButton)Header; }
         }
 
-        public TabItemSearchViewModel MyDataContext
+        internal TabItemSearchViewModel MyDataContext
         {
             get { return (TabItemSearchViewModel)DataContext; }
         }

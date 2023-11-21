@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -54,12 +56,14 @@ internal partial class ListRulesWindowViewModel : ObservableObject
         }
     }
 
-    internal void SearchRule(IEnumerable<OneRule> listRules)
+    [RelayCommand()]
+    private async Task SearchRule(IEnumerable<OneRule> listRules)
     {
         if (SelectedRule == null)
-            return;
-        Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.SearchRule(listRules);
+            WpfMessageBox.ShowModal(Locale.ERROR_SELECT_RULE, Locale.TITLE_ERROR);
+        IEnumerable<OneRule> listRulesToSearch = Application.Current.GetCurrentWindow<ListRulesWindow>().ListRulesToManage.SelectedItems.OfType<OneRule>();
         Application.Current.GetCurrentWindow<ListRulesWindow>().Close();
+        await Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.SearchRule(listRulesToSearch);
     }
 
     #endregion

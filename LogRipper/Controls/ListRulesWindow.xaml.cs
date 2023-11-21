@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 
-using LogRipper.Constants;
-using LogRipper.Helpers;
-using LogRipper.Models;
 using LogRipper.ViewModels;
 
 namespace LogRipper.Controls;
@@ -33,18 +29,6 @@ public partial class ListRulesWindow : Window
     internal ListRulesWindowViewModel MyDataContext
     {
         get { return (ListRulesWindowViewModel)DataContext; }
-    }
-
-    private void BtnSeeRulesResult_Click(object sender, RoutedEventArgs e)
-    {
-        if (ListRulesToManage.SelectedItems?.Count > 0)
-        {
-            MyDataContext.SearchRule(ListRulesToManage.SelectedItems.OfType<OneRule>());
-        }
-        else
-        {
-            WpfMessageBox.ShowModal(Locale.ERROR_SELECT_RULE, Locale.TITLE_ERROR);
-        }
     }
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

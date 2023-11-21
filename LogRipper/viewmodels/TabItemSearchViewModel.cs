@@ -26,7 +26,9 @@ public partial class TabItemSearchViewModel : ObservableObject
     private OneLine _selectedLine;
     [ObservableProperty()]
     private string _search;
+    [ObservableProperty()]
     private ECurrentSearchMode _currentSearchMode;
+    [ObservableProperty()]
     private List<OneRule> _listSearchRules;
     [ObservableProperty()]
     private bool _currentShowNumLine, _currentShowFileName;
@@ -34,10 +36,15 @@ public partial class TabItemSearchViewModel : ObservableObject
     internal void SetNewSearch(List<OneLine> result, ECurrentSearchMode currentSearchMode, string search = null, List<OneRule> rules = null)
     {
         ListResult = result;
-        _currentSearchMode = currentSearchMode;
+        CurrentSearchMode = currentSearchMode;
         Search = search;
-        _listSearchRules = rules;
+        ListSearchRules = rules;
         OnPropertyChanged(nameof(WhatToSearch));
+    }
+
+    partial void OnSelectedLineChanged(OneLine value)
+    {
+        Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.SelectedLine = value;
     }
 
     public string WhatToSearch
@@ -45,8 +52,8 @@ public partial class TabItemSearchViewModel : ObservableObject
         get
         {
             string ret = Search;
-            if (_currentSearchMode == ECurrentSearchMode.BY_RULES)
-                ret = _listSearchRules[0].ToString();
+            if (CurrentSearchMode == ECurrentSearchMode.BY_RULES)
+                ret = ListSearchRules[0].ToString();
             if (!string.IsNullOrWhiteSpace(Locale.LBL_RESULT))
                 return $"{ret} " + string.Format(Locale.LBL_RESULT, ListResult?.Count ?? 0);
             else

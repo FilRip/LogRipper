@@ -251,34 +251,44 @@ internal partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand()]
-    private void Search()
+    private async Task Search()
     {
         InputBoxWindow input = new();
         input.ChkCaseSensitive.IsChecked = _searchCaseSensitive == StringComparison.CurrentCulture;
         input.ShowModal(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, _search);
         if (input.DialogResult == true && ListLines?.Count > 0 && !string.IsNullOrEmpty(input.TxtUserEdit.Text))
         {
+            _listSearchRules.Clear();
             _search = input.TxtUserEdit.Text;
-            TabItemSearch newTab = new();
-            List<OneLine> result;
-            if (_currentSearchMode == ECurrentSearchMode.BY_RULES)
-                result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && _listSearchRules.Exists(rule => rule.Execute(line.Line, line.Date))).ToList();
-            result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0).ToList();
-            newTab.MyDataContext.SetNewSearch(result, ECurrentSearchMode.BY_STRING, _search);
-            newTab.MyDataContext.CurrentShowNumLine = CurrentShowNumLine;
-            newTab.MyDataContext.CurrentShowFileName = CurrentShowFileName;
-            ListSearchTab.Add(newTab);
-            OnPropertyChanged(nameof(ListSearchTab));
-            CurrentSearchTab = newTab;
-            newTab.SetTitle(_search);
             _searchCaseSensitive = StringComparison.CurrentCultureIgnoreCase;
             if (input.ChkCaseSensitive.IsChecked == true)
                 _searchCaseSensitive = StringComparison.CurrentCulture;
-            OneLine find = ListLines.FirstOrDefault(line => line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0);
-            if (find != null)
-                SelectedLine = find;
-            ShowSearchResult = true;
+            _currentSearchMode = ECurrentSearchMode.BY_STRING;
+            await CreateSearchTab();
         }
+    }
+
+    private async Task CreateSearchTab()
+    {
+        ActiveProgressRing = true;
+        await Task.Delay(10);
+        TabItemSearch newTab = new();
+        List<OneLine> result;
+        if (_currentSearchMode == ECurrentSearchMode.BY_RULES)
+            result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && _listSearchRules.Exists(rule => rule.Execute(line.Line, line.Date))).ToList();
+        else
+            result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0).ToList();
+        newTab.MyDataContext.SetNewSearch(result, _currentSearchMode, _search, _listSearchRules);
+        newTab.MyDataContext.CurrentShowNumLine = CurrentShowNumLine;
+        newTab.MyDataContext.CurrentShowFileName = CurrentShowFileName;
+        ListSearchTab.Add(newTab);
+        OnPropertyChanged(nameof(ListSearchTab));
+        CurrentSearchTab = newTab;
+        newTab.SetTitle(_currentSearchMode == ECurrentSearchMode.BY_RULES ? _listSearchRules[0].ToString() : _search);
+        if (result?.Count > 0)
+            SelectedLine = result[0];
+        ShowSearchResult = true;
+        ActiveProgressRing = false;
     }
 
     [RelayCommand()]
@@ -539,13 +549,12 @@ internal partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    internal void SearchRule(IEnumerable<OneRule> rules)
+    internal async Task SearchRule(IEnumerable<OneRule> rules)
     {
         _listSearchRules.Clear();
         _listSearchRules.AddRange(rules);
         _currentSearchMode = ECurrentSearchMode.BY_RULES;
-        ShowSearchResult = true;
-        OnPropertyChanged(nameof(ListLinesSearch));
+        await CreateSearchTab();
     }
 
     [RelayCommand()]
@@ -732,6 +741,33 @@ internal partial class MainWindowViewModel : ObservableObject
         new AboutWindow().ShowDialog();
     }
 
+    internal async Task OpenNewFile(string filename)
+    {
+        ActiveProgressRing = true;
+        List<OneLine> newListLines;
+        if (ListLines.Count > 0)
+            Application.Current.GetCurrentWindow<MainWindow>().ScrollToBegin();
+        await Task.Delay(10);
+        FileManager.RemoveAllFiles();
+        newListLines = FileManager.LoadFile(filename, out OneFile file, ReturnCurrentFileEncoding, activeAutoReload: EnableAutoReload);
+        if (ListLines.Count > 0)
+        {
+            _numVisibleStart = 1;
+            _numVisibleEnd = 2;
+            _filterListLines = null;
+            SelectedLine = null;
+            SelectedLines = null;
+            RowIndexSelected = 0;
+            ListFiles.Clear();
+            ListLines.Clear();
+        }
+        ListFiles.Add(file);
+        ListLines = new ObservableCollection<OneLine>(newListLines);
+        Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
+        FilterByDate = false;
+        ActiveProgressRing = false;
+    }
+
     [RelayCommand()]
     private async Task OpenFile()
     {
@@ -743,29 +779,7 @@ internal partial class MainWindowViewModel : ObservableObject
         {
             try
             {
-                ActiveProgressRing = true;
-                List<OneLine> newListLines = null;
-                if (ListLines.Count > 0)
-                    Application.Current.GetCurrentWindow<MainWindow>().ScrollToBegin();
-                await Task.Delay(10);
-                FileManager.RemoveAllFiles();
-                newListLines = FileManager.LoadFile(dialog.FileName, out OneFile file, ReturnCurrentFileEncoding, activeAutoReload: EnableAutoReload);
-                if (ListLines.Count > 0)
-                {
-                    _numVisibleStart = 1;
-                    _numVisibleEnd = 2;
-                    _filterListLines = null;
-                    SelectedLine = null;
-                    SelectedLines = null;
-                    RowIndexSelected = 0;
-                    ListFiles.Clear();
-                    ListLines.Clear();
-                }
-                ListFiles.Add(file);
-                ListLines = new ObservableCollection<OneLine>(newListLines);
-                Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
-                FilterByDate = false;
-                ActiveProgressRing = false;
+                await OpenNewFile(dialog.FileName);
             }
             catch (Exception ex)
             {

@@ -10,6 +10,7 @@ public enum Conditions
     END_WITH = 2,
     REG_EX = 3,
     SCRIPT = 4,
+    NOT_CONTAINS = 5,
 }
 
 internal static class ConditionsManager
@@ -18,6 +19,8 @@ internal static class ConditionsManager
     {
         if (condition == Locale.LBL_CONTAINS)
             return Conditions.CONTAINS;
+        else if (condition == Locale.LBL_NOT_CONTAINS)
+            return Conditions.NOT_CONTAINS;
         else if (condition == Locale.LBL_START_WITH)
             return Conditions.START_WITH;
         else if (condition == Locale.LBL_END_WITH)
@@ -35,6 +38,7 @@ internal static class ConditionsManager
         return conditions switch
         {
             Conditions.CONTAINS => Locale.LBL_CONTAINS,
+            Conditions.NOT_CONTAINS => Locale.LBL_NOT_CONTAINS,
             Conditions.START_WITH => Locale.LBL_START_WITH,
             Conditions.END_WITH => Locale.LBL_END_WITH,
             Conditions.REG_EX => Locale.LBL_REG_EX,

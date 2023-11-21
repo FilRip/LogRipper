@@ -70,9 +70,9 @@
             <RowDefinition Height="{Binding ShowSearchResult, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.2*}"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.9*" Name="MainList"/>
+            <ColumnDefinition Width="0.8*" Name="MainList"/>
             <ColumnDefinition Width="{Binding EnableShowMargin, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
-            <ColumnDefinition Width="{Binding EnableShowMargin, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.1*}"/>
+            <ColumnDefinition Width="{Binding EnableShowMargin, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.2*}"/>
         </Grid.ColumnDefinitions>
 
         <ContentControl Visibility="Collapsed" Content="{StaticResource ParentDataContext}"/>
@@ -373,7 +373,7 @@
                 <TextBlock Grid.Column="7" Text="{x:Static constants:Locale.PLEASE_WAIT}" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="{Binding ActiveProgressRing, Converter={StaticResource boolToVisible}}"/>
                 <ui:ProgressRing Grid.Column="9" IsActive="{Binding ActiveProgressRing}" Height="32" Width="32" HorizontalAlignment="Right" VerticalAlignment="Top"/>
             </Grid>
-            <DataGrid Grid.Row="2" BorderThickness="0" ItemsSource="{Binding FilteredListLines}" Name="ListBoxLines" SelectionMode="Extended" GridLinesVisibility="Vertical"
+            <DataGrid Grid.Row="2" BorderThickness="0" ItemsSource="{Binding FilteredListLines}" Name="ListBoxLines" SelectionMode="Extended" GridLinesVisibility="Vertical" Drop="ListBoxLines_Drop" AllowDrop="True"
                       HeadersVisibility="None" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="ListBoxLines_ScrollChanged" SelectedItem="{Binding SelectedLine}" SelectionChanged="ListBoxLines_SelectionChanged" SelectedIndex="{Binding RowIndexSelected}"
                       CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" RowHeight="{x:Static constants:Values.RowHeight}" MinRowHeight="1">
                 <DataGrid.RowStyle>

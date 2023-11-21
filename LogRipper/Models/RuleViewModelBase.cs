@@ -49,6 +49,10 @@ public abstract partial class RuleViewModelBase : ObservableObject
         {
             result = line.IndexOf(Text, 0, MyStringComparison) >= 0;
         }
+        else if (Conditions == Conditions.NOT_CONTAINS)
+        {
+            result = line.IndexOf(Text, 0, MyStringComparison) < 0;
+        }
         else if (Conditions == Conditions.START_WITH)
         {
             result = line.StartsWith(Text, MyStringComparison);

@@ -8,8 +8,10 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using LogRipper.Constants;
+using LogRipper.Controls;
 using LogRipper.Exceptions;
 using LogRipper.Helpers;
+using LogRipper.ViewModels;
 using LogRipper.Windows;
 
 using Microsoft.Win32;
@@ -48,6 +50,12 @@ public class OneState
     [XmlElement()]
     public bool HideAllOthersLines { get; set; }
 
+    [XmlElement()]
+    public List<OneTabSearch> SearchTab { get; set; }
+
+    [XmlElement()]
+    public int CurrentSelectedTabSearch {  get; set; }
+
     internal static void SaveCurrentState()
     {
         SaveFileDialog dialog = new()
@@ -69,7 +77,24 @@ public class OneState
                 StartDate = win.MyDataContext.StartDateTime,
                 EndDate = win.MyDataContext.EndDateTime,
                 HideAllOthersLines = win.MyDataContext.HideAllOthersLines,
+                SearchTab = [],
             };
+            if (win.MyDataContext.ListSearchTab?.Count > 0)
+            {
+                OneTabSearch saveTabSearch;
+                foreach (TabItemSearchViewModel tab in win.MyDataContext.ListSearchTab.Select(tab => tab.MyDataContext))
+                {
+                    saveTabSearch = new OneTabSearch()
+                    {
+                        Result = tab.ListResult,
+                        SearchRules = tab.ListSearchRules,
+                        SearchMode = tab.CurrentSearchMode,
+                        Search = tab.Search,
+                    };
+                    state.SearchTab.Add(saveTabSearch);
+                }
+                state.CurrentSelectedTabSearch = win.MyDataContext.ListSearchTab.IndexOf(win.MyDataContext.CurrentSearchTab);
+            }
             XmlSerializer serializer = new(typeof(OneState));
             if (File.Exists(filename))
                 File.Delete(filename);
@@ -141,6 +166,20 @@ public class OneState
                 win.MyDataContext.HideAllOthersLines = newState.HideAllOthersLines;
                 win.MyDataContext.RefreshVisibleLines();
                 win.ListBoxLines.SelectedIndex = newState.CurrentNumLine;
+                win.MyDataContext.ListSearchTab.Clear();
+                if (newState.SearchTab?.Count > 0)
+                {
+                    TabItemSearch tabSearch;
+                    foreach (OneTabSearch tab in newState.SearchTab)
+                    {
+                        tabSearch = new TabItemSearch();
+                        tabSearch.MyDataContext.SetNewSearch(tab.Result, tab.SearchMode, tab.Search, tab.SearchRules);
+                        win.MyDataContext.ListSearchTab.Add(tabSearch);
+                        tabSearch.SetTitle(tab.SearchMode == ECurrentSearchMode.BY_RULES ? tab.SearchRules[0].ToString() : tab.Search);
+                        win.MyDataContext.ShowSearchResult = true;
+                    }
+                    win.MyDataContext.CurrentSearchTab = win.MyDataContext.ListSearchTab[newState.CurrentSelectedTabSearch];
+                }
                 win.ScrollToSelected();
                 stream.Close();
                 stream.Dispose();

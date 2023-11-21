@@ -12,7 +12,7 @@
         mc:Ignorable="d"
         Title="{x:Static constants:Locale.TITLE_NEW_RULE}" Height="580" Width="840"
         d:DataContext="{d:DesignInstance Type=viewmodels:RuleWindowViewModel}"
-        Closing="Window_Closing">
+        Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=TxtSearch}">
     <Window.DataContext>
         <viewmodels:RuleWindowViewModel/>
     </Window.DataContext>
@@ -71,7 +71,7 @@
             </ui:FlyoutService.Flyout>
         </Button>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static constants:Locale.LBL_RULE_REGEX}" VerticalAlignment="Center" Visibility="{Binding RegExVisible, Converter={StaticResource boolToVisibility}}" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Text}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Text}" Name="TxtSearch" TabIndex="0" IsTabStop="True" Focusable="True"/>
 
         <!-- Sub rules -->
         <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="8" Text="{x:Static constants:Locale.LBL_SUB_RULES}" TextDecorations="Underline" HorizontalAlignment="Left" Margin="5 0 0 0"/>

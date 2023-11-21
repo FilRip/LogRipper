@@ -8,7 +8,7 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
-        mc:Ignorable="d"
+        mc:Ignorable="d" FocusManager.FocusedElement="{Binding ElementName=TxtCondition}"
         Title="{x:Static constants:Locale.TITLE_NEW_RULE}" Height="180" Width="500"
         d:DataContext="{d:DesignInstance Type=viewmodels:SubRuleWindowViewModel}"
         Closing="Window_Closing">
@@ -62,7 +62,7 @@
             </ui:FlyoutService.Flyout>
         </Button>
         <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.LBL_RULE_REGEX}" VerticalAlignment="Center" Visibility="{Binding RegExVisible, Converter={StaticResource boolToVisibility}}" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Text}"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Text}" Name="TxtCondition"/>
 
         <Grid Grid.Row="6" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

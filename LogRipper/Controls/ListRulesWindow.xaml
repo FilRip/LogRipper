@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="BtnSeeRulesResult" Grid.Column="0" Click="BtnSeeRulesResult_Click" HorizontalAlignment="Center">
+            <Button Name="BtnSeeRulesResult" Grid.Column="0" Command="{Binding SearchRuleCommand}" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static constants:Locale.BTN_SEE_RULE_RESULT}" HorizontalAlignment="Center" Margin="0 0 5 0"/>
                     <Image Source="{x:Static constants:Icons.SearchImage}" Width="16" Height="16"/>

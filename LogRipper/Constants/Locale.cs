@@ -173,6 +173,7 @@ internal static class Locale
     public static string CLOSE_TAB { get; set; }
     public static string CLOSE_ALL_TABS { get; set; }
     public static string CLOSE_OTHER_TABS { get; set; }
+    public static string LBL_NOT_CONTAINS { get; set; }
     #endregion
 
     #region Methods
@@ -341,6 +342,7 @@ internal static class Locale
             CLOSE_TAB = GetTranslation(nameof(CLOSE_TAB));
             CLOSE_ALL_TABS = GetTranslation(nameof(CLOSE_ALL_TABS));
             CLOSE_OTHER_TABS = GetTranslation(nameof(CLOSE_OTHER_TABS));
+            LBL_NOT_CONTAINS = GetTranslation(nameof(LBL_NOT_CONTAINS));
         }
         else
         {
@@ -353,6 +355,7 @@ internal static class Locale
         ListConditions =
         [
             LBL_CONTAINS,
+            LBL_NOT_CONTAINS,
             LBL_START_WITH,
             LBL_END_WITH,
             LBL_REG_EX,

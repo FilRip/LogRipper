@@ -9,7 +9,7 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
-        mc:Ignorable="d" Closing="Window_Closing"
+        mc:Ignorable="d" Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=TxtDateFormat}"
         Title="FileWindow" Height="200" Width="450">
     <Window.DataContext>
         <viewmodels:FileWindowViewModel/>
@@ -37,7 +37,7 @@
         <xctk:ColorPicker Grid.Row="2" Grid.Column="1" SelectedColor="{Binding BackColor}"/>
 
         <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.LBL_ASK_DATEFORMAT}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FormatDate}"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FormatDate}" Name="TxtDateFormat"/>
 
         <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Name="TxtEncoding"/>
         <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding ListEncoders}" SelectedItem="{Binding CurrentEncoder}"/>

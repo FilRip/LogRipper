@@ -1,6 +1,9 @@
-﻿namespace LogRipper.Constants;
+﻿using System;
 
-internal enum ECurrentSearchMode
+namespace LogRipper.Constants;
+
+[Serializable()]
+public enum ECurrentSearchMode
 {
     None = 0,
     BY_STRING = 1,

@@ -66,7 +66,7 @@ public partial class MainWindow : Window
         {
             if (Environment.GetCommandLineArgs().Length > 1 && !Environment.GetCommandLineArgs()[1].StartsWith("/r=", StringComparison.CurrentCultureIgnoreCase))
             {
-                _ = PreloadFile();
+                _ = MyDataContext.OpenNewFile(Environment.GetCommandLineArgs()[1]);
             }
         }
         catch (Exception ex)
@@ -77,19 +77,6 @@ public partial class MainWindow : Window
         if (version.EndsWith(".0.0"))
             version = version.Substring(0, version.Length - 4);
         Title += version;
-    }
-
-    private async Task PreloadFile()
-    {
-        MyDataContext.ActiveProgressRing = true;
-        List<OneLine> list;
-        await Task.Delay(10);
-        list = FileManager.LoadFile(Environment.GetCommandLineArgs()[1], out OneFile file);
-        if (list != null)
-            MyDataContext.ListLines = new ObservableCollection<OneLine>(list);
-        if (file != null)
-            MyDataContext.ListFiles.Add(file);
-        MyDataContext.ActiveProgressRing = false;
     }
 
     internal MainWindowViewModel MyDataContext
@@ -255,5 +242,16 @@ public partial class MainWindow : Window
     {
         if (Properties.Settings.Default.MinimizeInSystray && WindowState == WindowState.Minimized)
             Hide();
+    }
+
+    private void ListBoxLines_Drop(object sender, DragEventArgs e)
+    {
+        try
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files?.Length > 0)
+                _ = MyDataContext.OpenNewFile(files[0]);
+        }
+        catch (Exception) { /* Ignore errors */ }
     }
 }
