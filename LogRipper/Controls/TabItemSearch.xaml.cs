@@ -25,12 +25,7 @@ namespace LogRipper.Controls
 
         internal void SetTitle(string title)
         {
-            MyHeader.Label_TabTitle.Content = title;
-        }
-
-        internal string GetTitle()
-        {
-            return MyHeader.Label_TabTitle.Content.ToString();
+            MyHeader.Label_TabTitle.Content = title.Replace("_", "__");
         }
 
         private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -296,6 +296,11 @@
                                                         <ui:FontIcon Glyph="&#xECC8;"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
+                                                <MenuItem Header="{x:Static constants:Locale.BTN_SEE_RULE_RESULT}" Command="{Binding SearchResultCommand}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xE71E;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                             </ContextMenu>
                                         </DataTemplate.Resources>
                                         <Grid>

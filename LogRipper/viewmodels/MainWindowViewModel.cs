@@ -221,8 +221,10 @@ internal partial class MainWindowViewModel : ObservableObject
     #region Methods
 
     [RelayCommand()]
-    private void CheckForUpdate()
+    private async Task CheckForUpdate()
     {
+        ActiveProgressRing = true;
+        await Task.Delay(10);
         StringBuilder version = AutoUpdater.LatestVersion(Properties.Settings.Default.beta);
         if (version != null)
         {
@@ -242,6 +244,7 @@ internal partial class MainWindowViewModel : ObservableObject
         }
         else
             WpfMessageBox.ShowModal(Locale.ERROR_CHECK_NEW_VERSION, Locale.TITLE_ERROR);
+        ActiveProgressRing = false;
     }
 
     [RelayCommand()]
@@ -547,6 +550,10 @@ internal partial class MainWindowViewModel : ObservableObject
                 return ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && _listSearchRules.Exists(rule => rule.Execute(line.Line, line.Date)));
             return ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0);
         }
+    }
+    internal async Task SearchRule(OneRule rules)
+    {
+        await SearchRule(new List<OneRule>() { rules });
     }
 
     internal async Task SearchRule(IEnumerable<OneRule> rules)
