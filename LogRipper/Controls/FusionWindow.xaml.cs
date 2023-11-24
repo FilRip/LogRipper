@@ -58,4 +58,12 @@ public partial class FusionWindow : Window
         Properties.Settings.Default.MergeWS = WindowState.ToString("G");
         Properties.Settings.Default.Save();
     }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (MyDataContext.IsFileReadOnly)
+        {
+            TxtFileName.SelectionStart = TxtFileName.Text.Length;
+        }
+    }
 }

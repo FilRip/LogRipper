@@ -61,7 +61,7 @@ internal static class FileManager
         int length = (int)new FileInfo(filename).Length;
         if (length <= 0)
         {
-            WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+            WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, filename), Locale.TITLE_ERROR);
             return list;
         }
         FileStream fs = null;
@@ -111,7 +111,7 @@ internal static class FileManager
             }
         }
         else
-            WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+            WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, filename), Locale.TITLE_ERROR);
 #pragma warning restore S2589 // Boolean expressions should not be gratuitous
         return list;
     }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Media;
 
@@ -24,6 +26,7 @@ public partial class FusionWindowViewModel : ObservableObject
     private bool _isFileReadOnly;
     [ObservableProperty()]
     private string _firstLine;
+    internal string[] ListFiles;
 
     public FusionWindowViewModel() : base()
     {
@@ -75,11 +78,18 @@ public partial class FusionWindowViewModel : ObservableObject
         OpenFileDialog dialog = new()
         {
             Filter = "Log file|*.log|All files|*.*",
+            Multiselect = true,
         };
         if (dialog.ShowDialog() == true)
         {
-            FileName = dialog.FileName;
+            FileName = dialog.FileNames[0];
             FillFirstLine(FileName);
+            if (dialog.FileNames.Length > 1)
+            {
+                List<string> otherFiles = dialog.FileNames.ToList();
+                otherFiles.RemoveAt(0);
+                ListFiles = otherFiles.ToArray();
+            }
         }
     }
 }

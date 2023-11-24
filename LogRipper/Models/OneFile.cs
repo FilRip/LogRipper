@@ -310,9 +310,11 @@ public partial class OneFile : ObservableObject, IDisposable
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ActiveProgressRing = true;
             if (previousEncoding != _currentEncoding)
                 await ReloadFile();
-            ObservableCollection<OneLine> lines = new(Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FilePath == FullPath));
             if (!string.IsNullOrWhiteSpace(DateFormat) && oldDateFormat != DateFormat)
+            {
+                ObservableCollection<OneLine> lines = new(Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FilePath == FullPath));
                 FileManager.ComputeDate(lines, DateFormat);
+            }
             MainWindow mainWindow = Application.Current.GetCurrentWindow<MainWindow>();
             mainWindow.RefreshMargin();
             mainWindow.MyDataContext.RefreshListFiles();

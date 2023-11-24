@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -606,21 +605,22 @@ internal partial class MainWindowViewModel : ObservableObject
             {
                 try
                 {
-                    listLines = FileManager.LoadFile(win.MyDataContext.FileName, out nextFile, ReturnCurrentFileEncoding, win.MyDataContext.BackColorBrush, win.MyDataContext.ForeColorBrush, EnableAutoReload);
+                    listLines = FileManager.LoadFile(file, out nextFile, ReturnCurrentFileEncoding, win.MyDataContext.BackColorBrush, win.MyDataContext.ForeColorBrush, EnableAutoReload);
                 }
                 catch (Exception ex)
                 {
-                    WpfMessageBox.ShowModal(string.Format(Locale.ERROR_READING_FILE, win.MyDataContext.FileName) + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
+                    WpfMessageBox.ShowModal(string.Format(Locale.ERROR_READING_FILE, file) + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
                 }
                 if (listLines?.Count == 0)
                 {
-                    WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                    WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, file), Locale.TITLE_ERROR);
                     continue;
                 }
                 ListFiles.Add(nextFile);
                 FileManager.ComputeDate(listLines, win.MyDataContext.FormatDate);
                 nextFile.DateFormat = win.MyDataContext.FormatDate;
-                Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
+                if (!string.IsNullOrWhiteSpace(win.MyDataContext.FormatDate))
+                    Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
                 Properties.Settings.Default.Save();
                 ListLines = new ObservableCollection<OneLine>(ListLines.Concat(listLines).OrderBy(l => l.Date));
                 Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
@@ -642,51 +642,51 @@ internal partial class MainWindowViewModel : ObservableObject
             string firstLine = ListLines.Select(o => o.Line).FirstOrDefault(l => !string.IsNullOrWhiteSpace(l));
             if (firstLine == null)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, FileManager.GetAllFiles()?[0]?.FullPath), Locale.TITLE_ERROR);
                 return;
             }
             foreach (OneFile presentfile in FileManager.GetAllFiles().Where(f => string.IsNullOrWhiteSpace(f.DateFormat)))
             {
-                if (!DateTime.TryParseExact(firstLine.Substring(0, win.MyDataContext.FormatDate.Length), win.MyDataContext.FormatDate, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime _))
-                {
-                    WpfMessageBox.ShowModal(Locale.ERROR_DATEFORMAT, Locale.TITLE_ERROR);
+                bool result = await presentfile.EditFile();
+                if (!result)
                     return;
-                }
-                FileManager.ComputeDate(ListLines.Where(l => l.FilePath == presentfile.FullPath), win.MyDataContext.FormatDate);
-                presentfile.DateFormat = win.MyDataContext.FormatDate;
             }
             if (ListLines.Count == 0)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, FileManager.GetAllFiles()?[0]?.FullPath), Locale.TITLE_ERROR);
                 return;
             }
-            List<OneLine> secondFile = null;
-            OneFile file = null;
+            List<OneLine> newListLines = null;
+            OneFile newFile = null;
             try
             {
-                secondFile = FileManager.LoadFile(win.MyDataContext.FileName, out file, ReturnCurrentFileEncoding, win.MyDataContext.BackColorBrush, win.MyDataContext.ForeColorBrush, EnableAutoReload);
+                newListLines = FileManager.LoadFile(win.MyDataContext.FileName, out newFile, ReturnCurrentFileEncoding, win.MyDataContext.BackColorBrush, win.MyDataContext.ForeColorBrush, EnableAutoReload);
             }
             catch (Exception ex)
             {
                 WpfMessageBox.ShowModal(string.Format(Locale.ERROR_READING_FILE, win.MyDataContext.FileName) + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
             }
-            if (secondFile?.Count == 0)
+            if (newListLines?.Count == 0)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, win.MyDataContext.FileName), Locale.TITLE_ERROR);
                 return;
             }
-            ListFiles.Add(file);
-            FileManager.ComputeDate(secondFile, win.MyDataContext.FormatDate);
-            file.DateFormat = win.MyDataContext.FormatDate;
-            if (secondFile == null || secondFile.Count == 0)
+            ListFiles.Add(newFile);
+            FileManager.ComputeDate(newListLines, win.MyDataContext.FormatDate);
+            newFile.DateFormat = win.MyDataContext.FormatDate;
+            if (newListLines == null || newListLines.Count == 0)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, win.MyDataContext.FileName), Locale.TITLE_ERROR);
                 return;
             }
-            Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
+            if (!string.IsNullOrWhiteSpace(win.MyDataContext.FormatDate))
+                Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
             Properties.Settings.Default.Save();
-            ListLines = new ObservableCollection<OneLine>(ListLines.Concat(secondFile).OrderBy(l => l.Date));
+            ListLines = new ObservableCollection<OneLine>(ListLines.Concat(newListLines).OrderBy(l => l.Date));
             Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
+            string[] listFilesToMerge = win.MyDataContext.ListFiles;
+            if (listFilesToMerge?.Length > 0)
+                await MergingFile(listFilesToMerge);
             ActiveProgressRing = false;
         }
     }
@@ -852,12 +852,19 @@ internal partial class MainWindowViewModel : ObservableObject
         OpenFileDialog dialog = new()
         {
             Filter = "Log file|*.log|All files|*.*",
+            Multiselect = true,
         };
         if (dialog.ShowDialog() == true)
         {
             try
             {
-                await OpenNewFile(dialog.FileName);
+                await OpenNewFile(dialog.FileNames[0]);
+                if (dialog.FileNames.Length > 1)
+                {
+                    List<string> otherFiles = dialog.FileNames.ToList();
+                    otherFiles.RemoveAt(0);
+                    await MergingFile(otherFiles.ToArray());
+                }
             }
             catch (Exception ex)
             {

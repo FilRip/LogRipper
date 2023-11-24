@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -256,6 +257,12 @@ public partial class MainWindow : Window
                 else if (ret == MessageBoxResult.No)
                 {
                     _ = MyDataContext.OpenNewFile(files[0]);
+                    if (files.Length > 1)
+                    {
+                        List<string> otherFiles = files.ToList();
+                        otherFiles.RemoveAt(0);
+                        _ = MyDataContext.MergingFile(otherFiles.ToArray());
+                    }
                 }
             }
         }
