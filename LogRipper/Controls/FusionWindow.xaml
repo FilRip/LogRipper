@@ -36,7 +36,7 @@
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FormatDate}" Name="TxtDateFormat"/>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static constants:Locale.LBL_MERGE_FILENAME}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FileName}" PreviewMouseUp="TextBox_PreviewMouseUp"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FileName}" PreviewMouseUp="TextBox_PreviewMouseUp" IsReadOnly="{Binding IsFileReadOnly}"/>
 
         <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_TEXT_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
         <xctk:ColorPicker Grid.Row="4" Grid.Column="1" SelectedColor="{Binding ForeColor}"/>

@@ -92,11 +92,10 @@ internal static class FileManager
                 if (!string.IsNullOrEmpty(line))
                 {
                     num++;
-                    OneLine oneLine = new()
+                    OneLine oneLine = new(filename)
                     {
                         NumLine = num,
                         Line = line,
-                        FileName = Path.GetFileNameWithoutExtension(filename),
                     };
                     list.Add(oneLine);
                 }
@@ -108,7 +107,7 @@ internal static class FileManager
                     DefaultBackground = defaultBackgfround,
                     DefaultForeground = defaultForeground,
                 };
-                _listFiles.Add(Path.GetFileNameWithoutExtension(filename), file);
+                _listFiles.Add(filename, file);
             }
         }
         else
@@ -153,8 +152,8 @@ internal static class FileManager
             sb.Append("</td>");
 
             SolidColorBrush back, fore;
-            back = listRules.ExecuteRulesBackground(line.Line, line.Date) ?? _listFiles[line.FileName].DefaultBackground;
-            fore = listRules.ExecuteRulesForeground(line.Line, line.Date) ?? _listFiles[line.FileName].DefaultForeground;
+            back = listRules.ExecuteRulesBackground(line.Line, line.Date) ?? _listFiles[line.FilePath].DefaultBackground;
+            fore = listRules.ExecuteRulesForeground(line.Line, line.Date) ?? _listFiles[line.FilePath].DefaultForeground;
             sb.Append($"<td bgcolor=\"#{back.Color.R:X2}{back.Color.G:X2}{back.Color.B:X2}\">");
             sb.Append($"<font color=\"#{fore.Color.R:X2}{fore.Color.G:X2}{fore.Color.B:X2}\">{line.Line}</font>");
             sb.Append("</td>");

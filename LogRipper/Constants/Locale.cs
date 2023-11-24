@@ -174,6 +174,8 @@ internal static class Locale
     public static string CLOSE_ALL_TABS { get; set; }
     public static string CLOSE_OTHER_TABS { get; set; }
     public static string LBL_NOT_CONTAINS { get; set; }
+    public static string ASK_EDIT_FILE_NOW { get; set; }
+    public static string ASK_MERGE_OR_REPLACE { get; set; }
     #endregion
 
     #region Methods
@@ -343,6 +345,8 @@ internal static class Locale
             CLOSE_ALL_TABS = GetTranslation(nameof(CLOSE_ALL_TABS));
             CLOSE_OTHER_TABS = GetTranslation(nameof(CLOSE_OTHER_TABS));
             LBL_NOT_CONTAINS = GetTranslation(nameof(LBL_NOT_CONTAINS));
+            ASK_EDIT_FILE_NOW = GetTranslation(nameof(ASK_EDIT_FILE_NOW));
+            ASK_MERGE_OR_REPLACE = GetTranslation(nameof(ASK_MERGE_OR_REPLACE));
         }
         else
         {

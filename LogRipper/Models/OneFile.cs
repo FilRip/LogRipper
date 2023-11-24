@@ -143,11 +143,10 @@ public partial class OneFile : ObservableObject, IDisposable
                             if (!string.IsNullOrEmpty(text))
                             {
                                 lastNumLine++;
-                                OneLine line = new()
+                                OneLine line = new(FullPath)
                                 {
                                     NumLine = lastNumLine,
                                     Line = text,
-                                    FileName = FileName,
                                 };
                                 if (!string.IsNullOrWhiteSpace(text) && !string.IsNullOrWhiteSpace(DateFormat) && text.Length >= DateFormat.Length &&
                                     DateTime.TryParseExact(text.Substring(0, DateFormat.Length), DateFormat, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime currentDate))
@@ -228,7 +227,7 @@ public partial class OneFile : ObservableObject, IDisposable
         mainWindowViewModel.ActiveProgressRing = true;
         await Task.Delay(10);
         List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
-        listLines.RemoveAll(l => l.FileName == FileName);
+        listLines.RemoveAll(l => l.FilePath == FullPath);
         List<OneLine> listNewLines;
         lock (_lockFileAccess)
         {
@@ -254,7 +253,7 @@ public partial class OneFile : ObservableObject, IDisposable
         }
         MainWindowViewModel mainWindowViewModel = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
         List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
-        listLines.RemoveAll(l => l.FileName == FileName);
+        listLines.RemoveAll(l => l.FilePath == FullPath);
         mainWindowViewModel.ListLines = new ObservableCollection<OneLine>(listLines);
         mainWindowViewModel.RefreshListFiles();
         await mainWindowViewModel.RefreshListLines();
@@ -310,7 +309,7 @@ public partial class OneFile : ObservableObject, IDisposable
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ActiveProgressRing = true;
             if (previousEncoding != _currentEncoding)
                 await ReloadFile();
-            ObservableCollection<OneLine> lines = new(Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FileName == FileName));
+            ObservableCollection<OneLine> lines = new(Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FilePath == FullPath));
             if (!string.IsNullOrWhiteSpace(DateFormat) && oldDateFormat != DateFormat)
                 FileManager.ComputeDate(lines, DateFormat);
             MainWindow mainWindow = Application.Current.GetCurrentWindow<MainWindow>();

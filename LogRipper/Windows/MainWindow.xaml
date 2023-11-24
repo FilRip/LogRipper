@@ -217,7 +217,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Grid.Column="0" BorderThickness="2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4">
+                <Border Grid.Row="0" Grid.Column="0" BorderThickness="2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4" Drop="ListBoxLines_Drop" AllowDrop="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" Name="ToolbarTitleRow"/>
@@ -263,7 +263,7 @@
                         </ScrollViewer>
                     </Grid>
                 </Border>
-                <Border Grid.Row="0" Grid.Column="1" BorderThickness="0 2 2 2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4">
+                <Border Grid.Row="0" Grid.Column="1" BorderThickness="0 2 2 2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4" Name="ListRules" Drop="ListRules_Drop" AllowDrop="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>

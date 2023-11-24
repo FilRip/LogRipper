@@ -17,6 +17,8 @@ public partial class FusionWindowViewModel : ObservableObject
     private Color _backColor;
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(ForeColorBrush))]
     private Color _foreColor;
+    [ObservableProperty()]
+    private bool _isFileReadOnly;
 
     public FusionWindowViewModel() : base()
     {
@@ -24,14 +26,20 @@ public partial class FusionWindowViewModel : ObservableObject
         ForeColor = Constants.Colors.DefaultForegroundColor;
     }
 
-    public Brush BackColorBrush
+    public SolidColorBrush BackColorBrush
     {
         get { return new SolidColorBrush(BackColor); }
     }
 
-    public Brush ForeColorBrush
+    public SolidColorBrush ForeColorBrush
     {
         get { return new SolidColorBrush(ForeColor); }
+    }
+
+    internal void SetFileReadOnly(string file)
+    {
+        FileName = file;
+        IsFileReadOnly = true;
     }
 
     [RelayCommand()]

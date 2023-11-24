@@ -186,13 +186,13 @@ public partial class MainWindow : Window
         for (int i = 1; i <= Environment.GetCommandLineArgs().Length - 1; i++)
             if (Environment.GetCommandLineArgs()[i].Trim().ToLower().StartsWith("/r="))
             {
-                MyDataContext.LoadRules(Environment.GetCommandLineArgs()[i].Trim().ToLower().Replace("/r=", ""));
+                _ = MyDataContext.LoadRules(Environment.GetCommandLineArgs()[i].Trim().ToLower().Replace("/r=", ""));
                 return;
             }
         if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.DefaultListRules) &&
             File.Exists(Properties.Settings.Default.DefaultListRules))
         {
-            MyDataContext.LoadRules(Properties.Settings.Default.DefaultListRules);
+            _ = MyDataContext.LoadRules(Properties.Settings.Default.DefaultListRules);
         }
         AutoUpdater.SearchNewVersion(Properties.Settings.Default.beta);
     }
@@ -250,7 +250,38 @@ public partial class MainWindow : Window
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files?.Length > 0)
-                _ = MyDataContext.OpenNewFile(files[0]);
+            {
+                MessageBoxResult ret = WpfMessageBox.ShowModalReturnButton(Locale.ASK_MERGE_OR_REPLACE, Locale.MENU_OPEN.Replace("_", ""), MessageBoxButton.YesNo);
+                if (ret == MessageBoxResult.Yes)
+                {
+                    _ = MyDataContext.MergingFile(files);
+                }
+                else if (ret == MessageBoxResult.No)
+                {
+                    _ = MyDataContext.OpenNewFile(files[0]);
+                }
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
+    }
+
+    private void ListRules_Drop(object sender, DragEventArgs e)
+    {
+        try
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files?.Length > 0)
+            {
+                MessageBoxResult ret = WpfMessageBox.ShowModalReturnButton(Locale.ASK_MERGE_OR_REPLACE, Locale.MENU_OPEN.Replace("_", ""), MessageBoxButton.YesNo);
+                if (ret == MessageBoxResult.Yes)
+                {
+                    _ = MyDataContext.MergingRule(files);
+                }
+                else if (ret == MessageBoxResult.No)
+                {
+                    _ = MyDataContext.LoadRules(files[0]);
+                }
+            }
         }
         catch (Exception) { /* Ignore errors */ }
     }

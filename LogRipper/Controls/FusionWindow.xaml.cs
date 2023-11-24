@@ -33,7 +33,8 @@ public partial class FusionWindow : Window
 
     private void TextBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        MyDataContext.BrowseFilenameCommand.Execute(null);
+        if (!MyDataContext.IsFileReadOnly)
+            MyDataContext.BrowseFilenameCommand.Execute(null);
     }
 
     private void BtnOK_Click(object sender, RoutedEventArgs e)

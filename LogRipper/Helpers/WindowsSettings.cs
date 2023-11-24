@@ -42,18 +42,18 @@ public static class WindowsSettings
         return IsWindows10OrGreater(build);
     }
 
-    public static bool UseImmersiveDarkMode(IntPtr pointeurFenetre, bool activerDarkMode)
+    public static bool UseImmersiveDarkMode(IntPtr windowHandle, bool enableDarkMode)
     {
         if (IsWindows10OrGreater())
         {
-            int attribut = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
+            int attribute = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
             if (IsWindows10OrGreater(18985))
             {
-                attribut = DWMWA_USE_IMMERSIVE_DARK_MODE;
+                attribute = DWMWA_USE_IMMERSIVE_DARK_MODE;
             }
-            int immersiveActif = (activerDarkMode ? 1 : 0);
-            NativeMethods.SetPreferredAppMode(activerDarkMode ? NativeMethods.PreferredAppMode.APPMODE_ALLOWDARK : NativeMethods.PreferredAppMode.APPMODE_DEFAULT);
-            return NativeMethods.DwmSetWindowAttribute(pointeurFenetre, attribut, ref immersiveActif, IntPtr.Size);
+            int immersiveActif = (enableDarkMode ? 1 : 0);
+            NativeMethods.SetPreferredAppMode(enableDarkMode ? NativeMethods.PreferredAppMode.APPMODE_ALLOWDARK : NativeMethods.PreferredAppMode.APPMODE_DEFAULT);
+            return NativeMethods.DwmSetWindowAttribute(windowHandle, attribute, ref immersiveActif, IntPtr.Size);
         }
         return false;
     }
