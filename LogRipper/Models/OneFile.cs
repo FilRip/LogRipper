@@ -288,12 +288,13 @@ public partial class OneFile : ObservableObject, IDisposable
             win.MyDataContext.CurrentEncoder = Locale.MENU_ENC_UNICODE.Replace("_", "");
         SetEncodingName();
         string oldDateFormat = DateFormat;
+        Encoding previousEncoding = _currentEncoding;
+        win.MyDataContext.FirstLine = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.FirstOrDefault(l => l.FilePath == FullPath && !string.IsNullOrWhiteSpace(l.Line))?.Line;
         if (win.ShowDialog() == true)
         {
             DateFormat = win.MyDataContext.FormatDate;
             DefaultForegroundColor = win.MyDataContext.ForeColor;
             DefaultBackgroundColor = win.MyDataContext.BackColor;
-            Encoding previousEncoding = _currentEncoding;
             if (win.MyDataContext.CurrentEncoder == Locale.MENU_ENC_DEFAULT.Replace("_", ""))
                 _currentEncoding = Encoding.Default;
             else if (win.MyDataContext.CurrentEncoder == Locale.MENU_ENC_ASCII.Replace("_", ""))

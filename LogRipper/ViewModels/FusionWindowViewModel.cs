@@ -1,4 +1,7 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -19,6 +22,8 @@ public partial class FusionWindowViewModel : ObservableObject
     private Color _foreColor;
     [ObservableProperty()]
     private bool _isFileReadOnly;
+    [ObservableProperty()]
+    private string _firstLine;
 
     public FusionWindowViewModel() : base()
     {
@@ -40,6 +45,28 @@ public partial class FusionWindowViewModel : ObservableObject
     {
         FileName = file;
         IsFileReadOnly = true;
+        FillFirstLine(file);
+    }
+
+    internal void FillFirstLine(string filename)
+    {
+        StringBuilder firstLine = new();
+        try
+        {
+            using FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            while (true)
+            {
+                int read = fs.ReadByte();
+                if (read < 0)
+                    break;
+                if ((read == 13 || read == 10) && !string.IsNullOrWhiteSpace(firstLine.ToString().Trim()))
+                    break;
+                char c = (char)read;
+                firstLine.Append(c);
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
+        FirstLine = firstLine.ToString();
     }
 
     [RelayCommand()]
@@ -52,6 +79,7 @@ public partial class FusionWindowViewModel : ObservableObject
         if (dialog.ShowDialog() == true)
         {
             FileName = dialog.FileName;
+            FillFirstLine(FileName);
         }
     }
 }

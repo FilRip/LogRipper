@@ -665,7 +665,6 @@ internal partial class MainWindowViewModel : ObservableObject
             try
             {
                 secondFile = FileManager.LoadFile(win.MyDataContext.FileName, out file, ReturnCurrentFileEncoding, win.MyDataContext.BackColorBrush, win.MyDataContext.ForeColorBrush, EnableAutoReload);
-                ListFiles.Add(file);
             }
             catch (Exception ex)
             {

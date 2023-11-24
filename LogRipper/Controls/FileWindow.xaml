@@ -10,12 +10,14 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
         mc:Ignorable="d" Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=TxtDateFormat}"
-        Title="FileWindow" Height="200" Width="450">
+        Title="FileWindow" Height="240" Width="450">
     <Window.DataContext>
         <viewmodels:FileWindowViewModel/>
     </Window.DataContext>
     <Grid Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
             <RowDefinition Height="Auto"/>
@@ -36,13 +38,16 @@
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_BACK_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
         <xctk:ColorPicker Grid.Row="2" Grid.Column="1" SelectedColor="{Binding BackColor}"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.LBL_ASK_DATEFORMAT}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FormatDate}" Name="TxtDateFormat"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.PREVIEW_FIRST_LINE}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FirstLine}" IsReadOnly="True"/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Name="TxtEncoding"/>
-        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding ListEncoders}" SelectedItem="{Binding CurrentEncoder}"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{x:Static constants:Locale.LBL_ASK_DATEFORMAT}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding FormatDate}" Name="TxtDateFormat"/>
+
+        <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Name="TxtEncoding"/>
+        <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding ListEncoders}" SelectedItem="{Binding CurrentEncoder}"/>
         
-        <Grid Grid.Row="8" Grid.ColumnSpan="2">
+        <Grid Grid.Row="10" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
