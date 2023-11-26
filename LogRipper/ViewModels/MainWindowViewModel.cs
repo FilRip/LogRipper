@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -221,8 +219,10 @@ internal partial class MainWindowViewModel : ObservableObject
     #region Methods
 
     [RelayCommand()]
-    private void CheckForUpdate()
+    private async Task CheckForUpdate()
     {
+        ActiveProgressRing = true;
+        await Task.Delay(10);
         StringBuilder version = AutoUpdater.LatestVersion(Properties.Settings.Default.beta);
         if (version != null)
         {
@@ -242,6 +242,7 @@ internal partial class MainWindowViewModel : ObservableObject
         }
         else
             WpfMessageBox.ShowModal(Locale.ERROR_CHECK_NEW_VERSION, Locale.TITLE_ERROR);
+        ActiveProgressRing = false;
     }
 
     [RelayCommand()]
@@ -402,8 +403,31 @@ internal partial class MainWindowViewModel : ObservableObject
         }
     }
 
+    internal async Task LoadNewRules(string filename)
+    {
+        try
+        {
+            ActiveProgressRing = true;
+            await Task.Delay(10);
+            SavedRules result = SavedRules.LoadFile(filename);
+            if (result == null || result.ListRules?.Count == 0)
+                throw new LogRipperException(Locale.ERROR_NO_RULE_FOUND);
+            ListRules.SetRules(new ObservableCollection<OneRule>(result.ListRules));
+            RefreshListRules();
+            UpdateCategory();
+        }
+        catch (Exception ex)
+        {
+            WpfMessageBox.ShowModal($"{Locale.ERROR_LOAD_RULES}{Environment.NewLine}{ex.Message}", Locale.TITLE_ERROR);
+        }
+        finally
+        {
+            ActiveProgressRing = false;
+        }
+    }
+
     [RelayCommand()]
-    internal void LoadRules(string filename = null)
+    internal async Task LoadRules(string filename = null)
     {
         OpenFileDialog dialog = new()
         {
@@ -411,36 +435,21 @@ internal partial class MainWindowViewModel : ObservableObject
         };
         if (!string.IsNullOrWhiteSpace(filename) || dialog.ShowDialog() == true)
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(filename))
-                    filename = dialog.FileName;
-                SavedRules result = SavedRules.LoadFile(filename);
-                if (result == null || result.ListRules?.Count == 0)
-                    throw new LogRipperException(Locale.ERROR_NO_RULE_FOUND);
-                ListRules.SetRules(new ObservableCollection<OneRule>(result.ListRules));
-                RefreshListRules();
-                UpdateCategory();
-            }
-            catch (Exception ex)
-            {
-                WpfMessageBox.ShowModal($"{Locale.ERROR_LOAD_RULES}{Environment.NewLine}{ex.Message}", Locale.TITLE_ERROR);
-            }
+            if (string.IsNullOrWhiteSpace(filename))
+                filename = dialog.FileName;
+            await LoadNewRules(filename);
         }
     }
 
-    [RelayCommand()]
-    private void MergeRules()
+    internal async Task MergingRule(string[] listFiles)
     {
-        OpenFileDialog dialog = new()
-        {
-            Filter = "Xml file|*.xml|All files|*.*",
-        };
-        if (!string.IsNullOrWhiteSpace(dialog.FileName) || dialog.ShowDialog() == true)
+        ActiveProgressRing = true;
+        await Task.Delay(10);
+        foreach (string file in listFiles)
         {
             try
             {
-                SavedRules result = SavedRules.LoadFile(dialog.FileName);
+                SavedRules result = SavedRules.LoadFile(file);
                 if (result == null || result.ListRules?.Count == 0)
                     throw new LogRipperException(Locale.ERROR_NO_RULE_FOUND);
                 foreach (OneRule rule in result.ListRules)
@@ -453,6 +462,20 @@ internal partial class MainWindowViewModel : ObservableObject
             {
                 WpfMessageBox.ShowModal($"{Locale.ERROR_LOAD_RULES}{Environment.NewLine}{ex.Message}", Locale.TITLE_ERROR);
             }
+        }
+        ActiveProgressRing = true;
+    }
+
+    [RelayCommand()]
+    private async Task MergeRules()
+    {
+        OpenFileDialog dialog = new()
+        {
+            Filter = "Xml file|*.xml|All files|*.*",
+        };
+        if (!string.IsNullOrWhiteSpace(dialog.FileName) || dialog.ShowDialog() == true)
+        {
+            await MergingRule([dialog.FileName]);
         }
     }
 
@@ -548,6 +571,10 @@ internal partial class MainWindowViewModel : ObservableObject
             return ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0);
         }
     }
+    internal async Task SearchRule(OneRule rules)
+    {
+        await SearchRule(new List<OneRule>() { rules });
+    }
 
     internal async Task SearchRule(IEnumerable<OneRule> rules)
     {
@@ -564,6 +591,44 @@ internal partial class MainWindowViewModel : ObservableObject
         win.ShowDialog();
     }
 
+    internal async Task MergingFile(string[] filesToMerge)
+    {
+        ActiveProgressRing = true;
+        await Task.Delay(10);
+        foreach (string file in filesToMerge)
+        {
+            FusionWindow win = new();
+            OneFile nextFile = null;
+            List<OneLine> listLines = null;
+            win.MyDataContext.SetFileReadOnly(file);
+            if (win.ShowDialog() == true)
+            {
+                try
+                {
+                    listLines = FileManager.LoadFile(file, out nextFile, ReturnCurrentFileEncoding, win.MyDataContext.BackColorBrush, win.MyDataContext.ForeColorBrush, EnableAutoReload);
+                }
+                catch (Exception ex)
+                {
+                    WpfMessageBox.ShowModal(string.Format(Locale.ERROR_READING_FILE, file) + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
+                }
+                if (listLines?.Count == 0)
+                {
+                    WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, file), Locale.TITLE_ERROR);
+                    continue;
+                }
+                ListFiles.Add(nextFile);
+                FileManager.ComputeDate(listLines, win.MyDataContext.FormatDate);
+                nextFile.DateFormat = win.MyDataContext.FormatDate;
+                if (!string.IsNullOrWhiteSpace(win.MyDataContext.FormatDate))
+                    Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
+                Properties.Settings.Default.Save();
+                ListLines = new ObservableCollection<OneLine>(ListLines.Concat(listLines).OrderBy(l => l.Date));
+                Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
+            }
+        }
+        ActiveProgressRing = false;
+    }
+
     [RelayCommand()]
     private async Task MergeFile()
     {
@@ -577,52 +642,51 @@ internal partial class MainWindowViewModel : ObservableObject
             string firstLine = ListLines.Select(o => o.Line).FirstOrDefault(l => !string.IsNullOrWhiteSpace(l));
             if (firstLine == null)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, FileManager.GetAllFiles()?[0]?.FullPath), Locale.TITLE_ERROR);
                 return;
             }
             foreach (OneFile presentfile in FileManager.GetAllFiles().Where(f => string.IsNullOrWhiteSpace(f.DateFormat)))
             {
-                if (!DateTime.TryParseExact(firstLine.Substring(0, win.MyDataContext.FormatDate.Length), win.MyDataContext.FormatDate, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime _))
-                {
-                    WpfMessageBox.ShowModal(Locale.ERROR_DATEFORMAT, Locale.TITLE_ERROR);
+                bool result = await presentfile.EditFile();
+                if (!result)
                     return;
-                }
-                FileManager.ComputeDate(ListLines.Where(l => l.FileName == presentfile.FileName), win.MyDataContext.FormatDate);
-                presentfile.DateFormat = win.MyDataContext.FormatDate;
             }
             if (ListLines.Count == 0)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, FileManager.GetAllFiles()?[0]?.FullPath), Locale.TITLE_ERROR);
                 return;
             }
-            List<OneLine> secondFile = null;
-            OneFile file = null;
+            List<OneLine> newListLines = null;
+            OneFile newFile = null;
             try
             {
-                secondFile = FileManager.LoadFile(win.MyDataContext.FileName, out file, ReturnCurrentFileEncoding, new SolidColorBrush(win.MyDataContext.BackColor), new SolidColorBrush(win.MyDataContext.ForeColor), EnableAutoReload);
-                ListFiles.Add(file);
+                newListLines = FileManager.LoadFile(win.MyDataContext.FileName, out newFile, ReturnCurrentFileEncoding, win.MyDataContext.BackColorBrush, win.MyDataContext.ForeColorBrush, EnableAutoReload);
             }
             catch (Exception ex)
             {
                 WpfMessageBox.ShowModal(string.Format(Locale.ERROR_READING_FILE, win.MyDataContext.FileName) + Environment.NewLine + ex.Message, Locale.TITLE_ERROR);
             }
-            if (secondFile?.Count == 0)
+            if (newListLines?.Count == 0)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, win.MyDataContext.FileName), Locale.TITLE_ERROR);
                 return;
             }
-            ListFiles.Add(file);
-            FileManager.ComputeDate(secondFile, win.MyDataContext.FormatDate);
-            FileManager.GetFile(Path.GetFileNameWithoutExtension(win.MyDataContext.FileName)).DateFormat = win.MyDataContext.FormatDate;
-            if (secondFile == null || secondFile.Count == 0)
+            ListFiles.Add(newFile);
+            FileManager.ComputeDate(newListLines, win.MyDataContext.FormatDate);
+            newFile.DateFormat = win.MyDataContext.FormatDate;
+            if (newListLines == null || newListLines.Count == 0)
             {
-                WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+                WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, win.MyDataContext.FileName), Locale.TITLE_ERROR);
                 return;
             }
-            ListLines = new ObservableCollection<OneLine>(ListLines.Concat(secondFile).OrderBy(l => l.Date));
-            Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
+            if (!string.IsNullOrWhiteSpace(win.MyDataContext.FormatDate))
+                Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
             Properties.Settings.Default.Save();
+            ListLines = new ObservableCollection<OneLine>(ListLines.Concat(newListLines).OrderBy(l => l.Date));
             Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
+            string[] listFilesToMerge = win.MyDataContext.ListFiles;
+            if (listFilesToMerge?.Length > 0)
+                await MergingFile(listFilesToMerge);
             ActiveProgressRing = false;
         }
     }
@@ -690,7 +754,7 @@ internal partial class MainWindowViewModel : ObservableObject
 
     private bool FilterLine(object obj)
     {
-        if (obj is OneLine line && (FileManager.GetFile(line.FileName)?.Active == true || !string.IsNullOrWhiteSpace(line.GroupLines)))
+        if (obj is OneLine line && (FileManager.GetFile(line.FilePath)?.Active == true || !string.IsNullOrWhiteSpace(line.GroupLines)))
         {
             if (!string.IsNullOrWhiteSpace(line.GroupLines) && line.GroupLines.IndexOf(' ') < 0)
                 return false;
@@ -749,23 +813,37 @@ internal partial class MainWindowViewModel : ObservableObject
             Application.Current.GetCurrentWindow<MainWindow>().ScrollToBegin();
         await Task.Delay(10);
         FileManager.RemoveAllFiles();
-        newListLines = FileManager.LoadFile(filename, out OneFile file, ReturnCurrentFileEncoding, activeAutoReload: EnableAutoReload);
-        if (ListLines.Count > 0)
+        try
         {
-            _numVisibleStart = 1;
-            _numVisibleEnd = 2;
-            _filterListLines = null;
-            SelectedLine = null;
-            SelectedLines = null;
-            RowIndexSelected = 0;
-            ListFiles.Clear();
-            ListLines.Clear();
+            newListLines = FileManager.LoadFile(filename, out OneFile file, ReturnCurrentFileEncoding, activeAutoReload: EnableAutoReload);
+            if (file != null)
+            {
+                if (ListLines.Count > 0)
+                {
+                    _numVisibleStart = 1;
+                    _numVisibleEnd = 2;
+                    _filterListLines = null;
+                    SelectedLine = null;
+                    SelectedLines = null;
+                    RowIndexSelected = 0;
+                    ListFiles.Clear();
+                    ListLines.Clear();
+                }
+                ListFiles.Add(file);
+                ListLines = new ObservableCollection<OneLine>(newListLines);
+                Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
+                FilterByDate = false;
+                if (WpfMessageBox.ShowModal(Locale.ASK_EDIT_FILE_NOW, Locale.BTN_EDIT_RULE.Replace("_", ""), MessageBoxButton.YesNo))
+                {
+                    await file.EditFile();
+                }
+            }
         }
-        ListFiles.Add(file);
-        ListLines = new ObservableCollection<OneLine>(newListLines);
-        Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
-        FilterByDate = false;
-        ActiveProgressRing = false;
+        catch (Exception) { /* Ignore errors */ }
+        finally
+        {
+            ActiveProgressRing = false;
+        }
     }
 
     [RelayCommand()]
@@ -774,12 +852,19 @@ internal partial class MainWindowViewModel : ObservableObject
         OpenFileDialog dialog = new()
         {
             Filter = "Log file|*.log|All files|*.*",
+            Multiselect = true,
         };
         if (dialog.ShowDialog() == true)
         {
             try
             {
-                await OpenNewFile(dialog.FileName);
+                await OpenNewFile(dialog.FileNames[0]);
+                if (dialog.FileNames.Length > 1)
+                {
+                    List<string> otherFiles = dialog.FileNames.ToList();
+                    otherFiles.RemoveAt(0);
+                    await MergingFile(otherFiles.ToArray());
+                }
             }
             catch (Exception ex)
             {

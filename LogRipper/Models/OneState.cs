@@ -54,7 +54,7 @@ public class OneState
     public List<OneTabSearch> SearchTab { get; set; }
 
     [XmlElement()]
-    public int CurrentSelectedTabSearch {  get; set; }
+    public int CurrentSelectedTabSearch { get; set; }
 
     internal static void SaveCurrentState()
     {

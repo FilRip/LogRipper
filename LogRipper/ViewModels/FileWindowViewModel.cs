@@ -18,6 +18,8 @@ public partial class FileWindowViewModel : ObservableObject
     private readonly List<string> _listEncoders;
     [ObservableProperty()]
     private string _currentEncoder;
+    [ObservableProperty()]
+    private string _firstLine;
 
     public FileWindowViewModel() : base()
     {

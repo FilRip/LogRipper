@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
@@ -13,7 +14,19 @@ namespace LogRipper.Models;
 [XmlRoot()]
 public class OneLine : ObservableObject
 {
-    public OneLine() { }
+    [XmlElement()]
+    public string FilePath { get; private set; }
+
+    public OneLine(string filePath) : this()
+    {
+        FilePath = filePath;
+        FileName = Path.GetFileNameWithoutExtension(filePath);
+    }
+
+    public OneLine() : base()
+    {
+        FilePath = "";
+    }
 
     [XmlElement()]
     public DateTime Date { get; set; }
@@ -21,8 +34,8 @@ public class OneLine : ObservableObject
     [XmlElement()]
     public string Line { get; set; }
 
-    [XmlElement()]
-    public string FileName { get; set; }
+    [XmlIgnore()]
+    public string FileName { get; private set; }
 
     [XmlElement()]
     public int NumLine { get; set; }
@@ -33,13 +46,13 @@ public class OneLine : ObservableObject
     [XmlIgnore()]
     public SolidColorBrush DefaultBackground
     {
-        get { return FileManager.GetFile(FileName)?.DefaultBackground ?? Constants.Colors.BackgroundColorBrush; }
+        get { return FileManager.GetFile(FilePath)?.DefaultBackground ?? Constants.Colors.BackgroundColorBrush; }
     }
 
     [XmlIgnore()]
     public SolidColorBrush DefaultForeground
     {
-        get { return FileManager.GetFile(FileName)?.DefaultForeground ?? Constants.Colors.ForegroundColorBrush; }
+        get { return FileManager.GetFile(FilePath)?.DefaultForeground ?? Constants.Colors.ForegroundColorBrush; }
     }
 
     [XmlIgnore()]
@@ -78,7 +91,7 @@ public class OneLine : ObservableObject
 
             if (result != null)
                 return result;
-            return FileManager.GetFile(FileName)?.DefaultBackground ?? Constants.Colors.BackgroundColorBrush;
+            return FileManager.GetFile(FilePath)?.DefaultBackground ?? Constants.Colors.BackgroundColorBrush;
         }
     }
 
@@ -91,7 +104,7 @@ public class OneLine : ObservableObject
 
             if (result != null)
                 return result;
-            return FileManager.GetFile(FileName)?.DefaultForeground ?? Constants.Colors.ForegroundColorBrush;
+            return FileManager.GetFile(FilePath)?.DefaultForeground ?? Constants.Colors.ForegroundColorBrush;
         }
     }
 

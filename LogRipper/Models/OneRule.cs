@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
@@ -173,6 +174,12 @@ public partial class OneRule : RuleViewModelBase
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.RemoveRule(this);
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.UpdateCategory();
         }
+    }
+
+    [RelayCommand()]
+    private async Task SearchResult()
+    {
+        await Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.SearchRule(this);
     }
 
     [RelayCommand()]

@@ -42,7 +42,7 @@ public class SavedRules
     {
         if (!File.Exists(filename))
             return null;
-        FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read);
+        FileStream fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         XmlSerializer serializer = new(typeof(SavedRules));
         try
         {

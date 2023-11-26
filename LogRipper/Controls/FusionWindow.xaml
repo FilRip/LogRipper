@@ -9,13 +9,16 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
+        Loaded="Window_Loaded"
         mc:Ignorable="d" Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=TxtDateFormat}"
-        Title="{x:Static constants:Locale.TITLE_MERGE_FILE}" Height="210" Width="600">
+        Title="{x:Static constants:Locale.TITLE_MERGE_FILE}" Height="260" Width="600">
     <Window.DataContext>
         <viewmodels:FusionWindowViewModel/>
     </Window.DataContext>
     <Grid Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
             <RowDefinition Height="Auto"/>
@@ -32,19 +35,22 @@
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static constants:Locale.LBL_ASK_DATEFORMAT}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FormatDate}" Name="TxtDateFormat"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static constants:Locale.LBL_MERGE_FILENAME}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FileName}" PreviewMouseUp="TextBox_PreviewMouseUp" IsReadOnly="{Binding IsFileReadOnly}" Name="TxtFileName"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static constants:Locale.LBL_MERGE_FILENAME}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FileName}" PreviewMouseUp="TextBox_PreviewMouseUp"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static constants:Locale.PREVIEW_FIRST_LINE}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding FirstLine}" IsReadOnly="True"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_TEXT_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <xctk:ColorPicker Grid.Row="4" Grid.Column="1" SelectedColor="{Binding ForeColor}"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static constants:Locale.LBL_ASK_DATEFORMAT}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FormatDate}" Name="TxtDateFormat"/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_BACK_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <xctk:ColorPicker Grid.Row="6" Grid.Column="1" SelectedColor="{Binding BackColor}"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_TEXT_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <xctk:ColorPicker Grid.Row="6" Grid.Column="1" SelectedColor="{Binding ForeColor}"/>
 
-        <Grid Grid.Row="8" Grid.ColumnSpan="2">
+        <TextBlock Grid.Row="8" Grid.Column="0" Text="{x:Static constants:Locale.LBL_DEFAULT_BACK_COLOR}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <xctk:ColorPicker Grid.Row="8" Grid.Column="1" SelectedColor="{Binding BackColor}"/>
+
+        <Grid Grid.Row="10" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>

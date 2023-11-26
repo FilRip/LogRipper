@@ -5,7 +5,13 @@ namespace LogRipper.Helpers;
 
 internal static class WpfMessageBox
 {
-    public static bool ShowModal(string text, string title, MessageBoxButton boutons = MessageBoxButton.OK, Window parentWindow = null)
+    public static bool ShowModal(string text, string title, MessageBoxButton buttons = MessageBoxButton.OK, Window parentWindow = null)
+    {
+        MessageBoxResult ret = ShowModalReturnButton(text, title, buttons, parentWindow);
+        return ret == MessageBoxResult.OK || ret == MessageBoxResult.Yes;
+    }
+
+    public static MessageBoxResult ShowModalReturnButton(string text, string title, MessageBoxButton buttons = MessageBoxButton.OK, Window parentWindow = null)
     {
         text = text.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine).Replace(@"\n", Environment.NewLine);
         parentWindow ??= Application.Current.GetCurrentWindow();
@@ -14,16 +20,16 @@ internal static class WpfMessageBox
         {
             parentWindow.Dispatcher.Invoke(() =>
             {
-                ret = MessageBox.Show(parentWindow, text, title, boutons);
+                ret = MessageBox.Show(parentWindow, text, title, buttons);
             });
         }
         else
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ret = MessageBox.Show(text, title, boutons);
+                ret = MessageBox.Show(text, title, buttons);
             });
         }
-        return (ret == MessageBoxResult.OK || ret == MessageBoxResult.Yes);
+        return ret;
     }
 }

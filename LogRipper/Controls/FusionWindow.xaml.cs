@@ -33,7 +33,8 @@ public partial class FusionWindow : Window
 
     private void TextBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        MyDataContext.BrowseFilenameCommand.Execute(null);
+        if (!MyDataContext.IsFileReadOnly)
+            MyDataContext.BrowseFilenameCommand.Execute(null);
     }
 
     private void BtnOK_Click(object sender, RoutedEventArgs e)
@@ -56,5 +57,13 @@ public partial class FusionWindow : Window
         Properties.Settings.Default.MergeSizeY = Height;
         Properties.Settings.Default.MergeWS = WindowState.ToString("G");
         Properties.Settings.Default.Save();
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (MyDataContext.IsFileReadOnly)
+        {
+            TxtFileName.SelectionStart = TxtFileName.Text.Length;
+        }
     }
 }

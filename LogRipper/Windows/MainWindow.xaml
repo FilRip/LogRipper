@@ -217,7 +217,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Grid.Column="0" BorderThickness="2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4">
+                <Border Grid.Row="0" Grid.Column="0" BorderThickness="2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4" Drop="ListBoxLines_Drop" AllowDrop="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" Name="ToolbarTitleRow"/>
@@ -263,7 +263,7 @@
                         </ScrollViewer>
                     </Grid>
                 </Border>
-                <Border Grid.Row="0" Grid.Column="1" BorderThickness="0 2 2 2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4">
+                <Border Grid.Row="0" Grid.Column="1" BorderThickness="0 2 2 2" BorderBrush="{x:Static constants:Colors.AccentColorBrush}" CornerRadius="4" Name="ListRules" Drop="ListRules_Drop" AllowDrop="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -294,6 +294,11 @@
                                                 <MenuItem Header="{x:Static constants:Locale.MENU_ADD_RULE}" Command="{Binding Path=DataContext.AddRuleCommand, Source={StaticResource ParentDataContext}}">
                                                     <MenuItem.Icon>
                                                         <ui:FontIcon Glyph="&#xECC8;"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="{x:Static constants:Locale.BTN_SEE_RULE_RESULT}" Command="{Binding SearchResultCommand}">
+                                                    <MenuItem.Icon>
+                                                        <ui:FontIcon Glyph="&#xE71E;"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                             </ContextMenu>
