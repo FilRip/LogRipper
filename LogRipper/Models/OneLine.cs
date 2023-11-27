@@ -15,7 +15,7 @@ namespace LogRipper.Models;
 public class OneLine : ObservableObject
 {
     [XmlElement()]
-    public string FilePath { get; private set; }
+    public string FilePath { get; set; }
 
     public OneLine(string filePath) : this()
     {

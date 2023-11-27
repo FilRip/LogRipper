@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 
+using LogRipper.Constants;
+using LogRipper.Helpers;
 using LogRipper.ViewModels;
 
 namespace LogRipper.Controls;
@@ -39,12 +41,16 @@ public partial class FusionWindow : Window
 
     private void BtnOK_Click(object sender, RoutedEventArgs e)
     {
+        if (!FileManager.CheckDateFormat(MyDataContext.FormatDate, MyDataContext.FirstLine))
+            return;
         DialogResult = true;
         Close();
     }
 
     private void BtnCancel_Click(object sender, RoutedEventArgs e)
     {
+        if (!FileManager.CheckDateFormat(MyDataContext.FormatDate, MyDataContext.FirstLine))
+            return;
         DialogResult = false;
         Close();
     }

@@ -42,7 +42,7 @@ internal static class FileManager
         RemoveAllFiles();
         foreach (OneFile file in listFiles)
         {
-            _listFiles.Add(file.FileName, file);
+            _listFiles.Add(file.FullPath, file);
             file.CommonInit();
         }
         Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshListFiles();
@@ -128,6 +128,23 @@ internal static class FileManager
             }
             oneLine.Date = lastDt;
         }
+    }
+
+    internal static bool CheckDateFormat(string formatDate, string line)
+    {
+        if (string.IsNullOrWhiteSpace(formatDate) || string.IsNullOrWhiteSpace(line))
+            return true;
+        bool ret = TryParseDate(formatDate, line);
+        if (!ret)
+            return WpfMessageBox.ShowModal(Locale.INVALID_DATE_FORMAT, Locale.BTN_EDIT_RULE.Replace("_", ""), MessageBoxButton.YesNo);
+        return true;
+    }
+
+    internal static bool TryParseDate(string formatDate, string line)
+    {
+        if (string.IsNullOrWhiteSpace(formatDate))
+            return true;
+        return DateTime.TryParseExact(line.Substring(0, formatDate.Length), formatDate, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out _);
     }
 
     internal static void ExportToHtml(ObservableCollection<OneLine> listLines, ListCurrentRules listRules, string filepath)
