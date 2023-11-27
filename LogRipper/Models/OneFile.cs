@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
@@ -31,6 +32,7 @@ public partial class OneFile : ObservableObject, IDisposable
     private bool disposedValue;
     private readonly object _lockFileAccess = new();
     private Encoding _currentEncoding;
+    private readonly Timer _forceRefresh;
 
     // For XmlSerialization
     public OneFile() { }
@@ -45,6 +47,24 @@ public partial class OneFile : ObservableObject, IDisposable
         _currentEncoding = currentEncoding;
         SetEncodingName();
         CommonInit();
+        _forceRefresh = new Timer(100)
+        {
+            AutoReset = true,
+            Enabled = activeAutoReload,
+        };
+        _forceRefresh.Elapsed += ForceRefresh_Elapsed;
+    }
+
+    private void ForceRefresh_Elapsed(object sender, ElapsedEventArgs e)
+    {
+        if (AutoReload && !disposedValue)
+        {
+            lock (_lockFileAccess)
+            {
+                if (new FileInfo(FullPath).Length > LastOffset)
+                    Watcher_Changed(null, null);
+            }
+        }
     }
 
     private void SetEncodingName()
@@ -90,6 +110,7 @@ public partial class OneFile : ObservableObject, IDisposable
     internal void ActiveAutoReload()
     {
         AutoReload = !AutoReload;
+        _forceRefresh.Enabled = AutoReload;
         if (AutoReload && new FileInfo(FullPath).Length != LastOffset)
             Watcher_Changed(null, null);
     }
@@ -131,7 +152,7 @@ public partial class OneFile : ObservableObject, IDisposable
                         fs = File.Open(FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
                         fs.Position = LastOffset;
                         // TODO : If file smaller than before
-                        if (newLength < LastOffset)
+                        if (newLength <= LastOffset)
                             return;
                         byte[] donnees = new byte[newLength - LastOffset];
                         int nbRead = fs.Read(donnees, 0, newLength - LastOffset);
