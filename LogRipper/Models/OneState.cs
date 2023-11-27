@@ -154,10 +154,16 @@ public class OneState
                 {
                     win.MyDataContext.ListLines = new ObservableCollection<OneLine>(newState.ListLines);
                 }
-                if (newState.ListRules != null)
+                if (newState.ListRules?.Count > 0)
                 {
                     win.MyDataContext.ListRules.SetRules(new ObservableCollection<OneRule>(newState.ListRules));
                     win.MyDataContext.ListCategory = newState.ListCategory;
+                    win.MyDataContext.UpdateCategory();
+                }
+                else
+                {
+                    win.MyDataContext.ListRules.ListRules.Clear();
+                    win.MyDataContext.ListCategory.Clear();
                     win.MyDataContext.UpdateCategory();
                 }
                 win.MyDataContext.FilterByDate = newState.FilterByDate;
@@ -165,7 +171,7 @@ public class OneState
                 win.MyDataContext.EndDateTime = newState.EndDate;
                 win.MyDataContext.HideAllOthersLines = newState.HideAllOthersLines;
                 win.MyDataContext.RefreshVisibleLines();
-                win.ListBoxLines.SelectedIndex = newState.CurrentNumLine;
+                win.MyDataContext.RowIndexSelected = newState.CurrentNumLine;
                 win.MyDataContext.ListSearchTab.Clear();
                 if (newState.SearchTab?.Count > 0)
                 {
@@ -176,10 +182,12 @@ public class OneState
                         tabSearch.MyDataContext.SetNewSearch(tab.Result, tab.SearchMode, tab.Search, tab.SearchRules);
                         win.MyDataContext.ListSearchTab.Add(tabSearch);
                         tabSearch.SetTitle(tab.SearchMode == ECurrentSearchMode.BY_RULES ? tab.SearchRules[0].ToString() : tab.Search);
-                        win.MyDataContext.ShowSearchResult = true;
                     }
+                    win.MyDataContext.ShowSearchResult = true;
                     win.MyDataContext.CurrentSearchTab = win.MyDataContext.ListSearchTab[newState.CurrentSelectedTabSearch];
                 }
+                else
+                    win.MyDataContext.ShowSearchResult = false;
                 win.ScrollToSelected();
                 stream.Close();
                 stream.Dispose();

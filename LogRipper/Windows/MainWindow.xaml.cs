@@ -249,7 +249,11 @@ public partial class MainWindow : Window
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files?.Length > 0)
             {
-                MessageBoxResult ret = WpfMessageBox.ShowModalReturnButton(Locale.ASK_MERGE_OR_REPLACE, Locale.MENU_OPEN.Replace("_", ""), MessageBoxButton.YesNo);
+                MessageBoxResult ret;
+                if (MyDataContext.ListFiles?.Count > 0)
+                    ret = WpfMessageBox.ShowModalReturnButton(Locale.ASK_MERGE_OR_REPLACE, Locale.MENU_OPEN.Replace("_", ""), MessageBoxButton.YesNo);
+                else
+                    ret = MessageBoxResult.No;
                 if (ret == MessageBoxResult.Yes)
                 {
                     _ = MyDataContext.MergingFile(files);

@@ -62,6 +62,8 @@ internal partial class MainWindowViewModel : ObservableObject
     private ObservableCollection<TabItemSearch> _listSearchTab;
     [ObservableProperty()]
     private TabItemSearch _currentSearchTab;
+    [ObservableProperty()]
+    private int _rowIndexSelected;
 
     #endregion
 
@@ -191,8 +193,6 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         Application.Current.GetCurrentWindow<MainWindow>().Window_SizeChanged(null, null);
     }
-
-    public int RowIndexSelected { get; set; }
 
     partial void OnSelectedLineChanged(OneLine value)
     {

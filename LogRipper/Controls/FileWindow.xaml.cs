@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 
 using LogRipper.Constants;
+using LogRipper.Helpers;
 using LogRipper.ViewModels;
 
 namespace LogRipper.Controls;
@@ -33,12 +34,16 @@ public partial class FileWindow : Window
 
     private void BtnOK_Click(object sender, RoutedEventArgs e)
     {
+        if (!FileManager.CheckDateFormat(MyDataContext.FormatDate, MyDataContext.FirstLine))
+            return;
         DialogResult = true;
         Close();
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
+        if (!FileManager.CheckDateFormat(MyDataContext.FormatDate, MyDataContext.FirstLine))
+            return;
         DialogResult = false;
         Close();
     }

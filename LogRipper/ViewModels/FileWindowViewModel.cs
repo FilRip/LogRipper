@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using LogRipper.Constants;
+using LogRipper.Models;
 
 namespace LogRipper.ViewModels;
 
