@@ -159,6 +159,8 @@ public partial class MainWindow : Window
                 {
                     // We must set a real size to have the scrollbar
                     double sizeToolBar = Math.Max(ToolbarRow.ActualHeight - ToolbarTitleRow.ActualHeight - 15, 35);
+                    if (!MyDataContext.EnableShowToolbar)
+                        sizeToolBar = 0;
                     ListFilesRow.MaxHeight = sizeToolBar;
                     ListFilesRow.Height = new GridLength(ListFilesRow.MaxHeight);
                     ListRulesRow.MaxHeight = sizeToolBar;
@@ -174,7 +176,6 @@ public partial class MainWindow : Window
                     }
                     else if (ColumnLines.MaxWidth != double.PositiveInfinity)
                         ColumnLines.MaxWidth = double.PositiveInfinity;
-
                 }
             }, DispatcherPriority.Background);
     }

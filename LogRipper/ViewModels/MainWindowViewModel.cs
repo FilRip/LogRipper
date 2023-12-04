@@ -368,7 +368,7 @@ internal partial class MainWindowViewModel : ObservableObject
 
     internal void RefreshVisibleLines()
     {
-        if (ListLines == null)
+        if (ListLines == null || ListLines.Count == 0)
             return;
         for (int i = _numVisibleStart - 1; i <= _numVisibleEnd; i++)
             ListLines[i].RefreshLine();
