@@ -64,10 +64,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="{Binding EnableShowToolbar, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.12*}" Name="ToolbarRow"/>
-            <RowDefinition Height="{Binding EnableShowToolbar, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
-            <RowDefinition Height="0.88*"/>
-            <RowDefinition Height="{Binding ShowSearchResult, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}"/>
-            <RowDefinition Height="{Binding ShowSearchResult, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.2*}"/>
+            <RowDefinition Height="{Binding EnableShowToolbar, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}" Name="SeparatorToolbarRow"/>
+            <RowDefinition Height="0.88*" Name="MainRow"/>
+            <RowDefinition Height="{Binding ShowSearchResult, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}" Name="SearchResultRow"/>
+            <RowDefinition Height="{Binding ShowSearchResult, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.2*}" Name="SeparatorSearchResultRow"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.8*" Name="MainList"/>

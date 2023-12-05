@@ -256,7 +256,8 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         InputBoxWindow input = new();
         input.ChkCaseSensitive.IsChecked = _searchCaseSensitive == StringComparison.CurrentCulture;
-        input.ShowModal(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, _search);
+        input.TxtUserEdit.Text = _selectedText;
+        input.ShowModal(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, (string.IsNullOrWhiteSpace(_selectedText) ? _search : _selectedText));
         if (input.DialogResult == true && ListLines?.Count > 0 && !string.IsNullOrEmpty(input.TxtUserEdit.Text))
         {
             _listSearchRules.Clear();

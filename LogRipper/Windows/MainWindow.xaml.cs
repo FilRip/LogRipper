@@ -30,6 +30,7 @@ public partial class MainWindow : Window
     // TODO : Make a scrollbar colored by matching
     // TODO : Remove some Modal window
     // TODO : Make docking/float window/toolbar
+    // TODO : Display list of arguments for datetime format (https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings)
     public MainWindow()
     {
         InitializeComponent();
