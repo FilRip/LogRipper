@@ -81,8 +81,8 @@
         <TextBlock Grid.Row="16" Grid.Column="0" Text="{x:Static constants:Locale.OPTIONS_SPACE_SIZE}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         <ui:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding DefaultSpaceSize}" Minimum="2" SpinButtonPlacementMode="Inline" SmallChange="1" LargeChange="10"/>
 
-        <TextBlock Grid.Row="18" Grid.Column="0" Text="{x:Static constants:Locale.SETTINGS_WRAP}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-        <CheckBox Grid.Row="18" Grid.Column="1" IsChecked="{Binding WrapLines}"/>
+        <TextBlock Grid.Row="18" Grid.Column="0" Text="{x:Static constants:Locale.REGISTER_BETA_CHANNEL}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <CheckBox Grid.Row="18" Grid.Column="1" IsChecked="{Binding BetaChannel}"/>
 
         <CheckBox Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding AutoShowMargin}" Content="{x:Static constants:Locale.SETTINGS_AUTO_SHOW_MARGIN}"/>
 

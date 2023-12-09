@@ -178,6 +178,7 @@ internal static class Locale
     public static string ASK_MERGE_OR_REPLACE { get; set; }
     public static string PREVIEW_FIRST_LINE { get; set; }
     public static string INVALID_DATE_FORMAT { get; set; }
+    public static string REGISTER_BETA_CHANNEL { get; set; }
     #endregion
 
     #region Methods
@@ -351,6 +352,7 @@ internal static class Locale
             ASK_MERGE_OR_REPLACE = GetTranslation(nameof(ASK_MERGE_OR_REPLACE));
             PREVIEW_FIRST_LINE = GetTranslation(nameof(PREVIEW_FIRST_LINE));
             INVALID_DATE_FORMAT = GetTranslation(nameof(INVALID_DATE_FORMAT));
+            REGISTER_BETA_CHANNEL = GetTranslation(nameof(REGISTER_BETA_CHANNEL));
         }
         else
         {

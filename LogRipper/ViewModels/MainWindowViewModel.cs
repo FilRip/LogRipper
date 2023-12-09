@@ -237,7 +237,7 @@ internal partial class MainWindowViewModel : ObservableObject
             if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0 &&
                 WpfMessageBox.ShowModal(string.Format(Locale.LBL_NEW_VERSION, latestVersion.ToString()), "LogRipper", MessageBoxButton.YesNo))
             {
-                AutoUpdater.InstallNewVersion(ver);
+                AutoUpdater.InstallNewVersion(ver, Properties.Settings.Default.beta);
             }
         }
         else
