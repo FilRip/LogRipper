@@ -63,11 +63,9 @@
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="{Binding EnableShowToolbar, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.12*}" Name="ToolbarRow"/>
-            <RowDefinition Height="{Binding EnableShowToolbar, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}" Name="SeparatorToolbarRow"/>
-            <RowDefinition Height="0.88*" Name="MainRow"/>
-            <RowDefinition Height="{Binding ShowSearchResult, Converter={StaticResource AutoHideGrid}, ConverterParameter=auto}" Name="SearchResultRow"/>
-            <RowDefinition Height="{Binding ShowSearchResult, Converter={StaticResource AutoHideGrid}, ConverterParameter=0.2*}" Name="SeparatorSearchResultRow"/>
+            <RowDefinition Height="0.12*" Name="ToolbarRow"/>
+            <RowDefinition Height="*" Name="MainRow"/>
+            <RowDefinition Height="0.2*" Name="SearchResultRow"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.8*" Name="MainList"/>
@@ -193,21 +191,21 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_?">
-                <MenuItem Header="{x:Static constants:Locale.MENU_ABOUT}" Command="{Binding ShowAboutCommand}">
-                    <MenuItem.Icon>
-                        <ui:FontIcon Glyph="&#xE897;"/>
-                    </MenuItem.Icon>
-                </MenuItem>
                 <MenuItem Header="{x:Static constants:Locale.MENU_CHECK_NEW_VERSION}" Command="{Binding CheckForUpdateCommand}">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xEC05;"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="{x:Static constants:Locale.MENU_ABOUT}" Command="{Binding ShowAboutCommand}">
+                    <MenuItem.Icon>
+                        <ui:FontIcon Glyph="&#xE897;"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
         </Menu>
 
         <!-- Custom toolbar -->
-        <Grid Grid.Row="1" Margin="5 0 5 0" SizeChanged="Grid_SizeChanged">
+        <Grid Grid.Row="1" Margin="5 0 5 0" SizeChanged="Grid_SizeChanged" Visibility="{Binding EnableShowToolbar, Converter={StaticResource boolToVisible}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.33*"/>
@@ -346,10 +344,10 @@
                 </Border>
             </Grid>
         </Grid>
-        <GridSplitter Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="{x:Static constants:Colors.AccentColorBrush}"/>
+        <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="5" Background="{x:Static constants:Colors.AccentColorBrush}" Visibility="{Binding EnableShowToolbar, Converter={StaticResource boolToVisible}}" ResizeBehavior="CurrentAndNext" ResizeDirection="Rows"/>
 
         <!-- Main/Current file(s) -->
-        <Grid Margin="5" Grid.Row="3">
+        <Grid Margin="5" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="{x:Static constants:Values.DefaultRowHeightSpace}"/>
@@ -434,7 +432,7 @@
         </Grid>
 
         <!-- Custom margin -->
-        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" Background="{x:Static constants:Colors.AccentColorBrush}"/>
+        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" Background="{x:Static constants:Colors.AccentColorBrush}"/>
         <DataGrid Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" BorderThickness="0" Name="ListBoxMargin" SelectionMode="Single" GridLinesVisibility="None"
                   HeadersVisibility="None" AutoGenerateColumns="False" SelectedItem="{Binding SelectedLine}" VirtualizingStackPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" RowHeight="1" MinRowHeight="1">
@@ -455,10 +453,10 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <GridSplitter Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5" Background="{x:Static constants:Colors.AccentColorBrush}" ShowsPreview="True"/>
+        <GridSplitter Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="5" Background="{x:Static constants:Colors.AccentColorBrush}" ShowsPreview="True" Visibility="{Binding ShowSearchResult, Converter={StaticResource boolToVisible}}" ResizeBehavior="CurrentAndNext" ResizeDirection="Rows"/>
 
         <!-- Search result -->
-        <TabControl Grid.Row="5" Grid.ColumnSpan="3" ItemsSource="{Binding ListSearchTab}" x:Name="TabControlSearchResult" SelectedItem="{Binding CurrentSearchTab}" TabStripPlacement="Bottom" Style="{StaticResource MyTabControlStyle}"/>
+        <TabControl Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding ListSearchTab}" x:Name="TabControlSearchResult" SelectedItem="{Binding CurrentSearchTab}" TabStripPlacement="Bottom" Style="{StaticResource MyTabControlStyle}" Visibility="{Binding ShowSearchResult, Converter={StaticResource boolToVisible}}"/>
 
     </Grid>
 </Window>

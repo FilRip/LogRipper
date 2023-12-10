@@ -31,6 +31,7 @@ public partial class MainWindow : Window
     // TODO : Remove some Modal window
     // TODO : Make docking/float window/toolbar
     // TODO : Display list of arguments for datetime format (https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings)
+    // TODO : Close modal window by pressing Esc
     public MainWindow()
     {
         InitializeComponent();

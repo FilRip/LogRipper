@@ -189,11 +189,6 @@ internal partial class MainWindowViewModel : ObservableObject
         get { return _margin; }
     }
 
-    partial void OnShowSearchResultChanged(bool value)
-    {
-        Application.Current.GetCurrentWindow<MainWindow>().Window_SizeChanged(null, null);
-    }
-
     partial void OnSelectedLineChanged(OneLine value)
     {
         ((MainWindow)Application.Current.MainWindow).ScrollToSelected();
