@@ -205,7 +205,7 @@
         </Menu>
 
         <!-- Custom toolbar -->
-        <Grid Grid.Row="1" Margin="5 0 5 0" SizeChanged="Grid_SizeChanged" Visibility="{Binding EnableShowToolbar, Converter={StaticResource boolToVisible}}">
+        <Grid Grid.Row="1" Margin="5 0 5 0" SizeChanged="Grid_SizeChanged" Name="ToolbarGrid" Visibility="{Binding EnableShowToolbar, Converter={StaticResource boolToVisible}}" IsVisibleChanged="ToolbarGrid_IsVisibleChanged">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.33*"/>
@@ -456,7 +456,7 @@
         <GridSplitter Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="5" Background="{x:Static constants:Colors.AccentColorBrush}" ShowsPreview="True" Visibility="{Binding ShowSearchResult, Converter={StaticResource boolToVisible}}" ResizeBehavior="CurrentAndNext" ResizeDirection="Rows"/>
 
         <!-- Search result -->
-        <TabControl Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding ListSearchTab}" x:Name="TabControlSearchResult" SelectedItem="{Binding CurrentSearchTab}" TabStripPlacement="Bottom" Style="{StaticResource MyTabControlStyle}" Visibility="{Binding ShowSearchResult, Converter={StaticResource boolToVisible}}"/>
+        <TabControl Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding ListSearchTab}" x:Name="TabControlSearchResult" SelectedItem="{Binding CurrentSearchTab}" TabStripPlacement="Bottom" Style="{StaticResource MyTabControlStyle}" Visibility="{Binding ShowSearchResult, Converter={StaticResource boolToVisible}}" IsVisibleChanged="ToolbarGrid_IsVisibleChanged"/>
 
     </Grid>
 </Window>

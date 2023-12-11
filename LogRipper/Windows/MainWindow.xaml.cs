@@ -296,4 +296,17 @@ public partial class MainWindow : Window
         }
         catch (Exception) { /* Ignore errors */ }
     }
+
+    public void ToolbarGrid_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (TabControlSearchResult.IsVisible)
+            SearchResultRow.Height = new GridLength(0.2, GridUnitType.Star);
+        else
+            SearchResultRow.Height = new GridLength(0);
+        if (ToolbarGrid.IsVisible)
+            ToolbarRow.Height = new GridLength(0.1, GridUnitType.Star);
+        else
+            ToolbarRow.Height = new GridLength(0);
+        MainRow.Height = new GridLength(0.8, GridUnitType.Star);
+    }
 }
