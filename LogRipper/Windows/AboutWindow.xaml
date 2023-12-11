@@ -9,7 +9,7 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
         mc:Ignorable="d" ResizeMode="NoResize"
-        Title="{x:Static constants:Locale.MENU_ABOUT}" Height="400" Width="400" WindowStartupLocation="CenterScreen">
+        Title="{x:Static constants:Locale.MENU_ABOUT}" Height="400" Width="400" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

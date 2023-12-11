@@ -49,8 +49,6 @@ public partial class FusionWindow : Window
 
     private void BtnCancel_Click(object sender, RoutedEventArgs e)
     {
-        if (!FileManager.CheckDateFormat(MyDataContext.FormatDate, MyDataContext.FirstLine))
-            return;
         DialogResult = false;
         Close();
     }
@@ -70,6 +68,15 @@ public partial class FusionWindow : Window
         if (MyDataContext.IsFileReadOnly)
         {
             TxtFileName.SelectionStart = TxtFileName.Text.Length;
+        }
+    }
+
+    private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Escape)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

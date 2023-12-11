@@ -12,6 +12,7 @@
         mc:Ignorable="d"
         Title="{x:Static constants:Locale.TITLE_NEW_RULE}" Height="580" Width="840"
         d:DataContext="{d:DesignInstance Type=viewmodels:RuleWindowViewModel}"
+        KeyDown="Window_KeyDown"
         Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=TxtSearch}">
     <Window.DataContext>
         <viewmodels:RuleWindowViewModel/>

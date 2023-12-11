@@ -11,6 +11,7 @@
         mc:Ignorable="d" FocusManager.FocusedElement="{Binding ElementName=TxtCondition}"
         Title="{x:Static constants:Locale.TITLE_NEW_RULE}" Height="180" Width="500"
         d:DataContext="{d:DesignInstance Type=viewmodels:SubRuleWindowViewModel}"
+        KeyDown="Window_KeyDown"
         Closing="Window_Closing">
     <Window.DataContext>
         <viewmodels:SubRuleWindowViewModel/>
