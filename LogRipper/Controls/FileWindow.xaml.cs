@@ -42,8 +42,6 @@ public partial class FileWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        if (!FileManager.CheckDateFormat(MyDataContext.FormatDate, MyDataContext.FirstLine))
-            return;
         DialogResult = false;
         Close();
     }
@@ -55,5 +53,14 @@ public partial class FileWindow : Window
         Properties.Settings.Default.FileSizeX = Width;
         Properties.Settings.Default.FileSizeY = Height;
         Properties.Settings.Default.Save();
+    }
+
+    private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Escape)
+        {
+            DialogResult = false;
+            Close();
+        }
     }
 }

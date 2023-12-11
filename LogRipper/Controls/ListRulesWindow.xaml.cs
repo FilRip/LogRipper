@@ -40,4 +40,10 @@ public partial class ListRulesWindow : Window
         Properties.Settings.Default.ListRulesWS = WindowState.ToString("G");
         Properties.Settings.Default.Save();
     }
+
+    private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Escape)
+            Close();
+    }
 }

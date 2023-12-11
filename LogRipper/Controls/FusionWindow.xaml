@@ -11,6 +11,7 @@
         ui:ThemeManager.IsThemeAware="True"
         Loaded="Window_Loaded"
         mc:Ignorable="d" Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=TxtDateFormat}"
+        KeyDown="Window_KeyDown"
         Title="{x:Static constants:Locale.TITLE_MERGE_FILE}" Height="260" Width="600">
     <Window.DataContext>
         <viewmodels:FusionWindowViewModel/>

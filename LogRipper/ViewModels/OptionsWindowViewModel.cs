@@ -34,7 +34,7 @@ internal partial class OptionsWindowViewModel : ObservableObject
     [ObservableProperty()]
     private int? _defaultSpaceSize;
     [ObservableProperty()]
-    private bool _wrapLines, _autoShowMargin, _autoShowDateFilter, _autoShowToolbar, _showIconSystray, _minimizeInSystray;
+    private bool _wrapLines, _autoShowMargin, _autoShowDateFilter, _autoShowToolbar, _showIconSystray, _minimizeInSystray, _betaChannel;
 
     public OptionsWindowViewModel() : base()
     {
@@ -81,6 +81,7 @@ internal partial class OptionsWindowViewModel : ObservableObject
         WrapLines = Properties.Settings.Default.WrapLines;
         ShowIconSystray = Properties.Settings.Default.ShowInSystray;
         MinimizeInSystray = Properties.Settings.Default.MinimizeInSystray;
+        BetaChannel = Properties.Settings.Default.beta;
     }
 
     public List<OneLanguage> ListLanguages
@@ -196,6 +197,7 @@ internal partial class OptionsWindowViewModel : ObservableObject
         Properties.Settings.Default.WrapLines = WrapLines;
         Properties.Settings.Default.ShowInSystray = ShowIconSystray;
         Properties.Settings.Default.MinimizeInSystray = MinimizeInSystray;
+        Properties.Settings.Default.beta = BetaChannel;
         Properties.Settings.Default.Save();
         Application.Current.GetCurrentWindow<OptionsWindow>().Close();
     }

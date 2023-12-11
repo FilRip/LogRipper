@@ -10,6 +10,7 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
         mc:Ignorable="d" Closing="Window_Closing" FocusManager.FocusedElement="{Binding ElementName=TxtDateFormat}"
+        KeyDown="Window_KeyDown"
         Title="FileWindow" Height="240" Width="450">
     <Window.DataContext>
         <viewmodels:FileWindowViewModel/>

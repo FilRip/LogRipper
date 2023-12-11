@@ -189,11 +189,6 @@ internal partial class MainWindowViewModel : ObservableObject
         get { return _margin; }
     }
 
-    partial void OnShowSearchResultChanged(bool value)
-    {
-        Application.Current.GetCurrentWindow<MainWindow>().Window_SizeChanged(null, null);
-    }
-
     partial void OnSelectedLineChanged(OneLine value)
     {
         ((MainWindow)Application.Current.MainWindow).ScrollToSelected();
@@ -237,7 +232,7 @@ internal partial class MainWindowViewModel : ObservableObject
             if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0 &&
                 WpfMessageBox.ShowModal(string.Format(Locale.LBL_NEW_VERSION, latestVersion.ToString()), "LogRipper", MessageBoxButton.YesNo))
             {
-                AutoUpdater.InstallNewVersion(ver);
+                AutoUpdater.InstallNewVersion(ver, Properties.Settings.Default.beta);
             }
         }
         else
@@ -256,7 +251,8 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         InputBoxWindow input = new();
         input.ChkCaseSensitive.IsChecked = _searchCaseSensitive == StringComparison.CurrentCulture;
-        input.ShowModal(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, _search);
+        input.TxtUserEdit.Text = _selectedText;
+        input.ShowModal(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, (string.IsNullOrWhiteSpace(_selectedText) ? _search : _selectedText));
         if (input.DialogResult == true && ListLines?.Count > 0 && !string.IsNullOrEmpty(input.TxtUserEdit.Text))
         {
             _listSearchRules.Clear();
@@ -368,7 +364,7 @@ internal partial class MainWindowViewModel : ObservableObject
 
     internal void RefreshVisibleLines()
     {
-        if (ListLines == null)
+        if (ListLines == null || ListLines.Count == 0)
             return;
         for (int i = _numVisibleStart - 1; i <= _numVisibleEnd; i++)
             ListLines[i].RefreshLine();

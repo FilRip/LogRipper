@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -10,6 +11,8 @@ using System.Windows;
 using LogRipper.Constants;
 using LogRipper.Exceptions;
 using LogRipper.Windows;
+
+using Newtonsoft.Json;
 
 namespace LogRipper.Helpers;
 
@@ -45,7 +48,6 @@ internal static class AutoUpdater
     private const string UpdateExtension = ".update";
     private static readonly string AutoUpdateDirectory = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), UpdateFolder);
 
-#pragma warning disable IDE0060 // Supprimer le paramètre inutilisé
     internal static StringBuilder LatestVersion(bool beta)
     {
         ExtendWebClient client = null;
@@ -53,9 +55,26 @@ internal static class AutoUpdater
         try
         {
             client = new ExtendWebClient();
-            string readme = client.DownloadString(new Uri($"https://github.com/FilRip/LogRipper/releases/latest"));
-            if (!string.IsNullOrWhiteSpace(readme))
-                result = new StringBuilder(client.LastUri.Segments[client.LastUri.Segments.Length - 1].Replace("v", ""));
+            if (beta)
+            {
+                client.Headers.Add("User-Agent", "LogRipper");
+                string json = client.DownloadString(new Uri($"https://api.github.com/repos/filrip/logripper/releases"));
+                Releases[] deserialized = JsonConvert.DeserializeObject<Releases[]>(json);
+                if (deserialized != null)
+                {
+                    Releases lastBeta = Array.Find(deserialized, r => r.PreRelease);
+                    if (lastBeta != null)
+                    {
+                        result = new StringBuilder(lastBeta.Tag.Replace("v", ""));
+                    }
+                }
+            }
+            else
+            {
+                string readme = client.DownloadString(new Uri($"https://github.com/FilRip/LogRipper/releases/latest"));
+                if (!string.IsNullOrWhiteSpace(readme))
+                    result = new StringBuilder(client.LastUri.Segments[client.LastUri.Segments.Length - 1].Replace("v", ""));
+            }
         }
         catch (Exception) { /* Ignore errors */ }
         finally
@@ -64,9 +83,8 @@ internal static class AutoUpdater
         }
         return result;
     }
-#pragma warning restore IDE0060 // Supprimer le paramètre inutilisé
 
-    internal static void InstallNewVersion(string version)
+    internal static void InstallNewVersion(string version, bool beta)
     {
         ExtendWebClient client = null;
         try
@@ -75,7 +93,7 @@ internal static class AutoUpdater
             if (File.Exists(destFile))
                 File.Delete(destFile);
             client = new ExtendWebClient();
-            client.DownloadFile(new Uri($"https://github.com/FilRip/LogRipper/releases/download/v{version}/LogRipper.zip"), destFile);
+            client.DownloadFile(new Uri($"https://github.com/FilRip/LogRipper/releases/download/v{version}/LogRipper{(beta ? "Beta" : "")}.zip"), destFile);
             if (!File.Exists(destFile) || new FileInfo(destFile).Length == 0)
                 throw new LogRipperException(Locale.LBL_ERROR_DOWNLOAD_NEW_VERSION);
             if (!ZipManager.Extract(AutoUpdateDirectory, destFile))
@@ -109,7 +127,7 @@ internal static class AutoUpdater
                     if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0 &&
                         WpfMessageBox.ShowModal(string.Format(Locale.LBL_NEW_VERSION, latestVersion.ToString()), "LogRipper", MessageBoxButton.YesNo))
                     {
-                        InstallNewVersion(version.ToString());
+                        InstallNewVersion(version.ToString(), beta);
                     }
                 }
             }
@@ -199,5 +217,13 @@ internal static class AutoUpdater
             Process.Start(Environment.GetCommandLineArgs()[0], args.ToString());
             Environment.Exit(0);
         });
+    }
+
+    public class Releases
+    {
+        [JsonProperty(PropertyName = "tag_name")]
+        public string Tag { get; set; }
+        [JsonProperty(PropertyName = "prerelease")]
+        public bool PreRelease { get; set; }
     }
 }

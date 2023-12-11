@@ -9,6 +9,7 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
         mc:Ignorable="d" Closing="Window_Closing"
+        KeyDown="Window_KeyDown"
         Title="{x:Static constants:Locale.TITLE_LIST_RULES}" Height="450" Width="800">
     <Window.DataContext>
         <viewmodels:ListRulesWindowViewModel/>
