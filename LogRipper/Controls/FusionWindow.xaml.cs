@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 
-using LogRipper.Constants;
 using LogRipper.Helpers;
 using LogRipper.ViewModels;
 
