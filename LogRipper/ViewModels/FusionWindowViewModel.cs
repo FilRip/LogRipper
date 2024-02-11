@@ -30,6 +30,7 @@ public partial class FusionWindowViewModel : ObservableObject
 
     public FusionWindowViewModel() : base()
     {
+        FormatDate = Properties.Settings.Default.DefaultDateFormat;
         BackColor = Constants.Colors.DefaultBackgroundColor;
         ForeColor = Constants.Colors.DefaultForegroundColor;
     }
