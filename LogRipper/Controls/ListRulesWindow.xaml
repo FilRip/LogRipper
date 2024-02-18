@@ -27,7 +27,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{x:Static constants:Locale.LBL_LIST_RULES}"/>
-        <ListBox Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding ListRules, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" SelectedItem="{Binding SelectedRule}" Name="ListRulesToManage" SelectionMode="Extended">
+        <ListBox Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding ListRules, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" SelectedItem="{Binding SelectedRule}" Name="ListRulesToManage" SelectionMode="Extended" SelectionChanged="ListRulesToManage_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Label}" HorizontalAlignment="Left" Background="{Binding BackgroundBrush}" Foreground="{Binding ForegroundBrush}"/>

@@ -27,6 +27,12 @@ internal partial class ListRulesWindowViewModel : ObservableObject
 
     #endregion
 
+    #region Properties
+
+    internal List<OneRule> SelectedItems { get; set; } = [];
+
+    #endregion
+
     #region Methods
 
     [RelayCommand()]
@@ -44,15 +50,23 @@ internal partial class ListRulesWindowViewModel : ObservableObject
     {
         if (SelectedRule == null)
             return;
-        if (WpfMessageBox.ShowModal($"{Locale.ASK_CONFIRM_DEL}{Environment.NewLine}{SelectedRule}", Locale.TITLE_CONFIRM_DEL, MessageBoxButton.YesNo))
+        List<OneRule> listToDelete = SelectedItems.ToList();
+        foreach (OneRule rule in listToDelete)
         {
-            OneRule rule = SelectedRule;
-            SelectedRule = null;
-            Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.RemoveRule(rule);
-            ListRules = null;
-            ListRules = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.ListRules;
-            Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.UpdateCategory();
-            OnPropertyChanged(nameof(ListRules));
+            MessageBoxResult result;
+            result = WpfMessageBox.ShowModalReturnButton($"{Locale.ASK_CONFIRM_DEL}{Environment.NewLine}{rule}", Locale.TITLE_CONFIRM_DEL, MessageBoxButton.YesNoCancel);
+            if (result == MessageBoxResult.Cancel)
+                break;
+            if (result == MessageBoxResult.Yes)
+            {
+                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.RemoveRule(rule);
+                SelectedRule = null;
+                SelectedItems.Clear();
+                ListRules = null;
+                ListRules = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.ListRules;
+                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.UpdateCategory();
+                OnPropertyChanged(nameof(ListRules));
+            }
         }
     }
 

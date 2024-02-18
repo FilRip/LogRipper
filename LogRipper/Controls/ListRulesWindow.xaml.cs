@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 
+using LogRipper.Models;
 using LogRipper.ViewModels;
 
 namespace LogRipper.Controls;
@@ -45,5 +46,12 @@ public partial class ListRulesWindow : Window
     {
         if (e.Key == System.Windows.Input.Key.Escape)
             Close();
+    }
+
+    private void ListRulesToManage_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        MyDataContext.SelectedItems.Clear();
+        foreach (OneRule rule in ListRulesToManage.SelectedItems)
+            MyDataContext.SelectedItems.Add(rule);
     }
 }
