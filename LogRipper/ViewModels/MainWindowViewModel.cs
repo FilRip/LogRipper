@@ -155,11 +155,11 @@ internal partial class MainWindowViewModel : ObservableObject
         await RefreshListLines();
     }
 
-    public List<OneCategory> ListCategory { get; set; }
+    public ObservableCollection<OneCategory> ListCategory { get; set; }
 
     public void UpdateCategory(string category = null)
     {
-        if (!string.IsNullOrWhiteSpace(category) && !ListCategory.Exists(c => c.Category.IndexOf(category, 0, StringComparison.CurrentCultureIgnoreCase) >= 0))
+        if (!string.IsNullOrWhiteSpace(category) && !ListCategory.Any(c => c.Category.IndexOf(category, 0, StringComparison.CurrentCultureIgnoreCase) >= 0))
             ListCategory.Add(new OneCategory(category));
         if (ListRules.ListRules?.Count > 0)
         {
@@ -168,7 +168,7 @@ internal partial class MainWindowViewModel : ObservableObject
                     ListCategory.RemoveAt(i);
 
             foreach (string cat in ListRules.ListRules.Where(r => !string.IsNullOrWhiteSpace(r.Category)).Select(r => r.Category).Distinct())
-                if (!ListCategory.Exists(r => r.Category.IndexOf(cat, 0, StringComparison.CurrentCultureIgnoreCase) >= 0))
+                if (!ListCategory.Any(r => r.Category.IndexOf(cat, 0, StringComparison.CurrentCultureIgnoreCase) >= 0))
                     ListCategory.Add(new OneCategory(cat));
         }
         OnPropertyChanged(nameof(ListCategory));
@@ -569,7 +569,7 @@ internal partial class MainWindowViewModel : ObservableObject
     }
     internal async Task SearchRule(OneRule rules)
     {
-        await SearchRule(new List<OneRule>() { rules });
+        await SearchRule([rules]);
     }
 
     internal async Task SearchRule(IEnumerable<OneRule> rules)

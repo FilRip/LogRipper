@@ -71,7 +71,7 @@ public class OneState
                 ListRules = win.MyDataContext.ListRules.ListRules.ToList(),
                 ListFiles = FileManager.GetAllFiles(),
                 ListLines = win.MyDataContext.ListLines.ToList(),
-                ListCategory = win.MyDataContext.ListCategory,
+                ListCategory = win.MyDataContext.ListCategory.ToList(),
                 CurrentNumLine = win.MyDataContext.NumStartVisibleLine,
                 FilterByDate = win.MyDataContext.FilterByDate,
                 StartDate = win.MyDataContext.StartDateTime,
@@ -157,7 +157,7 @@ public class OneState
                 if (newState.ListRules?.Count > 0)
                 {
                     win.MyDataContext.ListRules.SetRules(new ObservableCollection<OneRule>(newState.ListRules));
-                    win.MyDataContext.ListCategory = newState.ListCategory;
+                    win.MyDataContext.ListCategory = new ObservableCollection<OneCategory>(newState.ListCategory);
                     win.MyDataContext.UpdateCategory();
                 }
                 else
