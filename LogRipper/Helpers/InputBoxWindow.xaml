@@ -5,13 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:constants="clr-namespace:LogRipper.Constants"
         xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:viewmodels="clr-namespace:LogRipper.ViewModels"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.IsThemeAware="True"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Height="160" Width="400" Activated="Window_Activated" ShowActivated="True">
+        Height="200" Width="600" Activated="Window_Activated" ShowActivated="True">
+    <Window.DataContext>
+        <viewmodels:InputBoxViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -20,7 +31,14 @@
         <TextBlock Grid.Row="0" Name="TxtQuestion"/>
         <ComboBox Grid.Row="1" Name="TxtUserEdit" IsEditable="True" IsEnabled="True" Focusable="True" IsTabStop="True" TabIndex="0" PreviewKeyUp="TxtUserEdit_PreviewKeyUp"/>
         <CheckBox Grid.Row="2" Name="ChkCaseSensitive" Content="{x:Static constants:Locale.LBL_SEARCH_CASE_SENSITIVE}" Visibility="Visible" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="True" TabIndex="1"/>
-        <Button Grid.Row="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BtnOk_Click" HorizontalAlignment="Center" TabIndex="2">
+        <StackPanel Orientation="Horizontal" Grid.Row="3">
+            <CheckBox Content="{x:Static constants:Locale.LBL_DATE_FILTER}" Command="{Binding ChangeFilterByDateCommand}" IsChecked="{Binding FilterByDate, Mode=OneWay}"/>
+            <TextBlock Text="{x:Static constants:Locale.LBL_DATE_START_FILTER}" VerticalAlignment="Center" Margin="10 0 0 0"/>
+            <xctk:DateTimePicker Value="{Binding StartDateTime}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Minimum="{Binding MinDate}" Maximum="{Binding MaxDate}" ClipValueToMinMax="True"/>
+            <TextBlock Text="{x:Static constants:Locale.LBL_DATE_END_FILTER}" VerticalAlignment="Center" Margin="10 0 0 0"/>
+            <xctk:DateTimePicker Value="{Binding EndDateTime}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Minimum="{Binding MinDate}" Maximum="{Binding MaxDate}" ClipValueToMinMax="True"/>
+        </StackPanel>
+        <Button Grid.Row="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BtnOk_Click" HorizontalAlignment="Center" TabIndex="2">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Go" VerticalAlignment="Center" Margin="0 0 5 0"/>
                 <Image Source="{x:Static constants:Icons.SearchImage}" Height="16" Width="16"/>

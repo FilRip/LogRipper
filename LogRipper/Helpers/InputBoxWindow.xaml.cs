@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
+using LogRipper.ViewModels;
+
 namespace LogRipper.Helpers
 {
     /// <summary>
@@ -78,6 +80,11 @@ namespace LogRipper.Helpers
                 InputManager.Current.ProcessInput(new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.Tab) { RoutedEvent = Keyboard.KeyDownEvent });
                 InputManager.Current.ProcessInput(new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.Tab) { RoutedEvent = Keyboard.KeyUpEvent });
             }, System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        internal InputBoxViewModel MyDataContext
+        {
+            get { return (InputBoxViewModel)DataContext; }
         }
     }
 }
