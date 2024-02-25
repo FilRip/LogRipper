@@ -249,6 +249,11 @@ internal partial class MainWindowViewModel : ObservableObject
     [RelayCommand()]
     private async Task Search()
     {
+        if (ListFiles == null || ListFiles.Count == 0)
+        {
+            WpfMessageBox.ShowModal(Locale.ERROR_EMPTY_FILE, Locale.TITLE_ERROR);
+            return;
+        }
         InputBoxWindow input = new();
         input.ChkCaseSensitive.IsChecked = _searchCaseSensitive == StringComparison.CurrentCulture;
         input.TxtUserEdit.Text = _selectedText;
@@ -266,9 +271,15 @@ internal partial class MainWindowViewModel : ObservableObject
             if (input.ChkCaseSensitive.IsChecked == true)
                 _searchCaseSensitive = StringComparison.CurrentCulture;
             _currentSearchMode = ECurrentSearchMode.BY_STRING;
+            _searchByDate = input.MyDataContext.FilterByDate;
+            _searchStartDate = input.MyDataContext.StartDateTime;
+            _searchEndDate = input.MyDataContext.EndDateTime;
             await CreateSearchTab();
         }
     }
+
+    private bool _searchByDate;
+    private DateTime? _searchStartDate, _searchEndDate;
 
     private async Task CreateSearchTab()
     {
@@ -279,7 +290,11 @@ internal partial class MainWindowViewModel : ObservableObject
         if (_currentSearchMode == ECurrentSearchMode.BY_RULES)
             result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && _listSearchRules.Exists(rule => rule.Execute(line.Line, line.Date))).ToList();
         else
+        {
             result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0).ToList();
+            if (_searchByDate)
+                result = result.Where(line => (_searchStartDate.HasValue && line.Date >= _searchStartDate) && (_searchEndDate.HasValue && line.Date <= _searchEndDate)).ToList();
+        }
         newTab.MyDataContext.SetNewSearch(result, _currentSearchMode, _search, _listSearchRules);
         newTab.MyDataContext.CurrentShowNumLine = CurrentShowNumLine;
         newTab.MyDataContext.CurrentShowFileName = CurrentShowFileName;
@@ -304,6 +319,7 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         InputBoxWindow input = new();
         input.ChkCaseSensitive.Visibility = Visibility.Collapsed;
+        input.StackDateFilter.Visibility = Visibility.Collapsed;
         input.ShowModal(Locale.TITLE_GOTO, Locale.LBL_GOTO_LINE, _lastLineNumber.ToString());
         if (input.DialogResult == true && ListLines?.Count > 0 && int.TryParse(input.TxtUserEdit.Text, out int numLine))
         {

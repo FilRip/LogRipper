@@ -31,7 +31,7 @@
         <TextBlock Grid.Row="0" Name="TxtQuestion"/>
         <ComboBox Grid.Row="1" Name="TxtUserEdit" IsEditable="True" IsEnabled="True" Focusable="True" IsTabStop="True" TabIndex="0" PreviewKeyUp="TxtUserEdit_PreviewKeyUp"/>
         <CheckBox Grid.Row="2" Name="ChkCaseSensitive" Content="{x:Static constants:Locale.LBL_SEARCH_CASE_SENSITIVE}" Visibility="Visible" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsTabStop="True" TabIndex="1"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="3">
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Name="StackDateFilter">
             <CheckBox Content="{x:Static constants:Locale.LBL_DATE_FILTER}" Command="{Binding ChangeFilterByDateCommand}" IsChecked="{Binding FilterByDate, Mode=OneWay}"/>
             <TextBlock Text="{x:Static constants:Locale.LBL_DATE_START_FILTER}" VerticalAlignment="Center" Margin="10 0 0 0"/>
             <xctk:DateTimePicker Value="{Binding StartDateTime}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Minimum="{Binding MinDate}" Maximum="{Binding MaxDate}" ClipValueToMinMax="True"/>
