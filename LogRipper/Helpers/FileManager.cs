@@ -84,7 +84,6 @@ internal static class FileManager
             fs?.Close();
             fs?.Dispose();
         }
-#pragma warning disable S2589 // False positive, Boolean expressions should not be gratuitous
         if (lines?.Length > 0)
         {
             foreach (string line in lines)
@@ -112,7 +111,6 @@ internal static class FileManager
         }
         else
             WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, filename), Locale.TITLE_ERROR);
-#pragma warning restore S2589 // Boolean expressions should not be gratuitous
         return list;
     }
 
