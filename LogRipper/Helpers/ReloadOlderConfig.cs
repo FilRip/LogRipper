@@ -34,7 +34,9 @@ namespace LogRipper.Helpers
                     if (line.StartsWith("<setting "))
                     {
                         string name = line.Substring(line.IndexOf('"') + 1, line.IndexOf('"', line.IndexOf('"') + 1) - line.IndexOf('"') - 1);
+#pragma warning disable S127 // "for" loop stop conditions should be invariant
                         i++;
+#pragma warning restore S127 // "for" loop stop conditions should be invariant
                         string value = listLines[i].Trim().Replace("<value>", "").Replace("</value>", "");
                         PropertyInfo pi = Array.Find(listProperties, p => p.Name == name);
                         if (pi != null)

@@ -67,5 +67,10 @@ namespace LogRipper.Controls
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        private void DataGrid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Application.Current.GetCurrentWindow<MainWindow>().ScrollToSelected();
+        }
     }
 }

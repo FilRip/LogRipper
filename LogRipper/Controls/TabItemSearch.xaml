@@ -28,7 +28,7 @@
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding WhatToSearch}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
         <ContentControl Visibility="Collapsed" Content="{StaticResource TabItemDataContext}"/>
         <DataGrid Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0" ItemsSource="{Binding ListResult}" SelectionMode="Single" GridLinesVisibility="Vertical"
-                      HeadersVisibility="None" AutoGenerateColumns="False" SelectedItem="{Binding SelectedLine}"
+                      HeadersVisibility="None" AutoGenerateColumns="False" SelectedItem="{Binding SelectedLine}" MouseLeftButtonDown="DataGrid_MouseLeftButtonDown"
                       CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" RowHeight="{x:Static constants:Values.RowHeight}" MinRowHeight="1">
             <DataGrid.Columns>
                 <DataGridTextColumn FontSize="{x:Static constants:Values.FontSize}" Binding="{Binding NumLine}" IsReadOnly="True" Visibility="{Binding DataContext.CurrentShowNumLine, Converter={StaticResource boolToVisible}, Source={StaticResource TabItemDataContext}}" CellStyle="{StaticResource MyCellStyle}"/>

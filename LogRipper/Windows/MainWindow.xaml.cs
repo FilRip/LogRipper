@@ -93,6 +93,7 @@ public partial class MainWindow : Window
         if (MyDataContext.SelectedLine != null)
         {
             ListBoxLines.ScrollIntoView(MyDataContext.SelectedLine);
+            ListBoxLines.GetScrollViewer()?.ScrollToVerticalOffset(MyDataContext.ListLines.IndexOf(MyDataContext.SelectedLine));
             if (MyDataContext.EnableShowMargin && MyDataContext.AutoFollowInMargin)
                 ListBoxMargin.ScrollIntoView(MyDataContext.SelectedLine);
         }
