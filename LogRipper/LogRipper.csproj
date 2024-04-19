@@ -10,8 +10,8 @@
     <Product>LogRipper</Product>
     <Description>Explore log files with design</Description>
     <Copyright>Copyright © CoolBytes 2023-2024</Copyright>
-    <AssemblyVersion>1.9.0.0</AssemblyVersion>
-    <FileVersion>1.9.0.0</FileVersion>
+    <AssemblyVersion>1.10.0.0</AssemblyVersion>
+    <FileVersion>1.10.0.0</FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
