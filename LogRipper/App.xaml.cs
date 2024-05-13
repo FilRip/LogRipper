@@ -52,13 +52,16 @@ namespace LogRipper
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            NotifyIconViewModel.Instance.RemoveIcon();
+            NotifyIconViewModel.Instance?.RemoveIcon();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            _notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
-            NotifyIconViewModel.Instance.SetControl(_notifyIcon);
+            if (LogRipper.Properties.Settings.Default.ShowInSystray)
+            {
+                _notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
+                NotifyIconViewModel.Instance.SetControl(_notifyIcon);
+            }
         }
     }
 }

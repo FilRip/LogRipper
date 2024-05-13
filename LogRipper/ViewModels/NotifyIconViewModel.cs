@@ -41,7 +41,7 @@ public partial class NotifyIconViewModel : ObservableObject
 
     internal void RemoveIcon()
     {
-        _notifyIcon.Dispose();
+        _notifyIcon?.Dispose();
     }
 
     internal void SetControl(TaskbarIcon myControl)
