@@ -37,6 +37,13 @@ internal static class FileManager
         _listFiles.Clear();
     }
 
+    internal static void AddFile(OneFile file)
+    {
+        if (_listFiles.TryGetValue(file.FileName, out _))
+            _listFiles.Remove(file.FileName);
+        _listFiles.Add(file.FileName, file);
+    }
+
     internal static void SetNewListFiles(List<OneFile> listFiles)
     {
         RemoveAllFiles();
@@ -101,7 +108,7 @@ internal static class FileManager
             }
             if (createFile)
             {
-                file = new OneFile(filename, length, defaultFileEncoding, activeAutoReload)
+                file = new OneFile(filename, length, defaultFileEncoding, activeAutoReload, false)
                 {
                     DefaultBackground = defaultBackgfround,
                     DefaultForeground = defaultForeground,

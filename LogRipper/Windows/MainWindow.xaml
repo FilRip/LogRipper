@@ -110,6 +110,8 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="{x:Static constants:Locale.READ_CONSOLE}" Command="{Binding ReadConsoleCommand}"/>
+                <Separator/>
                 <MenuItem Header="{x:Static constants:Locale.MENU_EXIT}" Command="{Binding ExitCommand}" InputGestureText="Ctrl+X">
                     <MenuItem.Icon>
                         <ui:FontIcon Glyph="&#xE8BB;"/>
@@ -381,6 +383,7 @@
                       CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" RowHeight="{x:Static constants:Values.RowHeight}" MinRowHeight="1">
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>
                         <Setter Property="Visibility" Value="{Binding HideLine}"/>
                         <Setter Property="ContextMenu">
                             <Setter.Value>

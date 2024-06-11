@@ -52,6 +52,7 @@ namespace LogRipper
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
+            NativeMethods.FreeConsole();
             NotifyIconViewModel.Instance?.RemoveIcon();
         }
 

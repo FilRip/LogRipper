@@ -33,21 +33,26 @@ public partial class OneFile : ObservableObject, IDisposable
     private readonly object _lockFileAccess = new();
     private Encoding _currentEncoding;
     private readonly Timer _forceRefresh;
+    private readonly bool _isConsole;
 
     // For XmlSerialization
     public OneFile() { }
 
-    internal OneFile(string filepath, int offset, Encoding currentEncoding, bool activeAutoReload) : this()
+    internal OneFile(string filepath, int offset, Encoding currentEncoding, bool activeAutoReload, bool console) : this()
     {
+        _isConsole = console;
         _active = true;
         AutoReload = activeAutoReload;
         FullPath = filepath;
-        FileName = Path.GetFileNameWithoutExtension(filepath);
+        if (_isConsole)
+            FileName = Path.GetFileNameWithoutExtension(filepath);
+        else
+            FileName = filepath;
         LastOffset = offset;
         _currentEncoding = currentEncoding;
         SetEncodingName();
         CommonInit();
-        _forceRefresh = new Timer(100)
+        _forceRefresh = new Timer(10)
         {
             AutoReset = true,
             Enabled = activeAutoReload,
@@ -61,7 +66,30 @@ public partial class OneFile : ObservableObject, IDisposable
         {
             lock (_lockFileAccess)
             {
-                if (new FileInfo(FullPath).Length > LastOffset)
+                if (_isConsole)
+                {
+                    short newY = ConsoleHelper.GetCursorPosition().Y;
+                    if (newY > LastOffset)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            int lastNumLine = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Max(l => l.NumLine);
+                            for (short y = (short)(LastOffset + 1); y < newY; y++)
+                            {
+                                OneLine line = new(FullPath)
+                                {
+                                    NumLine = lastNumLine++,
+                                    Line = ConsoleHelper.GetText(0, y),
+                                };
+                                Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.AddLine(line);
+                            }
+                            LastOffset = newY;
+                            Application.Current.GetCurrentWindow<MainWindow>().ScrollToEnd();
+                            Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
+                        }, System.Windows.Threading.DispatcherPriority.DataBind);
+                    }
+                }
+                else if (new FileInfo(FullPath).Length > LastOffset)
                     Watcher_Changed(null, null);
             }
         }
@@ -91,7 +119,8 @@ public partial class OneFile : ObservableObject, IDisposable
             "Unicode" => Encoding.Unicode,
             _ => Encoding.Default,
         };
-        CreateFileWatcher();
+        if (!_isConsole)
+            CreateFileWatcher();
     }
 
     internal void CreateFileWatcher()
@@ -111,7 +140,7 @@ public partial class OneFile : ObservableObject, IDisposable
     {
         AutoReload = !AutoReload;
         _forceRefresh.Enabled = AutoReload;
-        if (AutoReload && new FileInfo(FullPath).Length != LastOffset)
+        if (!_isConsole && AutoReload && new FileInfo(FullPath).Length != LastOffset)
             Watcher_Changed(null, null);
     }
 
@@ -143,7 +172,7 @@ public partial class OneFile : ObservableObject, IDisposable
         {
             lock (_lockFileAccess)
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     int newLength = (int)new FileInfo(FullPath).Length;
                     FileStream fs = null;
@@ -187,7 +216,7 @@ public partial class OneFile : ObservableObject, IDisposable
                         fs?.Close();
                         fs?.Dispose();
                     }
-                }), System.Windows.Threading.DispatcherPriority.DataBind);
+                }, System.Windows.Threading.DispatcherPriority.DataBind);
             }
         }
     }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -64,6 +65,8 @@ internal partial class MainWindowViewModel : ObservableObject
     private TabItemSearch _currentSearchTab;
     [ObservableProperty()]
     private int _rowIndexSelected;
+    private bool _readConsoleMode;
+    private NativeMethods.ConsoleScreenBufferInfo _lastCoords;
 
     #endregion
 
@@ -649,6 +652,11 @@ internal partial class MainWindowViewModel : ObservableObject
     [RelayCommand()]
     private async Task MergeFile()
     {
+        if (_readConsoleMode)
+        {
+            WpfMessageBox.ShowModal(Locale.NOT_DURING_READ_CONSOLE_MODE, Locale.TITLE_ERROR);
+            return;
+        }
         string format = Properties.Settings.Default.DefaultDateFormat;
         FusionWindow win = new();
         win.MyDataContext.FormatDate = format;
@@ -873,6 +881,7 @@ internal partial class MainWindowViewModel : ObservableObject
         };
         if (dialog.ShowDialog() == true)
         {
+            _readConsoleMode = false;
             try
             {
                 await OpenNewFile(dialog.FileNames[0]);
@@ -914,7 +923,7 @@ internal partial class MainWindowViewModel : ObservableObject
     [RelayCommand()]
     private void CopySelectedItems()
     {
-        if (SelectedLines?.Count() > 0)
+        if (SelectedLines?.Any() == true)
         {
             StringBuilder listCopy = new();
             foreach (OneLine selected in SelectedLines)
@@ -1024,7 +1033,7 @@ internal partial class MainWindowViewModel : ObservableObject
     [RelayCommand()]
     public async Task HideSelectedLines()
     {
-        if (SelectedLines?.Count() > 0)
+        if (SelectedLines?.Any() == true)
         {
             ActiveProgressRing = true;
             foreach (OneLine line in SelectedLines)
@@ -1035,6 +1044,69 @@ internal partial class MainWindowViewModel : ObservableObject
                 GroupLines = string.Format(Locale.LBL_GROUP_LINE, ++_numGroupLine),
             });
             await RefreshListLines();
+        }
+    }
+
+    [RelayCommand()]
+    public void ReadConsole()
+    {
+        ChoiceProcessWindow window = new();
+        window.ShowDialog();
+    }
+
+    public async Task ReadFromConsole(string process)
+    {
+        ActiveProgressRing = true;
+        try
+        {
+            _readConsoleMode = true;
+            List<OneLine> newListLines = [];
+            if (ListLines.Count > 0)
+                Application.Current.GetCurrentWindow<MainWindow>().ScrollToBegin();
+            await Task.Delay(10);
+            FileManager.RemoveAllFiles();
+
+            _lastCoords = ConsoleHelper.GetConsoleInfo();
+            for (short i = 0; i < _lastCoords.dwCursorPosition.Y; i++)
+                newListLines.Add(new OneLine(process)
+                {
+                    NumLine = i,
+                    Line = ConsoleHelper.GetText(0, i),
+                });
+
+            if (ListLines.Count > 0)
+            {
+                _numVisibleStart = 1;
+                _numVisibleEnd = 2;
+                _filterListLines = null;
+                SelectedLine = null;
+                SelectedLines = null;
+                RowIndexSelected = 0;
+                ListFiles.Clear();
+                ListLines.Clear();
+            }
+
+            OneFile file = new(process, ConsoleHelper.GetCursorPosition().Y - 1, Encoding.UTF8, EnableAutoReload, true)
+            {
+                DefaultBackground = new SolidColorBrush(Constants.Colors.DefaultBackgroundColor),
+                DefaultForeground = new SolidColorBrush(Constants.Colors.DefaultForegroundColor),
+                FullPath = process,
+            };
+            ListFiles.Add(file);
+            FileManager.AddFile(file);
+            OnPropertyChanged(nameof(ListFiles));
+            ListLines = new ObservableCollection<OneLine>(newListLines);
+            Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
+            RefreshVisibleLines();
+            FilterByDate = false;
+        }
+        catch (Exception ex)
+        {
+            WpfMessageBox.ShowModal(ex.Message, Locale.TITLE_ERROR);
+        }
+        finally
+        {
+            ActiveProgressRing = false;
         }
     }
 
