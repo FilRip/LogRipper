@@ -19,10 +19,6 @@ public partial class FileWindow : Window
             Left = Properties.Settings.Default.FilePosX;
         if (Properties.Settings.Default.FilePosY != 0)
             Top = Properties.Settings.Default.FilePosY;
-        if (Properties.Settings.Default.FileSizeX != 0)
-            Width = Properties.Settings.Default.FileSizeX;
-        if (Properties.Settings.Default.FileSizeY != 0)
-            Height = Properties.Settings.Default.FileSizeY;
 
         TxtEncoding.Text = Locale.MENU_ENCODING.Replace("_", "");
     }
@@ -50,8 +46,6 @@ public partial class FileWindow : Window
     {
         Properties.Settings.Default.FilePosX = Left;
         Properties.Settings.Default.FilePosY = Top;
-        Properties.Settings.Default.FileSizeX = Width;
-        Properties.Settings.Default.FileSizeY = Height;
         Properties.Settings.Default.Save();
     }
 

@@ -276,18 +276,25 @@ public partial class OneFile : ObservableObject, IDisposable
         MainWindowViewModel mainWindowViewModel = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
         mainWindowViewModel.ActiveProgressRing = true;
         await Task.Delay(10);
-        List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
-        listLines.RemoveAll(l => l.FilePath == FullPath);
-        List<OneLine> listNewLines;
-        lock (_lockFileAccess)
+        if (_isConsole)
         {
-            listNewLines = FileManager.LoadFile(FullPath, out _, _currentEncoding, DefaultBackground, DefaultForeground, createFile: false);
-            LastOffset = (int)new FileInfo(FullPath).Length;
+            await mainWindowViewModel.ReadFromConsole(FullPath);
         }
-        if (!string.IsNullOrWhiteSpace(DateFormat))
-            FileManager.ComputeDate(listNewLines, DateFormat);
-        mainWindowViewModel.ListLines = new ObservableCollection<OneLine>(listLines.Concat(listNewLines).OrderBy(l => l.Date));
-        await mainWindowViewModel.RefreshListLines();
+        else
+        {
+            List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
+            listLines.RemoveAll(l => l.FilePath == FullPath);
+            List<OneLine> listNewLines;
+            lock (_lockFileAccess)
+            {
+                listNewLines = FileManager.LoadFile(FullPath, out _, _currentEncoding, DefaultBackground, DefaultForeground, createFile: false);
+                LastOffset = (int)new FileInfo(FullPath).Length;
+            }
+            if (!string.IsNullOrWhiteSpace(DateFormat))
+                FileManager.ComputeDate(listNewLines, DateFormat);
+            mainWindowViewModel.ListLines = new ObservableCollection<OneLine>(listLines.Concat(listNewLines).OrderBy(l => l.Date));
+            await mainWindowViewModel.RefreshListLines();
+        }
         mainWindowViewModel.ActiveProgressRing = false;
     }
 

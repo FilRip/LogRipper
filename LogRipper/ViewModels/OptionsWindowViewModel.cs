@@ -149,34 +149,18 @@ internal partial class OptionsWindowViewModel : ObservableObject
         Properties.Settings.Default.WindowState = "";
         Properties.Settings.Default.RulePosX = 0;
         Properties.Settings.Default.RulePosY = 0;
-        Properties.Settings.Default.RuleWS = "";
         Properties.Settings.Default.ListRulesPosX = 0;
         Properties.Settings.Default.ListRulesPosY = 0;
-        Properties.Settings.Default.ListRulesWS = "";
         Properties.Settings.Default.MergePosX = 0;
         Properties.Settings.Default.MergePosY = 0;
-        Properties.Settings.Default.MergeWS = "";
         Properties.Settings.Default.InputBoxPosX = 0;
         Properties.Settings.Default.InputBoxPosY = 0;
         Properties.Settings.Default.SizeX = 0;
         Properties.Settings.Default.SizeY = 0;
-        Properties.Settings.Default.RuleSizeX = 0;
-        Properties.Settings.Default.RuleSizeY = 0;
-        Properties.Settings.Default.ListRulesSizeX = 0;
-        Properties.Settings.Default.ListRulesSizeY = 0;
-        Properties.Settings.Default.MergeSizeX = 0;
-        Properties.Settings.Default.MergeSizeY = 0;
-        Properties.Settings.Default.InputBoxSizeX = 0;
-        Properties.Settings.Default.InputBoxSizeY = 0;
         Properties.Settings.Default.FilePosX = 0;
         Properties.Settings.Default.FilePosY = 0;
-        Properties.Settings.Default.FileSizeX = 0;
-        Properties.Settings.Default.FileSizeY = 0;
         Properties.Settings.Default.SubRulePosX = 0;
         Properties.Settings.Default.SubRulePosY = 0;
-        Properties.Settings.Default.SubRuleSizeX = 0;
-        Properties.Settings.Default.SubRuleSizeY = 0;
-        Properties.Settings.Default.SubRuleWS = "";
         Properties.Settings.Default.Save();
     }
 

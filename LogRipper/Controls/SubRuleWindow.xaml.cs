@@ -20,12 +20,6 @@ public partial class SubRuleWindow : Window
             Left = Properties.Settings.Default.SubRulePosX;
         if (Properties.Settings.Default.SubRulePosY != 0)
             Top = Properties.Settings.Default.SubRulePosY;
-        if (Properties.Settings.Default.SubRuleSizeX != 0)
-            Width = Properties.Settings.Default.SubRuleSizeX;
-        if (Properties.Settings.Default.SubRuleSizeY != 0)
-            Height = Properties.Settings.Default.SubRuleSizeY;
-        if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.SubRuleWS) && Enum.TryParse(Properties.Settings.Default.SubRuleWS, out WindowState newState))
-            WindowState = newState;
 
         MyDataContext.SetCloseAction(Close);
         MyDataContext.SetParentRule(rule);
@@ -52,9 +46,6 @@ public partial class SubRuleWindow : Window
         DialogResult = MyDataContext.DialogResult;
         Properties.Settings.Default.SubRulePosX = Left;
         Properties.Settings.Default.SubRulePosY = Top;
-        Properties.Settings.Default.SubRuleSizeX = Width;
-        Properties.Settings.Default.SubRuleSizeY = Height;
-        Properties.Settings.Default.SubRuleWS = WindowState.ToString("G");
         Properties.Settings.Default.Save();
     }
 

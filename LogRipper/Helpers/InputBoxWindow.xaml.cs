@@ -20,10 +20,6 @@ namespace LogRipper.Helpers
                 Left = Properties.Settings.Default.InputBoxPosX;
             if (Properties.Settings.Default.InputBoxPosY != 0)
                 Top = Properties.Settings.Default.InputBoxPosY;
-            if (Properties.Settings.Default.InputBoxSizeX != 0)
-                Width = Properties.Settings.Default.InputBoxSizeX;
-            if (Properties.Settings.Default.InputBoxSizeY != 0)
-                Height = Properties.Settings.Default.InputBoxSizeY;
         }
 
         private void CommonInit(string title, string question)
@@ -59,8 +55,6 @@ namespace LogRipper.Helpers
         {
             Properties.Settings.Default.InputBoxPosX = Left;
             Properties.Settings.Default.InputBoxPosY = Top;
-            Properties.Settings.Default.InputBoxSizeX = Width;
-            Properties.Settings.Default.InputBoxSizeY = Height;
             Properties.Settings.Default.Save();
         }
 

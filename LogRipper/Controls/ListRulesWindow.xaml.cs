@@ -19,12 +19,6 @@ public partial class ListRulesWindow : Window
             Left = Properties.Settings.Default.ListRulesPosX;
         if (Properties.Settings.Default.ListRulesPosY != 0)
             Top = Properties.Settings.Default.ListRulesPosY;
-        if (Properties.Settings.Default.ListRulesSizeX != 0)
-            Width = Properties.Settings.Default.ListRulesSizeX;
-        if (Properties.Settings.Default.ListRulesSizeY != 0)
-            Height = Properties.Settings.Default.ListRulesSizeY;
-        if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ListRulesWS) && Enum.TryParse(Properties.Settings.Default.ListRulesWS, out WindowState newState))
-            WindowState = newState;
     }
 
     internal ListRulesWindowViewModel MyDataContext
@@ -36,9 +30,6 @@ public partial class ListRulesWindow : Window
     {
         Properties.Settings.Default.ListRulesPosX = Left;
         Properties.Settings.Default.ListRulesPosY = Top;
-        Properties.Settings.Default.ListRulesSizeX = Width;
-        Properties.Settings.Default.ListRulesSizeY = Height;
-        Properties.Settings.Default.ListRulesWS = WindowState.ToString("G");
         Properties.Settings.Default.Save();
     }
 

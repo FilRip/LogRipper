@@ -12,7 +12,7 @@ namespace LogRipper.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -157,18 +157,6 @@ namespace LogRipper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RuleWS {
-            get {
-                return ((string)(this["RuleWS"]));
-            }
-            set {
-                this["RuleWS"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double MergePosX {
             get {
@@ -193,18 +181,6 @@ namespace LogRipper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MergeWS {
-            get {
-                return ((string)(this["MergeWS"]));
-            }
-            set {
-                this["MergeWS"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double ListRulesPosX {
             get {
@@ -224,18 +200,6 @@ namespace LogRipper.Properties {
             }
             set {
                 this["ListRulesPosY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ListRulesWS {
-            get {
-                return ((string)(this["ListRulesWS"]));
-            }
-            set {
-                this["ListRulesWS"] = value;
             }
         }
         
@@ -284,102 +248,6 @@ namespace LogRipper.Properties {
             }
             set {
                 this["SizeY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double RuleSizeX {
-            get {
-                return ((double)(this["RuleSizeX"]));
-            }
-            set {
-                this["RuleSizeX"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double RuleSizeY {
-            get {
-                return ((double)(this["RuleSizeY"]));
-            }
-            set {
-                this["RuleSizeY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double MergeSizeX {
-            get {
-                return ((double)(this["MergeSizeX"]));
-            }
-            set {
-                this["MergeSizeX"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double MergeSizeY {
-            get {
-                return ((double)(this["MergeSizeY"]));
-            }
-            set {
-                this["MergeSizeY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double ListRulesSizeX {
-            get {
-                return ((double)(this["ListRulesSizeX"]));
-            }
-            set {
-                this["ListRulesSizeX"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double ListRulesSizeY {
-            get {
-                return ((double)(this["ListRulesSizeY"]));
-            }
-            set {
-                this["ListRulesSizeY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double InputBoxSizeX {
-            get {
-                return ((double)(this["InputBoxSizeX"]));
-            }
-            set {
-                this["InputBoxSizeX"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double InputBoxSizeY {
-            get {
-                return ((double)(this["InputBoxSizeY"]));
-            }
-            set {
-                this["InputBoxSizeY"] = value;
             }
         }
         
@@ -469,30 +337,6 @@ namespace LogRipper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double FileSizeX {
-            get {
-                return ((double)(this["FileSizeX"]));
-            }
-            set {
-                this["FileSizeX"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double FileSizeY {
-            get {
-                return ((double)(this["FileSizeY"]));
-            }
-            set {
-                this["FileSizeY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool AutoFollowMargin {
             get {
@@ -536,42 +380,6 @@ namespace LogRipper.Properties {
             }
             set {
                 this["SubRulePosY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double SubRuleSizeX {
-            get {
-                return ((double)(this["SubRuleSizeX"]));
-            }
-            set {
-                this["SubRuleSizeX"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double SubRuleSizeY {
-            get {
-                return ((double)(this["SubRuleSizeY"]));
-            }
-            set {
-                this["SubRuleSizeY"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SubRuleWS {
-            get {
-                return ((string)(this["SubRuleWS"]));
-            }
-            set {
-                this["SubRuleWS"] = value;
             }
         }
         

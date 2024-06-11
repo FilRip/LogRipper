@@ -19,12 +19,6 @@ public partial class FusionWindow : Window
             Left = Properties.Settings.Default.MergePosX;
         if (Properties.Settings.Default.MergePosY != 0)
             Top = Properties.Settings.Default.MergePosY;
-        if (Properties.Settings.Default.MergeSizeX != 0)
-            Width = Properties.Settings.Default.MergeSizeX;
-        if (Properties.Settings.Default.MergeSizeY != 0)
-            Height = Properties.Settings.Default.MergeSizeY;
-        if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.MergeWS) && Enum.TryParse(Properties.Settings.Default.MergeWS, out WindowState newState))
-            WindowState = newState;
     }
 
     internal FusionWindowViewModel MyDataContext
@@ -56,9 +50,6 @@ public partial class FusionWindow : Window
     {
         Properties.Settings.Default.MergePosX = Left;
         Properties.Settings.Default.MergePosY = Top;
-        Properties.Settings.Default.MergeSizeX = Width;
-        Properties.Settings.Default.MergeSizeY = Height;
-        Properties.Settings.Default.MergeWS = WindowState.ToString("G");
         Properties.Settings.Default.Save();
     }
 
