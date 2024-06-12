@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows;
 
+using LogRipper.Helpers;
 using LogRipper.Models;
 using LogRipper.ViewModels;
+using LogRipper.Windows;
 
 namespace LogRipper.Controls;
 
@@ -44,5 +46,10 @@ public partial class ListRulesWindow : Window
         MyDataContext.SelectedItems.Clear();
         foreach (OneRule rule in ListRulesToManage.SelectedItems)
             MyDataContext.SelectedItems.Add(rule);
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
     }
 }

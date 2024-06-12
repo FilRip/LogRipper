@@ -28,10 +28,11 @@ public partial class RuleWindow : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        DialogResult = MyDataContext.DialogResult;
         Properties.Settings.Default.RulePosX = Left;
         Properties.Settings.Default.RulePosY = Top;
         Properties.Settings.Default.Save();
+        if (MyDataContext.DialogResult)
+            MyDataContext.ExecuteWhenOk?.Invoke();
     }
 
     private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

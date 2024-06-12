@@ -153,6 +153,8 @@ public partial class RuleWindowViewModel : ObservableObject
         }
     }
 
+    internal Action ExecuteWhenOk { get; set; }
+
     #endregion
 
     #region Methods

@@ -11,6 +11,7 @@
         mc:Ignorable="d" Closing="Window_Closing"
         KeyDown="Window_KeyDown"
         WindowStartupLocation="CenterOwner"
+        Closed="Window_Closed"
         Title="{x:Static constants:Locale.TITLE_LIST_RULES}" Height="450" Width="800">
     <Window.DataContext>
         <viewmodels:ListRulesWindowViewModel/>

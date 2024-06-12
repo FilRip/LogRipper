@@ -265,7 +265,7 @@ internal partial class MainWindowViewModel : ObservableObject
             input.MyDataContext.FilterByDate = FilterByDate;
             input.MyDataContext.SetMinMaxDate(MinDate.Value, MaxDate.Value);
         }
-        input.ShowModal(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, (string.IsNullOrWhiteSpace(_selectedText) ? _search : _selectedText));
+        input.Show(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, (string.IsNullOrWhiteSpace(_selectedText) ? _search : _selectedText));
         if (input.DialogResult == true && ListLines?.Count > 0 && !string.IsNullOrEmpty(input.TxtUserEdit.Text))
         {
             _listSearchRules.Clear();
@@ -323,7 +323,7 @@ internal partial class MainWindowViewModel : ObservableObject
         InputBoxWindow input = new();
         input.ChkCaseSensitive.Visibility = Visibility.Collapsed;
         input.StackDateFilter.Visibility = Visibility.Collapsed;
-        input.ShowModal(Locale.TITLE_GOTO, Locale.LBL_GOTO_LINE, _lastLineNumber.ToString());
+        input.Show(Locale.TITLE_GOTO, Locale.LBL_GOTO_LINE, _lastLineNumber.ToString());
         if (input.DialogResult == true && ListLines?.Count > 0 && int.TryParse(input.TxtUserEdit.Text, out int numLine))
         {
             _lastLineNumber = numLine;
@@ -349,7 +349,7 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         RuleWindow win = new();
         win.MyDataContext.Text = _selectedText;
-        if (win.ShowDialog() == true)
+        win.MyDataContext.ExecuteWhenOk = () =>
         {
             OneRule rule = new()
             {
@@ -370,7 +370,8 @@ internal partial class MainWindowViewModel : ObservableObject
             ListRules.AddRule(rule);
             RefreshVisibleLines();
             UpdateCategory(rule.Category);
-        }
+        };
+        win.Show();
     }
 
     internal void SetVisibleLine(int nbStart, int nbVisible)
@@ -399,8 +400,7 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         ListRulesWindow win = new();
         win.MyDataContext.ListRules = ListRules.ListRules;
-        win.ShowDialog();
-        RefreshVisibleLines();
+        win.Show();
     }
 
     [RelayCommand()]

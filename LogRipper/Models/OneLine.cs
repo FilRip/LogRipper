@@ -35,7 +35,7 @@ public class OneLine : ObservableObject
     public string Line { get; set; }
 
     [XmlIgnore()]
-    public string FileName { get; private set; }
+    public string FileName { get; set; }
 
     [XmlElement()]
     public int NumLine { get; set; }

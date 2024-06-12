@@ -191,7 +191,7 @@ public partial class OneRule : RuleViewModelBase
         };
         win.BtnOK.Text = Locale.BTN_EDIT_RULE;
         win.MyDataContext.LoadRule(this);
-        if (win.ShowDialog() == true)
+        win.MyDataContext.ExecuteWhenOk = () =>
         {
             Conditions = ConditionsManager.ConditionStringToEnum(win.MyDataContext.Condition);
             BackgroundColor = win.MyDataContext.BackColor;
@@ -212,7 +212,8 @@ public partial class OneRule : RuleViewModelBase
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.UpdateRules(null, EventArgs.Empty);
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
             Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
-        }
+        };
+        win.Show();
     }
 
     internal override void Refresh()

@@ -28,21 +28,21 @@ namespace LogRipper.Helpers
             TxtQuestion.Text = question.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine).Replace(@"\n", Environment.NewLine);
         }
 
-        internal void ShowModal(string title, string question, string defaultValue = "")
+        internal void Show(string title, string question, string defaultValue = "")
         {
             CommonInit(title, question);
             TxtUserEdit.ItemsSource = new List<string>() { defaultValue };
             TxtUserEdit.Text = defaultValue;
             TxtUserEdit.SelectedIndex = 0;
-            ShowDialog();
+            Show();
         }
 
-        internal void ShowModal(string title, string question, string[] defaultValue)
+        internal void Show(string title, string question, string[] defaultValue)
         {
             CommonInit(title, question);
             TxtUserEdit.ItemsSource = defaultValue;
             TxtUserEdit.SelectedIndex = 0;
-            ShowDialog();
+            Show();
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)

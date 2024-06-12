@@ -353,6 +353,10 @@ internal static class Locale
     public static string ERROR_ATTACH_CONSOLE { get; private set; }
     [ReadTranslation()]
     public static string NOT_DURING_READ_CONSOLE_MODE { get; private set; }
+    [ReadTranslation()]
+    public static string TITLE_DELETE { get; private set; }
+    [ReadTranslation()]
+    public static string ASK_DELETE_LINES { get; private set; }
     #endregion
 
     #region Methods

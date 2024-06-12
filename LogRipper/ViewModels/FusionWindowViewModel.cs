@@ -70,7 +70,7 @@ public partial class FusionWindowViewModel : ObservableObject
             }
         }
         catch (Exception) { /* Ignore errors */ }
-        FirstLine = firstLine.ToString();
+        FirstLine = firstLine.ToString().Trim();
     }
 
     [RelayCommand()]

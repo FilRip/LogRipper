@@ -45,9 +45,9 @@ public partial class OneFile : ObservableObject, IDisposable
         AutoReload = activeAutoReload;
         FullPath = filepath;
         if (_isConsole)
-            FileName = Path.GetFileNameWithoutExtension(filepath);
-        else
             FileName = filepath;
+        else
+            FileName = Path.GetFileNameWithoutExtension(filepath);
         LastOffset = offset;
         _currentEncoding = currentEncoding;
         SetEncodingName();
@@ -130,7 +130,6 @@ public partial class OneFile : ObservableObject, IDisposable
             EnableRaisingEvents = true,
         };
         _watcher.Changed += Watcher_Changed;
-        _watcher.Created += Watcher_Created;
         _watcher.Error += Watcher_Error;
         _watcher.Deleted += Watcher_Deleted;
         _watcher.Renamed += Watcher_Renamed;
@@ -148,22 +147,32 @@ public partial class OneFile : ObservableObject, IDisposable
 
     private void Watcher_Renamed(object sender, RenamedEventArgs e)
     {
-        // TODO : Change filename
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            foreach (OneLine line in Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FilePath == FullPath))
+            {
+                line.FilePath = e.FullPath;
+                line.FileName = e.Name;
+            }
+        }, System.Windows.Threading.DispatcherPriority.DataBind);
+        FileName = e.Name;
+        FullPath = e.FullPath;
     }
 
     private void Watcher_Deleted(object sender, FileSystemEventArgs e)
     {
-        // TODO : Remove line from this file
+        if (WpfMessageBox.ShowModalReturnButton(string.Format(Locale.ASK_DELETE_LINES, FileName), Locale.TITLE_DELETE, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+        {
+            Application.Current.Dispatcher.Invoke(RemoveLines);
+        }
+        else
+            _watcher.Deleted -= Watcher_Deleted;
     }
 
     private void Watcher_Error(object sender, ErrorEventArgs e)
     {
-        // TODO : Ask to remove line of this file
-    }
-
-    private void Watcher_Created(object sender, FileSystemEventArgs e)
-    {
-        // TODO : Restart OneLine to zero
+        AutoReload = false;
+        _watcher.Deleted -= Watcher_Deleted;
     }
 
     private void Watcher_Changed(object sender, FileSystemEventArgs e)
@@ -308,6 +317,11 @@ public partial class OneFile : ObservableObject, IDisposable
             Dispose();
             Active = false;
         }
+        await RemoveLines();
+    }
+
+    private async Task RemoveLines()
+    {
         MainWindowViewModel mainWindowViewModel = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
         List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
         listLines.RemoveAll(l => l.FilePath == FullPath);
@@ -398,6 +412,13 @@ public partial class OneFile : ObservableObject, IDisposable
         {
             if (disposing)
             {
+                if (_watcher != null)
+                {
+                    _watcher.Changed -= Watcher_Changed;
+                    _watcher.Error -= Watcher_Error;
+                    _watcher.Deleted -= Watcher_Deleted;
+                    _watcher.Renamed -= Watcher_Renamed;
+                }
                 _watcher?.Dispose();
             }
 

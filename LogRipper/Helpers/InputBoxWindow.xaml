@@ -11,6 +11,7 @@
         ui:ThemeManager.IsThemeAware="True"
         mc:Ignorable="d"
         Closing="Window_Closing"
+        Topmost="True"
         Height="200" Width="600" Activated="Window_Activated" ShowActivated="True">
     <Window.DataContext>
         <viewmodels:InputBoxViewModel/>
