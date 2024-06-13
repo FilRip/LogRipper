@@ -1,5 +1,5 @@
 # LogRipper
-Software to load log files (from any others applications) and easily reading it by add rules/filters/... with colors,... that you can choice
+Software to load log files, or console (from any others applications) and easily reading it by add rules/filters/... with colors,... that you can choice
 <br><br><br>
 Source code licenced to CC BY-NC :
 - You can use the code
