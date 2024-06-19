@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -46,6 +47,8 @@ namespace LogRipper.ViewModels
         {
             get { return _maxDate; }
         }
+
+        public Func<InputBoxWindow, Task> ExecuteIfOk { get; set; }
 
         #endregion
 

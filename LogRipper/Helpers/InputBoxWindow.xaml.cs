@@ -47,7 +47,7 @@ namespace LogRipper.Helpers
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            MyDataContext.ExecuteIfOk(this);
             Close();
         }
 

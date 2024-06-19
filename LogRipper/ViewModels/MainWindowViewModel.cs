@@ -265,8 +265,13 @@ internal partial class MainWindowViewModel : ObservableObject
             input.MyDataContext.FilterByDate = FilterByDate;
             input.MyDataContext.SetMinMaxDate(MinDate.Value, MaxDate.Value);
         }
+        input.MyDataContext.ExecuteIfOk = CallbackSearch;
         input.Show(Locale.TITLE_SEARCH, Locale.LBL_SEARCH_TEXT, (string.IsNullOrWhiteSpace(_selectedText) ? _search : _selectedText));
-        if (input.DialogResult == true && ListLines?.Count > 0 && !string.IsNullOrEmpty(input.TxtUserEdit.Text))
+    }
+
+    private async Task CallbackSearch(InputBoxWindow input)
+    {
+        if (ListLines?.Count > 0 && !string.IsNullOrEmpty(input.TxtUserEdit.Text))
         {
             _listSearchRules.Clear();
             _search = input.TxtUserEdit.Text;
@@ -323,8 +328,13 @@ internal partial class MainWindowViewModel : ObservableObject
         InputBoxWindow input = new();
         input.ChkCaseSensitive.Visibility = Visibility.Collapsed;
         input.StackDateFilter.Visibility = Visibility.Collapsed;
+        input.MyDataContext.ExecuteIfOk = CallbackGotoLine;
         input.Show(Locale.TITLE_GOTO, Locale.LBL_GOTO_LINE, _lastLineNumber.ToString());
-        if (input.DialogResult == true && ListLines?.Count > 0 && int.TryParse(input.TxtUserEdit.Text, out int numLine))
+    }
+
+    private async Task CallbackGotoLine(InputBoxWindow input)
+    {
+        if (ListLines?.Count > 0 && int.TryParse(input.TxtUserEdit.Text, out int numLine))
         {
             _lastLineNumber = numLine;
             OneLine find = ListLines.FirstOrDefault(line => line.NumLine == numLine);
