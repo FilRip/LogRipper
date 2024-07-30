@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -250,7 +251,7 @@ internal partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand()]
-    private async Task Search()
+    private void Search()
     {
         if (ListFiles == null || ListFiles.Count == 0)
         {
@@ -336,6 +337,7 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         if (ListLines?.Count > 0 && int.TryParse(input.TxtUserEdit.Text, out int numLine))
         {
+            await Task.Delay(10);
             _lastLineNumber = numLine;
             OneLine find = ListLines.FirstOrDefault(line => line.NumLine == numLine);
             if (find != null)
@@ -706,6 +708,8 @@ internal partial class MainWindowViewModel : ObservableObject
                 WpfMessageBox.ShowModal(string.Format(Locale.ERROR_EMPTY_FILE, win.MyDataContext.FileName), Locale.TITLE_ERROR);
                 return;
             }
+            if (newFile == null)
+                throw new LogRipperException("OneFile object instance is null");
             ListFiles.Add(newFile);
             FileManager.ComputeDate(newListLines, win.MyDataContext.FormatDate);
             newFile.DateFormat = win.MyDataContext.FormatDate;

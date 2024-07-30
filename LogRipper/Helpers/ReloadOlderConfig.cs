@@ -10,6 +10,8 @@ namespace LogRipper.Helpers
         internal static void SearchAndReload()
         {
             string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company);
+            if (!Directory.Exists(appData))
+                Directory.CreateDirectory(appData);
             Version mostPrevious = new("1.0.0.0");
             string lastRep = null;
             foreach (string subFolder in Directory.GetDirectories(appData, $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product}*.*"))
