@@ -10,7 +10,9 @@ namespace LogRipper.Constants;
 
 internal static class Locale
 {
+#pragma warning disable S3993 // Custom attributes should be marked with "System.AttributeUsageAttribute"
     private sealed class ReadTranslationAttribute : Attribute { }
+#pragma warning restore S3993 // Custom attributes should be marked with "System.AttributeUsageAttribute"
 
     #region Fields
 

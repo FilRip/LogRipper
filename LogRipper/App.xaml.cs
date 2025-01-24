@@ -50,7 +50,9 @@ namespace LogRipper
             }
         }
 
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void Application_Exit(object sender, ExitEventArgs e)
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
             NativeMethods.FreeConsole();
             NotifyIconViewModel.Instance?.RemoveIcon();

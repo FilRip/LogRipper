@@ -32,14 +32,14 @@ namespace LogRipper.Controls
             LastTabClosed();
         }
 
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void CloseAllTab_Click(object sender, RoutedEventArgs e)
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
             MainWindowViewModel mainWindow = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
-#pragma warning disable S3966 // False positive, Objects should not be disposed more than once
             for (int i = mainWindow.ListSearchTab.Count - 1; i >= 0; i--)
                 if (mainWindow.ListSearchTab[i] is TabItemSearch currentTab)
                     currentTab.Dispose();
-#pragma warning restore S3966 // Objects should not be disposed more than once
             LastTabClosed();
         }
 
@@ -59,7 +59,7 @@ namespace LogRipper.Controls
 
         #endregion
 
-        private void LastTabClosed()
+        private static void LastTabClosed()
         {
             MainWindowViewModel mainWindow = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
             if (mainWindow.ListSearchTab.Count == 0)
@@ -76,11 +76,9 @@ namespace LogRipper.Controls
         private void CloseOtherTab_Click(object sender, RoutedEventArgs e)
         {
             MainWindowViewModel mainWindow = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
-#pragma warning disable S3966 // False positive, Objects should not be disposed more than once
             for (int i = mainWindow.ListSearchTab.Count - 1; i >= 0; i--)
                 if (mainWindow.ListSearchTab[i] is TabItemSearch currentTab && currentTab != MyTabItem)
                     currentTab.Dispose();
-#pragma warning restore S3966 // Objects should not be disposed more than once
             LastTabClosed();
         }
     }
