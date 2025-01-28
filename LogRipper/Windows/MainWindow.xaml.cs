@@ -197,25 +197,19 @@ public partial class MainWindow : Window
         AutoUpdater.SearchNewVersion(Properties.Settings.Default.beta);
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void TxtFile_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         OneFile file = (OneFile)((TextBlock)sender).DataContext;
         file.Active = !file.Active;
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void TxtRule_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         OneRule rule = (OneRule)((TextBlock)sender).DataContext;
         rule.Active = !rule.Active;
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void TxtCategory_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         OneCategory category = (OneCategory)((TextBlock)sender).DataContext;
         category.Active = !category.Active;

@@ -48,9 +48,7 @@ public partial class ListRulesWindow : Window
             MyDataContext.SelectedItems.Add(rule);
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void Window_Closed(object sender, EventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.RefreshVisibleLines();
     }

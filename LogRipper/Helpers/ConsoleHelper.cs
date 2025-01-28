@@ -55,7 +55,7 @@ public static class ConsoleHelper
     internal static ConsoleScreenBufferInfo GetConsoleInfo(IntPtr ptr)
     {
         if (!GetConsoleScreenBufferInfo(ptr, out ConsoleScreenBufferInfo outInfo))
-            throw new Win32Exception((int)GetLastError(), ((BetterWin32Errors.Win32Error)GetLastError()).ToString("G"));
+            throw new Win32Exception((int)GetLastError(), ((Win32Error)GetLastError()).ToString("G"));
         return outInfo;
     }
 
@@ -151,7 +151,7 @@ public static class ConsoleHelper
                     1,                  // # of chars to read
                     coord,              // (X,Y) screen location to read (see above)
                     out _))             // result: actual # of chars (unwanted)
-            throw new Win32Exception((int)GetLastError(), ((BetterWin32Errors.Win32Error)GetLastError()).ToString("G"));
+            throw new Win32Exception((int)GetLastError(), ((Win32Error)GetLastError()).ToString("G"));
         return chUnicode;
     }
 

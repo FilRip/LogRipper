@@ -32,9 +32,7 @@ namespace LogRipper.Controls
             LastTabClosed();
         }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void CloseAllTab_Click(object sender, RoutedEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
             MainWindowViewModel mainWindow = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
             for (int i = mainWindow.ListSearchTab.Count - 1; i >= 0; i--)

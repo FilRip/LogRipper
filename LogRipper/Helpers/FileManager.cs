@@ -77,7 +77,7 @@ internal static class FileManager
         {
             byte[] donnees = new byte[length];
             fs = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            fs.Read(donnees, 0, length);
+            length = fs.Read(donnees, 0, length);
             if (donnees.Length > 0)
                 lines = defaultFileEncoding.GetString(donnees).Split(Environment.NewLine.ToCharArray());
         }
@@ -165,12 +165,12 @@ internal static class FileManager
         {
             sb.AppendLine("<tr>");
 
-            sb.Append($"<td bgcolor=\"#{_listFiles[line.FileName].DefaultBackground.Color.R:X2}{_listFiles[_listFiles[line.FileName].FileName].DefaultBackground.Color.G:X2}{_listFiles[line.FileName].DefaultBackground.Color.B:X2}\">");
-            sb.Append($"<font color=\"#{_listFiles[line.FileName].DefaultForeground.Color.R:X2}{_listFiles[_listFiles[line.FileName].FileName].DefaultForeground.Color.G:X2}{_listFiles[line.FileName].DefaultForeground.Color.B:X2}\">{line.NumLine}</font>");
+            sb.Append($"<td bgcolor=\"#{_listFiles[line.FilePath].DefaultBackground.Color.R:X2}{_listFiles[line.FilePath].DefaultBackground.Color.G:X2}{_listFiles[line.FilePath].DefaultBackground.Color.B:X2}\">");
+            sb.Append($"<font color=\"#{_listFiles[line.FilePath].DefaultForeground.Color.R:X2}{_listFiles[line.FilePath].DefaultForeground.Color.G:X2}{_listFiles[line.FilePath].DefaultForeground.Color.B:X2}\">{line.NumLine}</font>");
             sb.Append("</td>");
 
-            sb.Append($"<td bgcolor=\"#{_listFiles[line.FileName].DefaultBackground.Color.R:X2}{_listFiles[line.FileName].DefaultBackground.Color.G:X}{_listFiles[line.FileName].DefaultBackground.Color.B:X2}\">");
-            sb.Append($"<font color=\"#{_listFiles[line.FileName].DefaultForeground.Color.R:X2}{_listFiles[line.FileName].DefaultForeground.Color.G:X}{_listFiles[line.FileName].DefaultForeground.Color.B:X2}\">{line.FileName}</font>");
+            sb.Append($"<td bgcolor=\"#{_listFiles[line.FilePath].DefaultBackground.Color.R:X2}{_listFiles[line.FilePath].DefaultBackground.Color.G:X}{_listFiles[line.FilePath].DefaultBackground.Color.B:X2}\">");
+            sb.Append($"<font color=\"#{_listFiles[line.FilePath].DefaultForeground.Color.R:X2}{_listFiles[line.FilePath].DefaultForeground.Color.G:X}{_listFiles[line.FilePath].DefaultForeground.Color.B:X2}\">{line.FileName}</font>");
             sb.Append("</td>");
 
             SolidColorBrush back, fore;

@@ -109,10 +109,12 @@ public partial class RuleWindowViewModel : ObservableObject
         get { return (Italic ? FontStyles.Italic : FontStyles.Normal); }
     }
 
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public List<string> ListConditions
     {
         get { return Locale.ListConditions; }
     }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
     public Brush BackColorBrush
     {
@@ -198,10 +200,12 @@ public partial class RuleWindowViewModel : ObservableObject
         return Compiler.TestCondition(cond, Text);
     }
 
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public IEnumerable<string> ListCategory
     {
         get { return Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListCategory.Select(c => c.Category); }
     }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
     [RelayCommand()]
     private void CloseWindow()
