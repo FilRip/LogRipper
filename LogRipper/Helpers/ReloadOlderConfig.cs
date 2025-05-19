@@ -28,7 +28,7 @@ namespace LogRipper.Helpers
             }
             if (!string.IsNullOrWhiteSpace(lastRep))
             {
-                PropertyInfo[] listProperties = Properties.Settings.Default.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.Name.ToLower().Contains("size")).ToArray();
+                PropertyInfo[] listProperties = [.. Properties.Settings.Default.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.Name.ToLower().Contains("size"))];
                 string[] listLines = File.ReadAllLines(Path.Combine(lastRep, "user.config"));
                 for (int i = 0; i < listLines.Length; i++)
                 {

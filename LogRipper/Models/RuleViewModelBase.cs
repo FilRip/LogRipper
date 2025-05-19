@@ -80,7 +80,7 @@ public abstract partial class RuleViewModelBase : ObservableObject
             }
             if (_mi != null)
             {
-                result = (bool)_mi.Invoke(null, new object[] { line, dateline });
+                result = (bool)_mi.Invoke(null, [line, dateline]);
             }
         }
 

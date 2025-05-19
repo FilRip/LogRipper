@@ -6,6 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
-[assembly: SuppressMessage("Style", "IDE0305:Simplifier l'initialisation des collections")]
-[assembly: SuppressMessage("Style", "IDE0300:Simplifier l'initialisation des collections")]
 [assembly: SuppressMessage("Major Bug", "S1244:Floating point numbers should not be tested for equality")]

@@ -50,7 +50,7 @@ internal partial class ListRulesWindowViewModel : ObservableObject
     {
         if (SelectedRule == null)
             return;
-        List<OneRule> listToDelete = SelectedItems.ToList();
+        List<OneRule> listToDelete = [.. SelectedItems];
         foreach (OneRule rule in listToDelete)
         {
             MessageBoxResult result;

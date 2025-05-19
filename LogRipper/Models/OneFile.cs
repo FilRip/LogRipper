@@ -291,7 +291,7 @@ public partial class OneFile : ObservableObject, IDisposable
         }
         else
         {
-            List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
+            List<OneLine> listLines = [.. mainWindowViewModel.ListLines];
             listLines.RemoveAll(l => l.FilePath == FullPath);
             List<OneLine> listNewLines;
             lock (_lockFileAccess)
@@ -301,7 +301,7 @@ public partial class OneFile : ObservableObject, IDisposable
             }
             if (!string.IsNullOrWhiteSpace(DateFormat))
                 FileManager.ComputeDate(listNewLines, DateFormat);
-            mainWindowViewModel.ListLines = new ObservableCollection<OneLine>(listLines.Concat(listNewLines).OrderBy(l => l.Date));
+            mainWindowViewModel.ListLines = [.. listLines.Concat(listNewLines).OrderBy(l => l.Date)];
             await mainWindowViewModel.RefreshListLines();
         }
         mainWindowViewModel.ActiveProgressRing = false;
@@ -323,9 +323,9 @@ public partial class OneFile : ObservableObject, IDisposable
     private async Task RemoveLines()
     {
         MainWindowViewModel mainWindowViewModel = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext;
-        List<OneLine> listLines = mainWindowViewModel.ListLines.ToList();
+        List<OneLine> listLines = [.. mainWindowViewModel.ListLines];
         listLines.RemoveAll(l => l.FilePath == FullPath);
-        mainWindowViewModel.ListLines = new ObservableCollection<OneLine>(listLines);
+        mainWindowViewModel.ListLines = [.. listLines];
         mainWindowViewModel.RefreshListFiles();
         await mainWindowViewModel.RefreshListLines();
     }
@@ -383,7 +383,7 @@ public partial class OneFile : ObservableObject, IDisposable
                 await ReloadFile();
             if (!string.IsNullOrWhiteSpace(DateFormat) && oldDateFormat != DateFormat)
             {
-                ObservableCollection<OneLine> lines = new(Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FilePath == FullPath));
+                ObservableCollection<OneLine> lines = [.. Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Where(line => line.FilePath == FullPath)];
                 FileManager.ComputeDate(lines, DateFormat);
             }
             MainWindow mainWindow = Application.Current.GetCurrentWindow<MainWindow>();

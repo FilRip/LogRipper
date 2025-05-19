@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -68,10 +67,10 @@ public class OneState
             MainWindow win = Application.Current.GetCurrentWindow<MainWindow>();
             OneState state = new()
             {
-                ListRules = win.MyDataContext.ListRules.ListRules.ToList(),
+                ListRules = [.. win.MyDataContext.ListRules.ListRules],
                 ListFiles = FileManager.GetAllFiles(),
-                ListLines = win.MyDataContext.ListLines.ToList(),
-                ListCategory = win.MyDataContext.ListCategory.ToList(),
+                ListLines = [.. win.MyDataContext.ListLines],
+                ListCategory = [.. win.MyDataContext.ListCategory],
                 CurrentNumLine = win.MyDataContext.NumStartVisibleLine,
                 FilterByDate = win.MyDataContext.FilterByDate,
                 StartDate = win.MyDataContext.StartDateTime,
@@ -152,12 +151,12 @@ public class OneState
                 win.MyDataContext.SelectedLine = null;
                 if (newState.ListLines != null)
                 {
-                    win.MyDataContext.ListLines = new ObservableCollection<OneLine>(newState.ListLines);
+                    win.MyDataContext.ListLines = [.. newState.ListLines];
                 }
                 if (newState.ListRules?.Count > 0)
                 {
-                    win.MyDataContext.ListRules.SetRules(new ObservableCollection<OneRule>(newState.ListRules));
-                    win.MyDataContext.ListCategory = new ObservableCollection<OneCategory>(newState.ListCategory);
+                    win.MyDataContext.ListRules.SetRules([.. newState.ListRules]);
+                    win.MyDataContext.ListCategory = [.. newState.ListCategory];
                     win.MyDataContext.UpdateCategory();
                 }
                 else

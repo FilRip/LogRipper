@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -205,7 +204,7 @@ public partial class OneRule : RuleViewModelBase
             Category = win.MyDataContext.Category;
             Bold = win.MyDataContext.Bold;
             Italic = win.MyDataContext.Italic;
-            SubRules = win.MyDataContext.SubRules.ToList();
+            SubRules = [.. win.MyDataContext.SubRules];
             Refresh();
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.UpdateCategory(win.MyDataContext.Category);
             Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListRules.EditRule(this);

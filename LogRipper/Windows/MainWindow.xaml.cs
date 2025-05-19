@@ -265,9 +265,9 @@ public partial class MainWindow : Window
                     _ = MyDataContext.OpenNewFile(files[0]);
                     if (files.Length > 1)
                     {
-                        List<string> otherFiles = files.ToList();
+                        List<string> otherFiles = [.. files];
                         otherFiles.RemoveAt(0);
-                        _ = MyDataContext.MergingFile(otherFiles.ToArray());
+                        _ = MyDataContext.MergingFile([.. otherFiles]);
                     }
                 }
             }

@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -302,7 +301,7 @@ internal partial class MainWindowViewModel : ObservableObject
         {
             result = ListLines?.Where(line => !string.IsNullOrWhiteSpace(line.Line) && line.Line.IndexOf(_search, 0, _searchCaseSensitive) >= 0).ToList();
             if (_searchByDate)
-                result = result.Where(line => (_searchStartDate.HasValue && line.Date >= _searchStartDate) && (_searchEndDate.HasValue && line.Date <= _searchEndDate)).ToList();
+                result = [.. result.Where(line => (_searchStartDate.HasValue && line.Date >= _searchStartDate) && (_searchEndDate.HasValue && line.Date <= _searchEndDate))];
         }
         newTab.MyDataContext.SetNewSearch(result, _currentSearchMode, _search, _listSearchRules);
         newTab.MyDataContext.CurrentShowNumLine = CurrentShowNumLine;
@@ -377,7 +376,7 @@ internal partial class MainWindowViewModel : ObservableObject
                 Category = win.MyDataContext.Category,
                 Bold = win.MyDataContext.Bold,
                 Italic = win.MyDataContext.Italic,
-                SubRules = win.MyDataContext.SubRules.ToList(),
+                SubRules = [.. win.MyDataContext.SubRules],
             };
             ListRules.AddRule(rule);
             RefreshVisibleLines();
@@ -444,7 +443,7 @@ internal partial class MainWindowViewModel : ObservableObject
             SavedRules result = SavedRules.LoadFile(filename);
             if (result == null || result.ListRules?.Count == 0)
                 throw new LogRipperException(Locale.ERROR_NO_RULE_FOUND);
-            ListRules.SetRules(new ObservableCollection<OneRule>(result.ListRules));
+            ListRules.SetRules([.. result.ListRules]);
             RefreshListRules();
             UpdateCategory();
         }
@@ -654,7 +653,7 @@ internal partial class MainWindowViewModel : ObservableObject
                 if (!string.IsNullOrWhiteSpace(win.MyDataContext.FormatDate))
                     Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
                 Properties.Settings.Default.Save();
-                ListLines = new ObservableCollection<OneLine>(ListLines.Concat(listLines).OrderBy(l => l.Date));
+                ListLines = [.. ListLines.Concat(listLines).OrderBy(l => l.Date)];
                 Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
             }
         }
@@ -721,7 +720,7 @@ internal partial class MainWindowViewModel : ObservableObject
             if (!string.IsNullOrWhiteSpace(win.MyDataContext.FormatDate))
                 Properties.Settings.Default.DefaultDateFormat = win.MyDataContext.FormatDate;
             Properties.Settings.Default.Save();
-            ListLines = new ObservableCollection<OneLine>(ListLines.Concat(newListLines).OrderBy(l => l.Date));
+            ListLines = [.. ListLines.Concat(newListLines).OrderBy(l => l.Date)];
             Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
             string[] listFilesToMerge = win.MyDataContext.ListFiles;
             if (listFilesToMerge?.Length > 0)
@@ -760,7 +759,7 @@ internal partial class MainWindowViewModel : ObservableObject
 
     internal void RefreshListFiles()
     {
-        ListFiles = new ObservableCollection<OneFile>(FileManager.GetAllFiles());
+        ListFiles = [.. FileManager.GetAllFiles()];
     }
 
     internal void RefreshListRules()
@@ -869,7 +868,7 @@ internal partial class MainWindowViewModel : ObservableObject
                     ListLines.Clear();
                 }
                 ListFiles.Add(file);
-                ListLines = new ObservableCollection<OneLine>(newListLines);
+                ListLines = [.. newListLines];
                 Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
                 FilterByDate = false;
                 if (WpfMessageBox.ShowModal(Locale.ASK_EDIT_FILE_NOW, Locale.BTN_EDIT_RULE.Replace("_", ""), MessageBoxButton.YesNo))
@@ -901,9 +900,9 @@ internal partial class MainWindowViewModel : ObservableObject
                 await OpenNewFile(dialog.FileNames[0]);
                 if (dialog.FileNames.Length > 1)
                 {
-                    List<string> otherFiles = dialog.FileNames.ToList();
+                    List<string> otherFiles = [.. dialog.FileNames];
                     otherFiles.RemoveAt(0);
-                    await MergingFile(otherFiles.ToArray());
+                    await MergingFile([.. otherFiles]);
                 }
             }
             catch (Exception ex)
@@ -1109,7 +1108,7 @@ internal partial class MainWindowViewModel : ObservableObject
             ListFiles.Add(file);
             FileManager.AddFile(file);
             OnPropertyChanged(nameof(ListFiles));
-            ListLines = new ObservableCollection<OneLine>(newListLines);
+            ListLines = [.. newListLines];
             Application.Current.GetCurrentWindow<MainWindow>().RefreshMargin();
             RefreshVisibleLines();
             FilterByDate = false;

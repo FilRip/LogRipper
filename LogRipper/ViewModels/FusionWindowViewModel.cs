@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Media;
 
@@ -87,9 +86,9 @@ public partial class FusionWindowViewModel : ObservableObject
             FillFirstLine(FileName);
             if (dialog.FileNames.Length > 1)
             {
-                List<string> otherFiles = dialog.FileNames.ToList();
+                List<string> otherFiles = [.. dialog.FileNames];
                 otherFiles.RemoveAt(0);
-                ListFiles = otherFiles.ToArray();
+                ListFiles = [.. otherFiles];
             }
         }
     }

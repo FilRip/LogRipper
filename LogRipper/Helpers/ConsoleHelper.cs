@@ -66,7 +66,7 @@ public static class ConsoleHelper
     /// <returns>List of found coordinates</returns>
     internal static List<Coord> IndexOfInConsole(string text)
     {
-        return IndexOfInConsole(new[] { text });
+        return IndexOfInConsole([text]);
     }
 
     /// <summary>

@@ -155,7 +155,7 @@ internal static class ZipManager
             }
             else
             {
-                names = new string[] { spec };
+                names = [spec];
             }
 
             foreach (string fileName in names)

@@ -28,7 +28,7 @@ internal static class FileManager
 
     internal static List<OneFile> GetAllFiles()
     {
-        return _listFiles.Values.OfType<OneFile>().Where(f => !f.IsDisposed).ToList();
+        return [.. _listFiles.Values.OfType<OneFile>().Where(f => !f.IsDisposed)];
     }
 
     internal static void RemoveAllFiles()

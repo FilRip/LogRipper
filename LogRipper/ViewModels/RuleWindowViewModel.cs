@@ -175,7 +175,7 @@ public partial class RuleWindowViewModel : ObservableObject
         Category = rule.Category;
         Bold = rule.Bold;
         Italic = rule.Italic;
-        SubRules = new ObservableCollection<OneSubRule>(rule.SubRules);
+        SubRules = [.. rule.SubRules];
         Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.UpdateCategory(Category);
     }
 
@@ -256,7 +256,7 @@ public partial class RuleWindowViewModel : ObservableObject
             SelectedSubRule.Conditions = ConditionsManager.ConditionStringToEnum(win.MyDataContext.Condition);
             SelectedSubRule.Text = win.MyDataContext.Text;
             SelectedSubRule.Refresh();
-            SubRules = new ObservableCollection<OneSubRule>(SubRules.ToList());
+            SubRules = [.. SubRules.ToList()];
             OnPropertyChanged(nameof(SelectedSubRule));
         }
     }

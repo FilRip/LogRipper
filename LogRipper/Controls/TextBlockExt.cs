@@ -69,7 +69,7 @@ internal static class TextBlockExt
             return;
 
         Dictionary<Inline, List<Inline>> replacements = [];
-        List<Inline> startInlines = new(span.Inlines);
+        List<Inline> startInlines = [.. span.Inlines];
         foreach (Inline i in startInlines)
         {
             switch (i)
@@ -93,7 +93,7 @@ internal static class TextBlockExt
         if (!replacements.Any())
             return;
 
-        List<Inline> currentInlines = new(span.Inlines);
+        List<Inline> currentInlines = [.. span.Inlines];
         span.Inlines.Clear();
         foreach (Inline i in currentInlines)
         {
