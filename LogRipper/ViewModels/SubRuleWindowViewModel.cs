@@ -62,12 +62,14 @@ public partial class SubRuleWindowViewModel : ObservableObject
         }
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public List<string> ListConditions
     {
         get { return Locale.ListConditions; }
     }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+#pragma warning restore IDE0079
 
     public bool RegExVisible
     {

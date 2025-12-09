@@ -94,16 +94,20 @@ internal partial class OptionsWindowViewModel : ObservableObject
         get { return _listThemes; }
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public bool PresentInRegistry
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+#pragma warning restore IDE0079
     {
         get { return RegistryManager.AlreadyPresent(); }
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public bool NotPresentInRegistry
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+#pragma warning restore IDE0079
     {
         get { return !RegistryManager.AlreadyPresent(); }
     }

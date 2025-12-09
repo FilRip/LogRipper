@@ -2,31 +2,30 @@
 
 using LogRipper.ViewModels;
 
-namespace LogRipper.Windows
+namespace LogRipper.Windows;
+
+/// <summary>
+/// Logique d'interaction pour ChoiceProcessWindow.xaml
+/// </summary>
+public partial class ChoiceProcessWindow : Window
 {
-    /// <summary>
-    /// Logique d'interaction pour ChoiceProcessWindow.xaml
-    /// </summary>
-    public partial class ChoiceProcessWindow : Window
+    public ChoiceProcessWindow()
     {
-        public ChoiceProcessWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 
-        public ChoiceProcessViewModel MyDataContext
-        {
-            get { return (ChoiceProcessViewModel)DataContext; }
-        }
+    public ChoiceProcessViewModel MyDataContext
+    {
+        get { return (ChoiceProcessViewModel)DataContext; }
+    }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            MyDataContext.ParentWindow = this;
-        }
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        MyDataContext.ParentWindow = this;
     }
 }

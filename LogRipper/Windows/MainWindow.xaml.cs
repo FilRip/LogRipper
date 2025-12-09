@@ -58,8 +58,11 @@ public partial class MainWindow : Window
         else if (Properties.Settings.Default.Theme == Locale.THEME_LIGHT)
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
         XamlControlsResources xcr = Application.Current.Resources.MergedDictionaries.OfType<XamlControlsResources>().FirstOrDefault();
-        if (xcr != null)
-            xcr.UseCompactResources = true;
+#pragma warning disable IDE0079
+#pragma warning disable S1121
+        xcr?.UseCompactResources = true;
+#pragma warning restore S1121
+#pragma warning restore IDE0079
 
         try
         {

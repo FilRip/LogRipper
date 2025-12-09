@@ -93,7 +93,11 @@ internal static class FileManager
         }
         if (lines?.Length > 0)
         {
+#pragma warning disable IDE0079
+#pragma warning disable S3267
             foreach (string line in lines)
+#pragma warning restore S3267
+#pragma warning restore IDE0079
             {
                 if (!string.IsNullOrEmpty(line))
                 {

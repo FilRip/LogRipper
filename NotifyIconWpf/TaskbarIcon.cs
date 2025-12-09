@@ -224,7 +224,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         // if was closed the last time - just make sure it doesn't have
         // a parent that is a popup
         Popup parent = LogicalTreeHelper.GetParent(balloon) as Popup;
-        if (parent != null) parent.Child = null;
+        parent?.Child = null;
 
         if (parent != null)
         {
@@ -822,13 +822,11 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
 
         lock (lockObject)
         {
-            EBalloon flags = EBalloon.User;
+            EBalloons flags = EBalloons.User;
 
             if (largeIcon)
             {
-#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
-                flags |= EBalloon.LargeIcon;
-#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
+                flags |= EBalloons.LargeIcon;
             }
 
             ShowBalloonTip(title, message, flags, customIcon.Handle);
@@ -845,7 +843,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// <param name="flags">Indicates what icon to use.</param>
     /// <param name="balloonIconHandle">A handle to a custom icon, if any, or
     /// <see cref="IntPtr.Zero"/>.</param>
-    private void ShowBalloonTip(string title, string message, EBalloon flags, IntPtr balloonIconHandle)
+    private void ShowBalloonTip(string title, string message, EBalloons flags, IntPtr balloonIconHandle)
     {
         EnsureNotDisposed();
 

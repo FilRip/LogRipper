@@ -170,9 +170,13 @@ internal partial class MainWindowViewModel : ObservableObject
                 if (!ListRules.ListRules.Any(r => !string.IsNullOrWhiteSpace(r.Category) && r.Category.IndexOf(ListCategory[i].Category, 0, StringComparison.CurrentCultureIgnoreCase) >= 0))
                     ListCategory.RemoveAt(i);
 
+#pragma warning disable IDE0079
+#pragma warning disable S3267
             foreach (string cat in ListRules.ListRules.Where(r => !string.IsNullOrWhiteSpace(r.Category)).Select(r => r.Category).Distinct())
                 if (!ListCategory.Any(r => r.Category.IndexOf(cat, 0, StringComparison.CurrentCultureIgnoreCase) >= 0))
                     ListCategory.Add(new OneCategory(cat));
+#pragma warning restore S3267
+#pragma warning restore IDE0079
         }
         OnPropertyChanged(nameof(ListCategory));
     }
@@ -483,9 +487,13 @@ internal partial class MainWindowViewModel : ObservableObject
                 SavedRules result = SavedRules.LoadFile(file);
                 if (result == null || result.ListRules?.Count == 0)
                     throw new LogRipperException(Locale.ERROR_NO_RULE_FOUND);
+#pragma warning disable IDE0079
+#pragma warning disable S3267
                 foreach (OneRule rule in result.ListRules)
                     if (!ListRules.RuleExist(rule))
                         ListRules.ListRules.Add(rule);
+#pragma warning restore S3267
+#pragma warning restore IDE0079
                 RefreshListRules();
                 UpdateCategory();
             }

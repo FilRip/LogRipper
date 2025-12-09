@@ -197,7 +197,11 @@ public partial class OneFile : ObservableObject, IDisposable
                         LastOffset += nbRead;
                         string[] newString = _currentEncoding.GetString(donnees).Split((char)13, (char)10);
                         int lastNumLine = Application.Current.GetCurrentWindow<MainWindow>().MyDataContext.ListLines.Max(l => l.NumLine);
+#pragma warning disable IDE0079
+#pragma warning disable S3267
                         foreach (string text in newString)
+#pragma warning restore S3267
+#pragma warning restore IDE0079
                         {
                             if (!string.IsNullOrEmpty(text))
                             {

@@ -450,6 +450,11 @@
                             <Setter Property="Padding" Value="0"/>
                             <Setter Property="FontStyle" Value="{Binding Style}"/>
                             <Setter Property="FontWeight" Value="{Binding Weight}"/>
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleY="0.1"/>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
